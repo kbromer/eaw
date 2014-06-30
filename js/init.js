@@ -1,16 +1,14 @@
 window.onload = function(){
-	var paper = new Raphael(document.getElementById('canvas_container'), 500, 500);	
-	var circle = paper.circle(100, 100, 80);
-	   var tetronimo = paper.path("M 250 250 l 0 -50 l -50 0 l 0 -50 l -50 0 l 0 50 l -50 0 l 0 50 z");
-    tetronimo.attr(
-        {
-            gradient: '90-#526c7a-#64a0c1',
-            stroke: '#3b4449',
-            'stroke-width': 10,
-            'stroke-linejoin': 'round',
-            rotation: -90
-        }
-    );
- 
-    tetronimo.animate({rotation: 360}, 2000, 'bounce');
+	$.getScript("js/zones.js", function() {
+  	console.log( "Load was performed." );
+
+
+		var paper = new Raphael(document.getElementById('canvas_container'), 500, 500);
+
+
+		var zonetest = new Zone("m397,105l-72,50l72,73l100,-35l-11,-68l-83,26l14,-32l-20,-14z");
+		zonetest.drawme(paper);
+
+});
+
 }
