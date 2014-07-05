@@ -16,17 +16,17 @@ Zone.prototype = {
   drawZone: function () {this.paper.path(this.pathstring).attr(
                                     {
                                         stroke: 'black',
+                                        gradient: '90-#d3d3d3-#3f3f3f',
                                         'stroke-width': 2,
                                         'stroke-linejoin': 'round',
                                     }
-                              )//.draggable) = false;
+                              ).draggable.enable();
                             }
 };
 
 function SeaZone(myPath, myPaper){
   Zone.call(this, myPath, myPaper);
 }
-// inherit the methods and properties from Question
 inheritPrototype(SeaZone, Zone);
 
 SeaZone.prototype.drawZone = function (){this.paper.path(this.pathstring).attr(
@@ -37,5 +37,5 @@ SeaZone.prototype.drawZone = function (){this.paper.path(this.pathstring).attr(
                                       'stroke-linejoin': 'round',
 
                                   }
-                            ).draggable.enable();
+                            )
                           }
