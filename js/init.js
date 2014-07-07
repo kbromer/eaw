@@ -30,20 +30,29 @@ window.onload = function(){
 		seaZone4.drawElement();
 		paper.zone_set = paper.setFinish();
 
-		paper.coll = {};//new Array();
-		paper.coll[0] = seaZone1;
-		paper.coll[1] = seaZone2;
-		paper.coll[2] = seaZone3;
-		paper.coll[3] = seaZone4;
-
 		//var zonetest = new Zone("m397,105l-72,50l72,73l100,-35l-11,-68l-83,26l14,-32l-20,-14z");
+		paper.setStart();
 		var fighter = new Fighter(null, paper);
 		fighter.drawElement();
+		paper.unit_set = paper.setFinish();
+
+		paper.unit_set.mouseup(function(evt) {
+			//use the upper left corner of the element
+			var b = paper.unit_set.getBBox();
+
+			for (var i = 0; i < paper.zone_set.length; i++){
+				var zone_element = paper.zone_set[i];
+
+				if (Raphael.isPointInsidePath(zone_element.attr('path'), b.x, b.y)){
+					paper.zone_set.forEach(function (el) {
+						el.attr({stroke:'black'});
+					});
+					zone_element.attr({stroke: 'red'});
+				}
+			}
+		});
 	});
-
-
-}
-
+}//close window.onload()
 
 //fix for Raphael inheritance issue
 Raphael.fn.fixNS = function(){
@@ -59,27 +68,27 @@ Raphael.fn.fixNS = function(){
 
 function getViewport() {
 
-var viewPortWidth;
-var viewPortHeight;
+	var viewPortWidth;
+	var viewPortHeight;
 
-// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
-if (typeof window.innerWidth != 'undefined') {
-	viewPortWidth = window.innerWidth,
-	viewPortHeight = window.innerHeight
-}
+	// the more standards compliant browsers (mozilla/netscape/opera/IE7) use window.innerWidth and window.innerHeight
+	if (typeof window.innerWidth != 'undefined') {
+		viewPortWidth = window.innerWidth,
+		viewPortHeight = window.innerHeight
+	}
 
-// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
-else if (typeof document.documentElement != 'undefined'
-&& typeof document.documentElement.clientWidth !=
-'undefined' && document.documentElement.clientWidth != 0) {
-		viewPortWidth = document.documentElement.clientWidth,
-		viewPortHeight = document.documentElement.clientHeight
-}
+	// IE6 in standards compliant mode (i.e. with a valid doctype as the first line in the document)
+	else if (typeof document.documentElement != 'undefined'
+	&& typeof document.documentElement.clientWidth !=
+	'undefined' && document.documentElement.clientWidth != 0) {
+			viewPortWidth = document.documentElement.clientWidth,
+			viewPortHeight = document.documentElement.clientHeight
+	}
 
-// older versions of IE
-else {
-	viewPortWidth = document.getElementsByTagName('body')[0].clientWidth,
-	viewPortHeight = document.getElementsByTagName('body')[0].clientHeight
-}
-return [viewPortWidth, viewPortHeight];
+	// older versions of IE
+	else {
+		viewPortWidth = document.getElementsByTagName('body')[0].clientWidth,
+		viewPortHeight = document.getElementsByTagName('body')[0].clientHeight
+	}
+	return [viewPortWidth, viewPortHeight];
 }

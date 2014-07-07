@@ -115,8 +115,6 @@ LandZone.prototype.drawElement = function (){this.paper.path(this.pathstring).at
                             );
                       };
 
-
-
 /* UTILITY METHODS */
 function inheritPrototype(childObject, parentObject) {
     // Crockford’s method
