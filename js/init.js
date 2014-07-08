@@ -34,11 +34,20 @@ window.onload = function(){
 		paper.setStart();
 		var fighter = new Fighter(null, paper);
 		fighter.drawElement();
+
+				var fighter2 = new Fighter(null, paper);
+				fighter2.drawElement();
+
 		paper.unit_set = paper.setFinish();
 
-		paper.unit_set.mouseup(function(evt) {
+//		paper.unit_set.push(fighter2.el);
+
+//paper.unit_set.push(fighter2.el);
+
+/*
+		paper.unit_set.mouseup(function(e) {
 			//use the upper left corner of the element
-			var b = paper.unit_set.getBBox();
+			var b = this.getBBox();
 
 			for (var i = 0; i < paper.zone_set.length; i++){
 				var zone_element = paper.zone_set[i];
@@ -51,6 +60,8 @@ window.onload = function(){
 				}
 			}
 		});
+*/
+
 	});
 }//close window.onload()
 
