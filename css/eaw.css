@@ -1,0 +1,17 @@
+.ui-draggable-dragging {
+    z-index:99999;
+}
+#images_hz {
+overflow: hidden;
+width: 100%;
+white-space: nowrap;
+margin-top: 60px;
+}
+#fighter_img {
+  display: inline;
+  margin: 0 10px;
+}
+#armor_img {
+  display: inline;
+  margin: 0 10px;
+}
