@@ -21,11 +21,50 @@ GameElement.prototype = {
 //unit types of elements
 function Unit(myPath, myPaper){
   this.el;
+  this.pathstring = myPath;
+  this.paper = myPaper;
   this.unit_type;
-  this.nation;
   GameElement.call(this, myPath, myPaper);
 }
 Unit.prototype = Object.create(GameElement);
+
+Unit.prototype.drawElement = function (){
+  this.el = this.paper.path(this.pathstring).attr(
+                                  {
+                                      stroke: 'black',
+                                      gradient: '90-#d3d3d3-#3f3f3f',
+                                      'stroke-width': 1,
+                                      'stroke-linejoin': 'round'
+
+                                  }
+                            ).draggable.enable();
+
+  //attach mouseup handler to the element when drawing
+  this.el.mouseup(function(event) {
+    event.preventDefault();
+    unitMouseupHandler(this);
+  });
+  this.el.mousedown(function(event){
+    event.preventDefault();
+    unitMousedownHandler(this);
+  });
+}
+
+
+//armor type
+function Armor(myPath, myPaper){
+  var ps;
+  if (myPath == null){
+    ps = " M 64.93 47.96 C 68.37 46.93 72.20 46.54 74.85 43.85 C 77.57 43.52 80.33 43.83 83.06 43.85 C 83.41 44.23 84.10 44.99 84.45 45.37 C 88.46 45.71 93.39 44.33 96.65 47.32 C 98.51 50.34 98.27 54.06 98.57 57.46 C 106.05 57.60 113.57 57.10 121.02 57.84 C 123.80 57.93 125.36 60.37 126.69 62.46 C 124.08 62.94 124.42 65.81 123.80 67.70 C 123.38 71.56 119.94 73.85 117.48 76.46 C 113.94 79.69 110.31 84.04 105.07 83.90 C 88.37 84.19 71.67 83.90 54.97 84.22 C 52.78 84.12 50.46 84.46 48.39 83.60 C 41.38 79.67 35.75 73.85 29.54 68.87 C 30.09 67.29 30.65 65.71 31.15 64.11 C 32.70 63.42 34.32 62.84 36.04 62.77 C 41.89 62.37 47.73 61.89 53.58 61.39 C 54.65 60.26 55.73 59.12 56.80 57.97 C 58.57 57.99 60.34 58.03 62.11 58.08 C 59.66 57.06 58.01 55.04 56.93 52.69 C 38.30 52.26 19.67 51.97 1.05 51.35 C 1.23 50.96 1.59 50.18 1.77 49.80 C 19.86 49.52 37.97 50.15 56.07 50.11 C 59.13 49.92 61.99 48.71 64.93 47.96 Z";
+  }
+  else{
+    ps = myPath;
+  }
+  this.unit_type = 'Armor';
+  Unit.call(this, ps, myPaper);
+}
+Armor.prototype = new Unit();
+Armor.prototype.constructor = Armor;
 
 //fighter types of units
 function Fighter(myPath, myPaper){
@@ -42,28 +81,8 @@ function Fighter(myPath, myPaper){
   Unit.call(this, ps, myPaper);
 }
 
-Fighter.prototype = Object.create(Unit);
-
-Fighter.prototype.drawElement = function (){this.el = this.paper.path(this.pathstring).attr(
-                                  {
-                                      stroke: 'black',
-                                      gradient: '90-#d3d3d3-#3f3f3f',
-                                      'stroke-width': 1,
-                                      'stroke-linejoin': 'round',
-                                      title: this.unit_type
-                                  }
-                            ).draggable.enable();
-
-  //attach mouseup handler to the element when drawing
-  this.el.mouseup(function(event) {
-    event.preventDefault();
-    unitMouseupHandler(this);
-  });
-  this.el.mousedown(function(event){
-    event.preventDefault();
-    unitMousedownHandler(this);
-  });
-}
+Fighter.prototype = new Unit();
+Fighter.prototype.constructor = Fighter;
 
 //zone is an element on the page
 function Zone(myPath, myPaper){

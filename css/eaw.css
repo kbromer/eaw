@@ -1,17 +1,47 @@
 .ui-draggable-dragging {
     z-index:99999;
 }
+.ui-draggable{
+  float: left;
+}
 #images_hz {
-overflow: hidden;
-width: 100%;
-white-space: nowrap;
-margin-top: 60px;
+  overflow: hidden;
+  width: 100%;
+}
+#navbar_row{
+  z-index: 999;
+  width: 100%;
+  position: relative;
+}
+#game_row{
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+}
+.navbar{
+  position: relative;
+}
+.subnav{
+  padding-left: 25px;
+  float: left;
+   display: inline;
+   white-space: nowrap;
 }
 #fighter_img {
-  display: inline;
-  margin: 0 10px;
+  width: 65px;
+  height: 65px;
 }
 #armor_img {
-  display: inline;
-  margin: 0 10px;
+  width: 65px;
+  height: 65px;
+}
+.unit_image{
+  width:65px;
+  height:65px;
+  position: relative;
+  z-index: 99999;
+}
+#canvas_container {
+  z-index:0;
+  margin-top:0px;
 }
