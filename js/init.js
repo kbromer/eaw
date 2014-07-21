@@ -29,10 +29,10 @@ window.onload = function(){
 
 						var new_unit;
 						switch (target_id){
-							case 'fighter':
+							case 'fighter_de':
 								new_unit = new Fighter(null, paper, 'German');
 								break;
-							case 'armor':
+							case 'armor_de':
 								new_unit = new Armor(null, paper, 'German');
 								break;
 						}

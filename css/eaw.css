@@ -4,7 +4,7 @@
 .ui-draggable{
   float: left;
 }
-#images_hz {
+.images_hz {
   overflow: hidden;
   width: 100%;
 }

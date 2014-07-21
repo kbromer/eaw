@@ -1,9 +1,13 @@
+var element_count = 0;
+
 //Base level game element that encompasses all 'pieces' on the board
 //includes chits, zones, units and dice
 function GameElement(myPath, myPaper) {
   this.pathstring = myPath;
   this.paper = myPaper;
   this.el;
+  this.id = 'ge' + element_count;
+  element_count++;
 }
 
 GameElement.prototype = {
@@ -23,6 +27,7 @@ GameElement.prototype = {
 //unit types of elements
 function Unit(myPath, myPaper, myOwner){
   this.unit_owner = myOwner;
+  this.location_zone = '';
   GameElement.call(this, myPath, myPaper);
 }
 Unit.prototype = Object.create(GameElement.prototype);
@@ -88,10 +93,10 @@ function Zone(myPath, myPaper){
   //this.zonenumber = myPaper.zonecount;
 
   //Raphael set objects for the collection of units
-  this.ally_unit_set = new myPaper.set();
-  this.russian_unit_set = new myPaper.set();
-  this.axis_unit_set = new myPaper.set();
-  this.neutral_unit_set = new myPaper.set();
+  this.ally_unit_set = {};
+  this.russian_unit_set = {};
+  this.axis_unit_set = {};
+  this.neutral_unit_set = {};
   GameElement.call(this, myPath, myPaper);
 }
 
@@ -155,13 +160,28 @@ function unitMouseupHandler(unit){
     var zone_element = unit.paper.zone_set[i];
     if (Raphael.isPointInsidePath(zone_element.attr('path'), (b.x + (b.width/2)), (b.y + b.height/2))){
       zone_element.attr({stroke: 'red'});
-      console.log('UNIT' + unit);//el.data("Unit", this)
-      console.log('UNIT OWNER: ' + unit.data("Unit").unit_owner);
+      /*console.log('UNIT' + unit);//el.data("Unit", this)
+      console.log('UNIT OWNER: ' + unit.data("Unit").unit_owner);*/
       var country = unit.data("Unit").unit_owner;
+      //set the units location to the zone it was dropped on
+      unit.data("Unit").location_zone = zone_element.data("Zone");
       switch (country){
         case 'German':
-            zone_element.data("Zone").axis_unit_set.push(unit);
+
+            zone_element.data("Zone").axis_unit_set[unit.data("Unit").id] = unit;
             console.log(zone_element.data("Zone").axis_unit_set);
+        break;
+        case 'British':
+            zone_element.data("Zone").ally_unit_set.push(unit);
+        break;
+        case 'French':
+            zone_element.data("Zone").ally_unit_set.push(unit);
+        break;
+        case 'Italian':
+            zone_element.data("Zone").axis_unit_set.push(unit);
+        break;
+        case 'American':
+            zone_element.data("Zone").ally_unit_set.push(unit);
         break;
       }
     }
@@ -169,6 +189,29 @@ function unitMouseupHandler(unit){
 }
 
 function unitMousedownHandler(unit){
+  //pull it out of the existing unti_set
+  var country = unit.data("Unit").unit_owner;
+  var zone = unit.data("Unit").location_zone;
+  switch (country){
+    case 'German':
+        delete zone.axis_unit_set[unit.data("Unit").id];
+    break;
+    case 'British':
+        zone.ally_unit_set.pop(unit);
+    break;
+    case 'French':
+        zone.ally_unit_set.pop(unit);
+    break;
+    case 'Italian':
+        zone.axis_unit_set.pop(unit);
+    break;
+    case 'American':
+        zone.ally_unit_set.pop(unit);
+    break;
+  }
+
+
+
   var new_path = Raphael.transformPath(unit.attr('path'), 's2');
   unit.attr({path: new_path});
 }
