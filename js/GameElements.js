@@ -22,7 +22,6 @@ GameElement.prototype = {
 
 //unit types of elements
 function Unit(myPath, myPaper, myOwner){
-  this.unit_type = '';
   this.unit_owner = myOwner;
   GameElement.call(this, myPath, myPaper);
 }
@@ -38,6 +37,8 @@ Unit.prototype.drawElement = function (){
                                       'stroke-linejoin': 'round'
                                   }
                             ).draggable.enable();
+
+  this.el.data("Unit", this);
 
   //attach mouseup handler to the element when drawing
   this.el.mouseup(function(event) {
@@ -82,10 +83,9 @@ Fighter.prototype = Object.create(Unit.prototype)
 Fighter.prototype.constructor = Fighter;
 
 //zone is an element on the page
-function Zone(myPath, myPaper, defaultOwner){
+function Zone(myPath, myPaper){
   //used for path tracking
-  this.zonenumber = myPaper.zonecount;
-  this.original_owner = defaultOwner;
+  //this.zonenumber = myPaper.zonecount;
 
   //Raphael set objects for the collection of units
   this.ally_unit_set = new myPaper.set();
@@ -117,7 +117,12 @@ SeaZone.prototype.drawElement = function (){var this_el = this.paper.path(this.p
                       };
 
 //landzone is a type of zone
-function LandZone(myPath, myPaper){
+function LandZone(myPath, myPaper, defaultOwner){
+  //set the zone owner to the
+  this.original_owner = defaultOwner;
+  this.current_owner = defaultOwner;
+
+
   Zone.call(this, myPath, myPaper);
 }
 LandZone.prototype = Object.create(Zone.prototype);
@@ -150,12 +155,13 @@ function unitMouseupHandler(unit){
     var zone_element = unit.paper.zone_set[i];
     if (Raphael.isPointInsidePath(zone_element.attr('path'), (b.x + (b.width/2)), (b.y + b.height/2))){
       zone_element.attr({stroke: 'red'});
-      console.log('UNIT' + unit);
-      console.log('UNIT OWNER: ' + unit.unit_owner);
-      switch (unit.unit_owner){
+      console.log('UNIT' + unit);//el.data("Unit", this)
+      console.log('UNIT OWNER: ' + unit.data("Unit").unit_owner);
+      var country = unit.data("Unit").unit_owner;
+      switch (country){
         case 'German':
-            zone_element.Zone.axis_unit_set.push(unit);
-            alert(zone_element.Zone.axis_unit_set);
+            zone_element.data("Zone").axis_unit_set.push(unit);
+            console.log(zone_element.data("Zone").axis_unit_set);
         break;
       }
     }
