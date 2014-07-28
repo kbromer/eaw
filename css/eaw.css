@@ -4,9 +4,10 @@
 .ui-draggable{
   float: left;
 }
-.images_hz {
+#images_hz {
   overflow: hidden;
   width: 100%;
+  overflow-x:scroll;
 }
 #navbar_row{
   z-index: 999;
@@ -23,9 +24,8 @@
 }
 .subnav{
   padding-left: 25px;
-  float: left;
-   display: inline;
-   white-space: nowrap;
+  display: inline;
+  white-space: nowrap;
 }
 #fighter_img {
   width: 65px;
@@ -40,6 +40,9 @@
   height:65px;
   position: relative;
   z-index: 99999;
+}
+.unit_nav_btn{
+  display: inline-block;
 }
 #canvas_container {
   z-index:0;

@@ -1,5 +1,16 @@
 window.onload = function(){
 		console.log("Window loaded...");
+		console.log("Setting up unit trays");
+		//hide the default hidden items
+		$(".default_hide").hide();
+
+		//bind all onclicks for buttons
+		$(".unit_nav_btn").click(function(){alert('YO!')});
+
+
+
+
+
 	$.getScript("js/GameElements.js", function() {
   	console.log( "Game elements engine loaded..." );
 
@@ -34,6 +45,12 @@ window.onload = function(){
 								break;
 							case 'armor_de':
 								new_unit = new Armor(null, paper, 'German');
+								break;
+							case 'infantry_de':
+								new_unit = new Infantry(null, paper, 'German');
+								break;
+							case 'carrier_de':
+								new_unit = new Carrier(null, paper, 'German');
 								break;
 						}
 
