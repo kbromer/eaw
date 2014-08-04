@@ -21,11 +21,12 @@
 }
 .navbar{
   position: relative;
+  margin-bottom: 0px;  
 }
 .subnav{
   padding-left: 25px;
-  display: inline;
   white-space: nowrap;
+  background: linear-gradient(to right, gray, white);
 }
 #fighter_img {
   width: 65px;
@@ -36,6 +37,12 @@
   height: 65px;
 }
 .unit_image{
+  width:65px;
+  height:65px;
+  position: relative;
+  z-index: 99999;
+}
+.icon_image{
   width:65px;
   height:65px;
   position: relative;

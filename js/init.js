@@ -1,19 +1,19 @@
 window.onload = function(){
-		console.log("Window loaded...");
-		console.log("Setting up unit trays");
-		//hide the default hidden items
+		console.log("Window loaded.");
+
+		//hide the default hidden items on teh screen
+		//before loading game engine so it doesn't appear broken
 		$(".default_hide").hide();
 
-		//bind all onclicks for buttons
-		$(".unit_nav_btn").click(function(){alert('YO!')});
 
 
 
+	console.log("Unit tray setup complete.");
 
 
 	$.getScript("js/GameElements.js", function() {
-  	console.log( "Game elements engine loaded..." );
-
+  	console.log( "Loading game elements..." );
+		var g = new Game();
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
@@ -52,6 +52,15 @@ window.onload = function(){
 							case 'carrier_de':
 								new_unit = new Carrier(null, paper, 'German');
 								break;
+							case 'art_de':
+								new_unit = new Artillery(null, paper, 'German');
+								break;
+							case 'sub_de':
+								new_unit = new Submarine(null, paper, 'German');
+								break;
+							case 'bomber_de':
+								new_unit = new Bomber(null, paper, 'German');
+								break;
 						}
 
 
@@ -83,7 +92,39 @@ window.onload = function(){
 		seaZone4.drawElement();
 		paper.zone_set = paper.setFinish();
 
+
+
+
+
+
+
+	//bind interface click handlers that need game elements
+		$(".unit_nav_btn").click(function(event){
+
+			var nation_to_hide = g.getCurrentNation().name;
+
+			//shift one player in the game player array
+			if (this.id == 'unit_right_nav_btn'){
+				var nation = g.nextNation();
+			//shift one player down
+			} else{
+				var nation = g.previousNation();
+			}
+			$("[id$=" + nation.name + "]").show();
+			$("[id$='" + nation_to_hide + "']").hide();
+			console.log(nation.name);
+			switch (nation.name){
+				case "de":
+				$(".subnav").css("background", "linear-gradient(to right, gray, white)");
+				break;
+				case "uk":
+				$(".subnav").css("background", "linear-gradient(to right, #A38967, white)");
+				break;
+			}
+		});
 	});
+
+
 }//close window.onload()
 
 //fix for Raphael inheritance issue
