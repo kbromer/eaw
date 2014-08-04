@@ -4,8 +4,8 @@
 	 width="64px" height="64px" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
 <defs>
 <linearGradient id="de_color" x1="0%" y1="0%" x2="100%" y2="0%">
-	<stop offset="0%" style="stop-color:rgb(80,80,80);stop-opacity:1" />
-	<stop offset="100%" style="stop-color:rgb(200,200,200);stop-opacity:1" />
+<stop offset="0%" style="stop-color:rgb(125,80,80);stop-opacity:1" />
+<stop offset="100%" style="stop-color:rgb(60,40,0);stop-opacity:1" />
 </linearGradient>
 </defs>
 <path stroke-width="4" d="M47.713,25.019l5.316-7.519c1.437-2.031,2.559-4.755,2.506-6.084c-0.054-1.33-1.177-2.45-2.511-2.506

@@ -27,11 +27,8 @@ function Nation(myName){
 Nation.prototype.constructor = Nation;
 
 function Game(){
-
   //possible nations
-  this.ALL_NATIONS = ['uk', 'de'];
-
-
+  this.ALL_NATIONS = ['de', 'uk', 'ru'];
   this.ACTIVE_NATIONS = new Array();
   //create nations
   for (var i = 0; i < this.ALL_NATIONS.length; i++){
@@ -117,10 +114,30 @@ Unit.prototype = Object.create(GameElement.prototype);
 Unit.prototype.constructor = Unit;
 
 Unit.prototype.drawElement = function (){
+
+  switch(this.unit_owner){
+    case 'de':
+      var country_gradient = '90-#d3d3d3-#3f3f3f';
+    break;
+    case 'uk':
+      var country_gradient = '90-#A38967-#D6C5AE';
+    break;
+    case 'fr':
+    break;
+    case 'it':
+    break;
+    case 'us':
+    break;
+    case 'ru':
+      var country_gradient = '90-#4F3B0D-#8C6D41';
+    break;
+  }
+
+
   this.el = this.paper.path(this.pathstring).attr(
                                   {
                                       stroke: 'black',
-                                      gradient: '90-#d3d3d3-#3f3f3f',
+                                      gradient: country_gradient,
                                       'stroke-width': 1,
                                       'stroke-linejoin': 'round'
                                   }
@@ -335,22 +352,25 @@ function unitMouseupHandler(unit){
       //set the units location to the zone it was dropped on
       unit.data("Unit").location_zone = zone_element.data("Zone");
       switch (country){
-        case 'German':
-
+        case 'de':
             zone_element.data("Zone").axis_unit_set[unit.data("Unit").id] = unit;
             console.log(zone_element.data("Zone").axis_unit_set);
         break;
-        case 'British':
-            zone_element.data("Zone").ally_unit_set.push(unit);
+        case 'uk':
+            zone_element.data("Zone").ally_unit_set[unit.data("Unit").id] = unit;
+
         break;
-        case 'French':
-            zone_element.data("Zone").ally_unit_set.push(unit);
+        case 'fr':
+
         break;
-        case 'Italian':
-            zone_element.data("Zone").axis_unit_set.push(unit);
+        case 'it':
+
         break;
-        case 'American':
-            zone_element.data("Zone").ally_unit_set.push(unit);
+        case 'us':
+
+        break;
+        case 'ru':
+            zone_element.data("Zone").russian_unit_set[unit.data("Unit").id] = unit;
         break;
       }
     }
@@ -362,20 +382,23 @@ function unitMousedownHandler(unit){
   var country = unit.data("Unit").unit_owner;
   var zone = unit.data("Unit").location_zone;
   switch (country){
-    case 'German':
+    case 'de':
         delete zone.axis_unit_set[unit.data("Unit").id];
     break;
-    case 'British':
+    case 'uk':
+        delete zone.ally_unit_set[unit.data("Unit").id];
+    break;
+    case 'fr':
         zone.ally_unit_set.pop(unit);
     break;
-    case 'French':
-        zone.ally_unit_set.pop(unit);
-    break;
-    case 'Italian':
+    case 'it':
         zone.axis_unit_set.pop(unit);
     break;
-    case 'American':
+    case 'us':
         zone.ally_unit_set.pop(unit);
+    break;
+    case 'ru':
+        delete zone.russian_unit_set[unit.data("Unit").id];
     break;
   }
 
