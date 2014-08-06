@@ -5,9 +5,6 @@ window.onload = function(){
 		//before loading game engine so it doesn't appear broken
 		$(".default_hide").hide();
 
-
-
-
 	console.log("Unit tray setup complete.");
 
 
@@ -17,7 +14,8 @@ window.onload = function(){
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-		var paper = new Raphael(document.getElementById('canvas_container'), w,h);
+		// var paper = new Raphael(document.getElementById('canvas_container'), w,h);
+		var paper = new Raphael(document.getElementById('canvas_container'), 2048,1536);
 		//fix raphael inheritance
 		paper.fixNS();
 		//enable draggability for elements on the Canvas
@@ -62,6 +60,15 @@ window.onload = function(){
 							case 'bomber':
 								new_unit = new Bomber(null, paper, nation_type);
 								break;
+							case 'cruiser':
+								new_unit = new Cruiser(null, paper, nation_type);
+								break;
+							case 'transport':
+								new_unit = new Transport(null, paper, nation_type);
+								break;
+							case 'battleship':
+								new_unit = new Battleship(null, paper, nation_type);
+								break;
 						}
 
 
@@ -82,18 +89,41 @@ window.onload = function(){
 //	  paper.setViewBox(0, 0, 500, 600, true);
 //	var background = paper.image('images/eaw.jpg', 0, 0, '100%', '100%');
 //		background.node.draggable = false;
-		paper.setStart();
-		var seaZone1 = new SeaZone("m4,4l-0.5,114.5l95,0l41.5,-88l-0.5,-26l-135.5,-0.5z", paper);
-		seaZone1.drawElement();
-		var seaZone2 = new SeaZone("m139,4l107,-0.5l3,122.5l-151.5,-6.5l42.5,-90l-1,-25.5z", paper);
-		seaZone2.drawElement();
-		var seaZone3 = new SeaZone("m3.5,118.5l0.5,116l97,0l-4,-114.5l-93.5,-1.5z", paper);
-		seaZone3.drawElement();
-		var seaZone4 = new SeaZone("m102,235l149,2l-3.5,-111.5l-150.5,-6l5,115.5z", paper);
-		seaZone4.drawElement();
-		paper.zone_set = paper.setFinish();
 
 
+	/*	for (var i = 0; i < ZoneList.length; i++){
+			var new_zone = new SeaZone(ZoneList[i], paper);
+			new_zone.drawElement();
+		}*/
+
+		$.get( "images/eaw.svg", function(data){
+			paper.setStart();
+			$(data).find('path').each(function(){
+				var path_string = $(this).attr("d");
+				var zone_id = $(this).attr("id");
+				var zone_data = ZoneProperties[zone_id];
+
+				if (zone_data["type"] == "sea"){
+					var zone = new SeaZone(path_string, paper);
+					zone.drawElement();
+				}else{
+				  var zone = new LandZone(path_string, paper, zone_data["owner"]);
+					zone.drawElement();
+				}
+			});
+			paper.zone_set = paper.setFinish();
+		});
+
+
+/*
+var seaZone1 = new SeaZone("m4,4l-0.5,114.5l95,0l41.5,-88l-0.5,-26l-135.5,-0.5z", paper);
+seaZone1.drawElement();
+var seaZone2 = new SeaZone("m139,4l107,-0.5l3,122.5l-151.5,-6.5l42.5,-90l-1,-25.5z", paper);
+seaZone2.drawElement();
+var seaZone3 = new SeaZone("m3.5,118.5l0.5,116l97,0l-4,-114.5l-93.5,-1.5z", paper);
+seaZone3.drawElement();
+var seaZone4 = new SeaZone("m102,235l149,2l-3.5,-111.5l-150.5,-6l5,115.5z", paper);
+seaZone4.drawElement();*/
 
 
 
@@ -105,30 +135,55 @@ window.onload = function(){
 			var nation_to_hide = g.getCurrentNation().name;
 			console.log('Hiding: ' + nation_to_hide);
 			//shift one player in the game player array
-			if (this.id == 'unit_right_nav_btn'){
+			if (this.id == 'right_nav_btn'){
 				var nation = g.nextNation();
 			//shift one player down
 			} else{
 				var nation = g.previousNation();
 			}
+
+			/*
 			$("[id$=" + nation.name + "]").show();
 			$("[id$='" + nation_to_hide + "']").hide();
-			console.log(nation.name);
+			*/
+			$("div[id^='unit_']").each(function( index ) {
+  			var old_id = $(this).attr("id");
+				var new_id = old_id.substring(0, old_id.length - 2) + nation.name;
+				$( this ).attr("id", new_id);
+			});
+
+			$("img[class^='unit_'], img[class^='icon_']").each(function( index ) {
+				var old_src = $(this).attr("src");
+				var image_type = old_src.substring(old_src.length - 3, old_src.length);
+				var new_src = old_src.substring(0, old_src.length - 6) + nation.name + "." + image_type;
+				$( this ).attr("src", new_src);
+				var old_id = $(this).attr("id");
+				var new_id = old_id.substring(0, old_id.length - 2) + nation.name;
+				$( this ).attr("id", new_id);
+			});
+
 			switch (nation.name){
 				case "de":
-				$(".subnav").css("background", "linear-gradient(to right, gray, white)");
+				$(".subnav").css("background", "linear-gradient(to right, gray, silver, gray)");
 				break;
 				case "uk":
-				$(".subnav").css("background", "linear-gradient(to right, #A38967, white)");
+				$(".subnav").css("background", "linear-gradient(to right, #A38967, tan, #A38967)");
 				break;
 				case "ru":
-				$(".subnav").css("background", "linear-gradient(to right, #911D1D, #C20000)")
+				$(".subnav").css("background", "linear-gradient(to right, #690000, #B30000, #690000)");
+				break;
+				case "fr":
+				$(".subnav").css("background", "linear-gradient(to right, #526c7a, #92A7B3, #526c7a)");
+				break;
+				case "it":
+				$(".subnav").css("background", "linear-gradient(to right, #FFC963,#EDD54E, #FFC963)");
+				break;
+				case "us":
+				$(".subnav").css("background", "linear-gradient(to right, #228A00, #63C742, #228A00)");
 				break;
 			}
 		});
 	});
-
-
 }//close window.onload()
 
 //fix for Raphael inheritance issue

@@ -20,13 +20,15 @@
   margin-left: auto;
 }
 .navbar{
-  position: relative;
-  margin-bottom: 0px;  
+  margin-bottom: 0px;
 }
 .subnav{
+  position: fixed;
+  width: 100%;
   padding-left: 25px;
+  padding-top: 50px;
   white-space: nowrap;
-  background: linear-gradient(to right, gray, white);
+  background: linear-gradient(to right, gray, silver, gray);
 }
 #fighter_img {
   width: 65px;
@@ -53,5 +55,5 @@
 }
 #canvas_container {
   z-index:0;
-  margin-top:0px;
+  margin-top:100px;
 }
