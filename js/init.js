@@ -50,7 +50,7 @@ window.onload = function(){
 							case 'carrier':
 								new_unit = new Carrier(null, paper, nation_type);
 								break;
-							case 'art':
+							case 'artillery':
 								new_unit = new Artillery(null, paper, nation_type);
 								break;
 							case 'sub':
@@ -74,6 +74,9 @@ window.onload = function(){
 						new_unit.drawElement();
 						paper.setFinish();
 						new_unit.el.attr({transform: ['t', svgXY.x, svgXY.y]});
+						
+						new_unit.el.data("Unit", this);
+
 						unitMouseupHandler(new_unit.el);
         }
     });
@@ -83,12 +86,6 @@ window.onload = function(){
 //	  paper.setViewBox(0, 0, 500, 600, true);
 //	var background = paper.image('images/eaw.jpg', 0, 0, '100%', '100%');
 //		background.node.draggable = false;
-
-
-	/*	for (var i = 0; i < ZoneList.length; i++){
-			var new_zone = new SeaZone(ZoneList[i], paper);
-			new_zone.drawElement();
-		}*/
 
 		$.get( "images/eaw.svg", function(data){
 			paper.setStart();
@@ -122,10 +119,6 @@ window.onload = function(){
 				var nation = g.previousNation();
 			}
 
-			/*
-			$("[id$=" + nation.name + "]").show();
-			$("[id$='" + nation_to_hide + "']").hide();
-			*/
 			$("div[id^='unit_']").each(function( index ) {
   			var old_id = $(this).attr("id");
 				var new_id = old_id.substring(0, old_id.length - 2) + nation.name;
