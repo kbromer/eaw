@@ -74,8 +74,9 @@ window.onload = function(){
 						new_unit.drawElement();
 						paper.setFinish();
 						new_unit.el.attr({transform: ['t', svgXY.x, svgXY.y]});
-						
-						new_unit.el.data("Unit", this);
+
+						new_unit.el.data("Unit", new_unit);
+						console.log(new_unit.el.data("Unit"));
 
 						unitMouseupHandler(new_unit.el);
         }
