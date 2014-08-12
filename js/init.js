@@ -97,13 +97,14 @@ window.onload = function(){
 				if (typeof zone_data == 'undefined')
 					console.log(zone_id + ' was not found in the zone list.');
 				if (zone_data["type"] == "sea"){
-					var zone = new SeaZone(path_string, paper);
+					var zone = new SeaZone(path_string, paper, zone_id);
 					zone.drawElement();
 				}else{
-				  var zone = new LandZone(path_string, paper, zone_data["owner"]);
+				  var zone = new LandZone(path_string, paper, zone_id, zone_data["owner"]);
 					zone.drawElement();
 				}
 			});
+			console.log('set finish');
 			paper.zone_set = paper.setFinish();
 		});
 
