@@ -1,12 +1,11 @@
 window.onload = function(){
-		console.log("Window loaded.");
+	console.log("Window loaded.");
 
-		//hide the default hidden items on teh screen
-		//before loading game engine so it doesn't appear broken
-		$(".default_hide").hide();
+	//hide the default hidden items on teh screen
+	//before loading game engine so it doesn't appear broken
+	$(".default_hide").hide();
 
 	console.log("Unit tray setup complete.");
-
 
 	$.getScript("js/GameElements.js", function() {
   	console.log( "Loading game elements..." );
@@ -14,14 +13,9 @@ window.onload = function(){
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-		// var paper = new Raphael(document.getElementById('canvas_container'), w,h);
-		var paper = new Raphael(document.getElementById('canvas_container'), 2048,1536);
-		//fix raphael inheritance
-		paper.fixNS();
-		//enable draggability for elements on the Canvas
-		paper.draggable.enable();
+		var paper = new Snap('#canvas_container');//, 2048,1536);
+		paper.zone_set = new Array();// = paper.set();
 		paper.zonecount = 0;
-		paper.setViewBox(0, 0, 2048, 1536, false);
 
 		//enable draggability for DOM unit elements
 		$("[id^='unit']").draggable();
@@ -70,26 +64,14 @@ window.onload = function(){
 								break;
 						}
 
-						paper.setStart();
 						new_unit.drawElement();
-						paper.setFinish();
-						new_unit.el.attr({transform: ['t', svgXY.x, svgXY.y]});
-
+						new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
-						console.log(new_unit.el.data("Unit"));
-
 						unitMouseupHandler(new_unit.el);
         }
     });
 
-//    paper.canvas.setAttribute('preserveAspectRatio', 'none');
-//		var zpd = new RaphaelZPD(paper, { zoom: true, pan: false, drag: false });
-//	  paper.setViewBox(0, 0, 500, 600, true);
-//	var background = paper.image('images/eaw.jpg', 0, 0, '100%', '100%');
-//		background.node.draggable = false;
-
 		$.get( "images/eaw.svg", function(data){
-			paper.setStart();
 			$(data).find('path').each(function(){
 				var path_string = $(this).attr("d");
 				var zone_id = $(this).attr("id");
@@ -99,13 +81,16 @@ window.onload = function(){
 				if (zone_data["type"] == "sea"){
 					var zone = new SeaZone(path_string, paper, zone_id);
 					zone.drawElement();
+					LAST_ZONE = zone.el;
+					paper.zone_set[paper.zone_set.length] = zone.el;
 				}else{
 				  var zone = new LandZone(path_string, paper, zone_id, zone_data["owner"]);
 					zone.drawElement();
+					LAST_ZONE = zone.el;
+					paper.zone_set[paper.zone_set.length] = zone.el;
 				}
 			});
-			console.log('set finish');
-			paper.zone_set = paper.setFinish();
+			console.log('Zone drawing complete.');
 		});
 
 		//bind interface click handlers that need game elements
@@ -161,33 +146,19 @@ window.onload = function(){
 	});
 }//close window.onload()
 
-//fix for Raphael inheritance issue
-Raphael.fn.fixNS = function(){
-	var r = this;
-	for (var ns_name in Raphael.fn) {
-			var ns = Raphael.fn[ns_name];
-			if (typeof ns == 'object') for (var fn in ns) {
-					var f = ns[fn];
-					ns[fn] = function(){ return f.apply(r, arguments); }
-			}
-	}
-}
-
 function getSvgCoordinates(event, paper) {
-	var mainsvg = paper.canvas;
-	var m = mainsvg.getScreenCTM();
-	var p = mainsvg.createSVGPoint();
+
 	var x, y;
 
 	x = event.pageX;
 	y = event.pageY;
 
-	p.x = x;
-	p.y = y;
-	p = p.matrixTransform(m.inverse());
+//	p.x = x;
+//	p.y = y;
+//	p = p.matrixTransform(m.inverse());
 
-	x = p.x - 25;
-	y = p.y - 25;
+	x = x - 25;
+	y = y - 120;
 
 	x = parseFloat(x.toFixed(3));
 	y = parseFloat(y.toFixed(3));
