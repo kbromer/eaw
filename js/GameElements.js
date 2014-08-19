@@ -510,29 +510,20 @@ function unitMousedownHandler(unit, event){
     console.log('OP: ' + original_path);
     original_path = original_path + ' ' + getNumberPath(prop_count.toString());
     leftover_unit.node.setAttribute("d", original_path);
-    leftover_unit.show();
-    unit_set[remaining_unit].show();
-
-
+    leftover_unit.attr({'display': 'initial'});
+    unit_set[remaining_unit].attr({'display': 'initial'});
 
 /*
-
-
     //if the unit has a path from the original set
-
-
-
     var u = event.target;
     console.log('u is : ' + event.toElement.data("Unit").id);
     console.log('unit is: ' + unit.data("Unit").id);
-
-      unit.attr({path: original_path});
-      var remaining_unit_path = original_path + ' ' + getNumberPath('7');
-  //  unit_set[remaining_unit].attr({path: remaining_unit_path});
+    unit.attr({path: original_path});
+    var remaining_unit_path = original_path + ' ' + getNumberPath('7');
+//  unit_set[remaining_unit].attr({path: remaining_unit_path});
     u.attr({path: remaining_unit_path});
 */
     }
-
 }
 
 function getNumberPath(number_for_path){
