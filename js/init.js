@@ -1,5 +1,40 @@
+'use strict';
 window.onload = function(){
 	console.log("Window loaded.");
+
+/*
+
+  $('img.svg').each(function(){
+            var $img = $(this);
+            var imgID = $img.attr('id');
+            var imgClass = $img.attr('class');
+            var imgURL = $img.attr('src');
+
+            $.get(imgURL, function(data) {
+                // Get the SVG tag, ignore the rest
+                var $svg = $(data).find('svg');
+
+                // Add replaced image's ID to the new SVG
+                if(typeof imgID !== 'undefined') {
+                    $svg = $svg.attr('id', imgID);
+                }
+                // Add replaced image's classes to the new SVG
+                if(typeof imgClass !== 'undefined') {
+                    $svg = $svg.attr('class', imgClass+' replaced-svg');
+                }
+
+                // Remove any invalid XML tags as per http://validator.w3.org
+                $svg = $svg.removeAttr('xmlns:a');
+
+                // Replace image with new SVG
+                $img.replaceWith($svg);
+
+            }, 'xml');
+
+        });*/
+
+
+
 
 	//hide the default hidden items on teh screen
 	//before loading game engine so it doesn't appear broken
@@ -30,6 +65,7 @@ window.onload = function(){
 						var target_id = event.originalEvent.target.id;
 						var unit_type = target_id.substr(0, target_id.indexOf('_'));
 						var nation_type = target_id.match(/_([^ ]*)/)[1];
+						var new_unit = '';
 
 						switch (unit_type){
 							case 'fighter':
@@ -67,7 +103,7 @@ window.onload = function(){
 						new_unit.drawElement();
 						new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
-						unitMouseupHandler(new_unit.el);
+						unitMouseupHandler(new_unit.el, event);
         }
     });
 

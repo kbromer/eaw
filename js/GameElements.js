@@ -1,4 +1,6 @@
+//total number of elements
 var element_count = 0;
+//last map zone created as part of map generation
 var LAST_ZONE;
 
 function Nation(myName){
@@ -158,7 +160,7 @@ function Armor(myPath, myPaper, myOwner) {
   var ps;
 
   if (myPath === null){
-    ps = 'M 1.12,8.85 C 1.12,8.85 2.32,8.93 2.32,8.93 2.32,8.93 2.85,9.38 2.85,9.38 2.85,9.38 3.52,8.93 3.52,8.93 3.52,8.93 5.25,8.78 5.25,8.78 5.25,8.78 5.70,8.41 5.70,8.41 5.70,8.41 15.30,8.48 15.30,8.48 15.30,8.48 15.30,8.85 15.30,8.85 15.30,8.85 20.93,8.78 20.93,8.78 20.93,8.78 22.72,9.08 22.72,9.08 22.72,9.08 26.70,9.08 26.70,9.08 26.70,9.08 28.43,9.90 28.43,9.90 28.43,9.90 29.17,10.57 29.17,10.57 29.17,10.57 27.60,10.71 27.60,10.71 27.60,10.71 25.88,10.64 25.88,10.64 25.88,10.64 25.12,10.19 25.12,10.19 25.12,10.19 22.57,10.27 22.57,10.27 22.57,10.27 21.60,11.16 21.60,11.16 21.60,11.16 20.77,11.61 20.77,11.61 20.77,11.61 20.77,12.20 20.77,12.20 20.77,12.20 18.68,12.28 18.68,12.28 18.68,12.28 20.93,12.50 20.93,12.50 20.93,12.50 20.93,13.24 20.93,13.24 20.93,13.24 19.43,13.39 19.43,13.39 19.43,13.39 16.43,13.84 16.43,13.84 16.43,13.84 15.60,14.58 15.67,14.58 15.75,14.58 15.60,16.96 15.60,16.96 15.60,16.96 16.50,18.82 16.50,18.82 16.50,18.82 17.85,20.01 17.85,20.01 17.85,20.01 18.82,20.54 18.82,20.54 18.82,20.54 20.25,21.21 20.25,21.21 20.25,21.21 21.75,21.65 21.75,21.65 21.75,21.65 23.25,22.17 23.25,22.17 23.25,22.17 25.20,22.17 25.20,22.17 25.20,22.17 50.02,22.25 50.02,22.25 50.02,22.25 51.98,21.80 51.98,21.80 51.98,21.80 53.32,21.35 53.32,21.35 53.32,21.35 54.38,20.98 54.38,20.98 54.38,20.98 55.42,19.79 55.42,19.79 55.42,19.79 55.57,18.01 55.57,18.01 55.57,18.01 54.67,17.34 54.67,17.34 54.67,17.34 54.82,16.52 54.82,16.52 54.82,16.52 57.23,16.52 57.23,16.52 57.23,16.52 57.38,13.69 57.38,13.69 57.38,13.69 58.05,13.54 58.05,13.54 58.05,13.54 58.12,9.60 58.12,9.60 58.12,9.60 56.10,9.60 56.10,9.60 56.10,9.60 55.57,10.12 55.57,10.12 55.57,10.12 49.80,10.19 49.80,10.19 49.80,10.19 45.82,10.19 45.82,10.19 45.82,10.19 44.92,10.64 44.92,10.64 44.92,10.64 44.92,9.60 44.92,9.60 44.92,9.60 47.77,9.45 47.77,9.45 47.77,9.45 47.77,5.43 47.77,5.43 47.77,5.43 43.57,5.51 43.57,5.51 43.57,5.51 43.57,2.83 43.57,2.83 42.98,3.94 C 42.98,3.94 42.45,3.27 42.45,3.27 42.45,3.27 40.57,3.27 40.57,3.27 40.57,3.27 39.38,2.98 39.38,2.98 39.38,2.98 37.88,3.05 37.88,3.05 37.88,3.05 37.57,3.57 37.57,3.57 37.57,3.57 37.12,4.46 37.12,4.46 37.12,4.46 36.15,4.84 36.15,4.84 36.15,4.84 33.23,4.91 33.23,4.91 33.23,4.91 32.92,5.58 32.92,5.58 32.92,5.58 29.77,5.51 29.77,5.51 29.77,5.51 29.10,6.25 29.10,6.25 29.10,6.25 27.22,6.25 27.22,6.25 27.22,6.25 26.77,6.70 26.77,6.70 26.77,6.70 21.30,6.85 21.30,6.85 21.30,6.85 21.30,7.29 21.30,7.29 21.30,7.29 15.60,7.37 15.60,7.37 15.60,7.37 3.75,7.22 3.75,7.22 3.75,7.22 3.30,6.77 3.30,6.77 3.30,6.77 2.02,6.85 2.02,6.85 2.02,6.85 1.43,7.37 1.43,7.37 1.43,7.37 0.97,7.81 0.97,7.81 0.97,7.81 1.12,8.78 1.12,8.78';
+    ps = 'M 1.13,8.78 C 1.13,8.78 0.97,7.81 0.97,7.81 0.97,7.81 1.43,7.37 1.43,7.37 1.43,7.37 2.03,6.85 2.03,6.85 2.03,6.85 3.30,6.77 3.30,6.77 3.30,6.77 3.75,7.21 3.75,7.21 3.75,7.21 15.60,7.37 15.60,7.37 15.60,7.37 21.30,7.29 21.30,7.29 21.30,7.29 21.30,6.85 21.30,6.85 21.30,6.85 26.77,6.70 26.77,6.70 26.77,6.70 27.23,6.25 27.23,6.25 27.23,6.25 29.10,6.25 29.10,6.25 29.10,6.25 29.77,5.51 29.77,5.51 29.77,5.51 32.93,5.58 32.93,5.58 32.93,5.58 33.23,4.91 33.23,4.91 33.23,4.91 36.15,4.83 36.15,4.83 36.15,4.83 37.13,4.46 37.13,4.46 37.13,4.46 37.57,3.57 37.57,3.57 37.57,3.57 37.87,3.05 37.87,3.05 37.87,3.05 39.37,2.98 39.37,2.98 39.37,2.98 40.57,3.27 40.57,3.27 40.57,3.27 42.45,3.27 42.45,3.27 42.45,3.27 42.97,3.94 43.57,2.83 43.57,2.83 43.57,5.51 43.57,5.51 43.57,5.51 47.77,5.43 47.77,5.43 47.77,5.43 47.77,9.45 47.77,9.45 47.77,9.45 44.93,9.60 44.93,9.60 44.93,9.60 44.93,10.64 44.93,10.64 44.93,10.64 45.83,10.19 45.83,10.19 45.83,10.19 49.80,10.19 49.80,10.19 49.80,10.19 55.57,10.12 55.57,10.12 55.57,10.12 56.10,9.60 56.10,9.60 56.10,9.60 58.13,9.60 58.13,9.60 58.13,9.60 58.05,13.54 58.05,13.54 58.05,13.54 57.37,13.69 57.37,13.69 57.37,13.69 57.23,16.52 57.23,16.52 57.23,16.52 54.83,16.52 54.83,16.52 54.83,16.52 54.67,17.33 54.67,17.33 54.67,17.33 55.57,18.01 55.57,18.01 55.57,18.01 55.43,19.79 55.43,19.79 55.43,19.79 54.37,20.98 54.37,20.98 54.37,20.98 53.33,21.36 53.33,21.36 53.33,21.36 51.97,21.80 51.97,21.80 51.97,21.80 50.03,22.25 50.03,22.25 50.03,22.25 25.20,22.17 25.20,22.17 25.20,22.17 23.25,22.17 23.25,22.17 23.25,22.17 21.75,21.65 21.75,21.65 21.75,21.65 20.25,21.20 20.25,21.20 20.25,21.20 18.83,20.54 18.83,20.54 18.83,20.54 17.85,20.01 17.85,20.01 17.85,20.01 16.50,18.82 16.50,18.82 16.50,18.82 15.60,16.96 15.60,16.96 15.60,16.96 15.75,14.58 15.67,14.58 15.60,14.58 16.43,13.84 16.43,13.84 16.43,13.84 19.43,13.39 19.43,13.39 19.43,13.39 20.93,13.24 20.93,13.24 20.93,13.24 20.93,12.50 20.93,12.50 20.93,12.50 18.67,12.27 18.67,12.27 18.67,12.27 20.77,12.20 20.77,12.20 20.77,12.20 20.77,11.61 20.77,11.61 20.77,11.61 21.60,11.16 21.60,11.16 21.60,11.16 22.57,10.27 22.57,10.27 22.57,10.27 25.13,10.19 25.13,10.19 25.13,10.19 25.87,10.64 25.87,10.64 25.87,10.64 27.60,10.71 27.60,10.71 27.60,10.71 29.17,10.57 29.17,10.57 29.17,10.57 28.43,9.89 28.43,9.89 28.43,9.89 26.70,9.08 26.70,9.08 26.70,9.08 22.73,9.08 22.73,9.08 22.73,9.08 20.93,8.78 20.93,8.78 20.93,8.78 15.30,8.86 15.30,8.86 15.30,8.86 15.30,8.48 15.30,8.48 15.30,8.48 5.70,8.40 5.70,8.40 5.70,8.40 5.25,8.78 5.25,8.78 5.25,8.78 3.53,8.93 3.53,8.93 3.53,8.93 2.85,9.38 2.85,9.38 2.85,9.38 2.33,8.93 2.33,8.93 2.33,8.93 1.13,8.86 1.13,8.86';
   }
   else{
     ps = myPath;
@@ -318,10 +320,12 @@ Submarine.prototype.constructor = Submarine;
 function Zone(myPath, myPaper, myName){
   this.name = myName;
   this.de_unit_set = {};
-  this.ally_unit_set = {};
+  this.uk_unit_set = {};
+  this.us_unit_set = {};
   this.russian_unit_set = {};
   this.axis_unit_set = {};
   this.neutral_unit_set = {};
+  this.ally_unit_set = {};
   GameElement.call(this, myPath, myPaper);
 }
 
@@ -349,10 +353,12 @@ SeaZone.prototype.drawElement = function (){this.el = this.paper.path(this.paths
                       };
 
 //landzone is a type of zone
-function LandZone(myPath, myPaper, myName, defaultOwner){
+function LandZone(myPath, myPaper, myName, defaultOwner, hasFactory, pointValue){
   //set the zone owner to the
   this.original_owner = defaultOwner;
   this.current_owner = defaultOwner;
+  this.factory = hasFactory;
+  this.point_value = pointValue;
   this.zone_gradient;
   switch (defaultOwner){
     case 'de':
@@ -400,11 +406,10 @@ LandZone.prototype.drawElement = function (){
 
 /************************ UTILITIES & HANDLERS **********************************************************************/
 
-function unitMouseupHandler(unit){
+function unitMouseupHandler(unit, event){
   //use the upper left corner of the element
   var b = unit.getBBox();
-  console.log(b);
-  console.log(unit);
+
   unit.paper.zone_set.forEach(function (el) {
       el.attr({stroke:'black'});
   });
@@ -417,16 +422,17 @@ function unitMouseupHandler(unit){
 
       zone_element.attr({stroke: 'red'});
 
-            var unit_id = unit.data("Unit").id;
-            console.log('unit_id ' + unit_id);
-            var unit_type = unit.data("Unit").unit_type;
-            console.log('unit_type ' + unit_type);
-            var country = unit.data("Unit").unit_owner;
-            console.log('country ' + country);
-            //set the units location to the zone it was dropped on
-            unit.data("Unit").location_zone = zone_element.data("Zone");
-            var set_name = country + '_unit_set';
-            console.log('I landed in ' + zone_element.data("Zone").name);
+      var unit_id = unit.data("Unit").id;
+      console.log('unit_id ' + unit_id);
+      var unit_type = unit.data("Unit").unit_type;
+
+      var country = unit.data("Unit").unit_owner;
+
+      //set the units location to the zone it was dropped on
+      unit.data("Unit").location_zone = zone_element.data("Zone");
+      var set_name = country + '_unit_set';
+      console.log(country + ' ' + unit_type + ' ' + unit_id + ' landed in ' + zone_element.data("Zone").name);
+
 
       var t = unit.paper.text(b.x, b.y, country + ' ' + unit_type + ' added to ' + zone_element.data("Zone").name).animate({ opacity : 0 }, 2000, function () { this.remove() });;
 
@@ -448,20 +454,21 @@ function unitMouseupHandler(unit){
         prop_count++;
       }
 
+      var svgc = getSvgCoordinates(event, unit.paper);
+
       if (prop_count > 1){
         var original_path = unit.node.getAttribute("d");
         original_path = original_path + ' ' + getNumberPath(prop_count.toString());
         unit.node.setAttribute("d", original_path);
-        unit.attr({path: original_path})
+        unit.attr({path: original_path});
 
         for (var unit_id in unit_set){
           if (unit_id != unit.data("Unit").id){
             unit_set[unit_id].attr({'display': 'none'});
+            unit_set[unit_id].transform('t' + svgc.x + ',' + svgc.y);
           }
         }
-
       }
-
     //break on teh first hit
     break;
     }
@@ -498,32 +505,29 @@ function unitMousedownHandler(unit, event){
     //show a remaining unit
     var leftover_unit = unit_set[remaining_unit];
     //delete whatever number was there originally
-
     var original_path = unit.node.getAttribute("d");
 
     var last_count = prop_count + 1;
-
-    var second_path_start = original_path.indexOf('M', 1);
-
+    var second_path_start = original_path.toLowerCase().indexOf('m', 1);
     //trim the end of hte path
     original_path = original_path.substr(0, second_path_start);
-    console.log('OP: ' + original_path);
     original_path = original_path + ' ' + getNumberPath(prop_count.toString());
     leftover_unit.node.setAttribute("d", original_path);
     leftover_unit.attr({'display': 'initial'});
     unit_set[remaining_unit].attr({'display': 'initial'});
-
-/*
-    //if the unit has a path from the original set
-    var u = event.target;
-    console.log('u is : ' + event.toElement.data("Unit").id);
-    console.log('unit is: ' + unit.data("Unit").id);
-    unit.attr({path: original_path});
-    var remaining_unit_path = original_path + ' ' + getNumberPath('7');
-//  unit_set[remaining_unit].attr({path: remaining_unit_path});
-    u.attr({path: remaining_unit_path});
-*/
     }
+
+
+/*** TODO: STILL HAVE DISAPPEARING FINAL ELEMENTS ***/
+
+  //also clear the number of the selected unit
+  var the_unit_path = unit.node.getAttribute("d");
+  var number_path_start = the_unit_path.toLowerCase().indexOf('m', 1);
+  //if there's a m after 1st (a number drawn)
+  if (number_path_start > 5){
+    the_unit_path = the_unit_path.substr(0, number_path_start);
+    unit.node.setAttribute("d", the_unit_path);
+  }
 }
 
 function getNumberPath(number_for_path){
