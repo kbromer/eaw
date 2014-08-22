@@ -2,8 +2,8 @@
 window.onload = function(){
 	console.log("Window loaded.");
 
-/*
-
+/*  //CHANGES IMAGES INTO INLINE SVG - CONSIDER INSTEAD OF SEPARATE IMAGES
+//FOR ALL OF THE COUNTRIES
   $('img.svg').each(function(){
             var $img = $(this);
             var imgID = $img.attr('id');
@@ -28,19 +28,37 @@ window.onload = function(){
 
                 // Replace image with new SVG
                 $img.replaceWith($svg);
-
             }, 'xml');
-
         });*/
-
-
-
 
 	//hide the default hidden items on teh screen
 	//before loading game engine so it doesn't appear broken
 	$(".default_hide").hide();
 
-	console.log("Unit tray setup complete.");
+	//add behaviors to tap menu bar
+	$("[id$='nav_option']").on('click', function() {
+		//deactive all boxes
+		$("[id$='nav_option']").parent().removeClass('active');
+		//check the clicked one
+		$(this).parent().addClass('active');
+
+		$('.subnav').hide('slide', {direction: 'left'}, 400);
+		$('.subnav').show('slide', {direction: 'right'}, 400);
+		switch (this.text){
+			case 'Units':
+			break;
+			case 'Tech':
+			break;
+			case 'Cards':
+			break;
+			case 'Diplomacy':
+			break;
+			case 'Stats':
+			break;
+
+		}
+	});
+
 
 	$.getScript("js/GameElements.js", function() {
   	console.log( "Loading game elements..." );
@@ -194,7 +212,7 @@ function getSvgCoordinates(event, paper) {
 //	p = p.matrixTransform(m.inverse());
 
 	x = x - 25;
-	y = y - 120;
+	y = y - 125;
 
 	x = parseFloat(x.toFixed(3));
 	y = parseFloat(y.toFixed(3));

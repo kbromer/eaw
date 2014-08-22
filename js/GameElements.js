@@ -414,6 +414,21 @@ function unitMouseupHandler(unit, event){
       el.attr({stroke:'black'});
   });
 
+
+/* FIGURING OUT BEST DROP POINT TO USE
+  console.log('BX: ' + b.x);
+  console.log('BY: ' + b.y);
+  console.log('event.x: ' + event.pageX);
+  var py = event.pageY;
+  py = py - 125;
+  console.log('event.y: ' + py);*/
+
+
+  //CREATE GROUPS IN EACH ZONE
+  //ENTIRE GROUP GETS SAME TRANSFORMATION APPLIED
+  //EACH GROUP GETS AN ELEMENT ADDED AFTER UNIT THAT HAS NUMBER OF UNIT IN GROUP
+  
+
   //console.log(new_path.toString());
   for (var i = 0; i < unit.paper.zone_set.length; i++){
     var zone_element = unit.paper.zone_set[i];
