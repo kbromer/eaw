@@ -42,21 +42,17 @@ window.onload = function(){
 		//check the clicked one
 		$(this).parent().addClass('active');
 
-		$('.subnav').hide('slide', {direction: 'left'}, 400);
-		$('.subnav').show('slide', {direction: 'right'}, 400);
-		switch (this.text){
-			case 'Units':
-			break;
-			case 'Tech':
-			break;
-			case 'Cards':
-			break;
-			case 'Diplomacy':
-			break;
-			case 'Stats':
-			break;
+		var bar = this.text;
 
+
+		if ($('.subnav').is(':visible')){
+			console.log('vis');
+			$('.subnav:visible').hide(showMenuItem(bar));
 		}
+		else{
+				showMenuItem(bar);
+		}
+
 	});
 
 
@@ -178,10 +174,10 @@ window.onload = function(){
 
 			switch (nation.name){
 				case "de":
-				$(".subnav").css("background", "linear-gradient(to right, gray, silver, gray)");
+				$(".subnav").css("background", "linear-gradient(to right, transparent, silver, transparent)");
 				break;
 				case "uk":
-				$(".subnav").css("background", "linear-gradient(to right, #A38967, tan, #A38967)");
+				$(".subnav").css("background", "linear-gradient(to right, transparent, tan, transparent)");
 				break;
 				case "ru":
 				$(".subnav").css("background", "linear-gradient(to right, #690000, #B30000, #690000)");
@@ -212,10 +208,29 @@ function getSvgCoordinates(event, paper) {
 //	p = p.matrixTransform(m.inverse());
 
 	x = x - 25;
-	y = y - 125;
+	y = y - 25;
 
 	x = parseFloat(x.toFixed(3));
 	y = parseFloat(y.toFixed(3));
 
 	return {x: x, y: y};
 }
+
+		function showMenuItem(selectedItem){
+			console.log('called back');
+			switch (selectedItem){
+				case 'Units':
+					$('.units_subnav').show();//.show('slide', {direction: 'down'}, 1000);
+				break;
+				case 'Tech':
+					$('.tech_subnav').show();//.show('slide', {direction: 'down'}, 1000);
+				break;
+				case 'Cards':
+				break;
+				case 'Diplomacy':
+				break;
+				case 'Stats':
+				break;
+
+			}
+		}
