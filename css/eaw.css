@@ -36,7 +36,7 @@ body {
   border-width: 3px;
 }
 .units_subnav{
-  background: linear-gradient(to right, gray, silver, gray);
+  background: linear-gradient(to right, transparent, gray, transparent);
 }
 #fighter_img {
   width: 65px;

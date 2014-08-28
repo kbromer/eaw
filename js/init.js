@@ -31,32 +31,10 @@ window.onload = function(){
             }, 'xml');
         });*/
 
-	//hide the default hidden items on teh screen
-	//before loading game engine so it doesn't appear broken
-	$(".default_hide").hide();
-
-	//add behaviors to tap menu bar
-	$("[id$='nav_option']").on('click', function() {
-		//deactive all boxes
-		$("[id$='nav_option']").parent().removeClass('active');
-		//check the clicked one
-		$(this).parent().addClass('active');
-
-		var bar = this.text;
+	setupBoard();
 
 
-		if ($('.subnav').is(':visible')){
-			console.log('vis');
-			$('.subnav:visible').hide(showMenuItem(bar));
-		}
-		else{
-				showMenuItem(bar);
-		}
-
-	});
-
-
-	$.getScript("js/GameElements.js", function() {
+	$.getScript("js/elements.js", function() {
   	console.log( "Loading game elements..." );
 		var g = new Game();
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -83,39 +61,39 @@ window.onload = function(){
 
 						switch (unit_type){
 							case 'fighter':
-								new_unit = new Fighter(null, paper, nation_type);
+								new_unit = new Fighter(null, paper, nation_type, g);
 								break;
 							case 'armor':
-								new_unit = new Armor(null, paper, nation_type);
+								new_unit = new Armor(null, paper, nation_type, g);
 								break;
 							case 'infantry':
-								new_unit = new Infantry(null, paper, nation_type);
+								new_unit = new Infantry(null, paper, nation_type, g);
 								break;
 							case 'carrier':
-								new_unit = new Carrier(null, paper, nation_type);
+								new_unit = new Carrier(null, paper, nation_type, g);
 								break;
 							case 'artillery':
-								new_unit = new Artillery(null, paper, nation_type);
+								new_unit = new Artillery(null, paper, nation_type, g);
 								break;
 							case 'sub':
-								new_unit = new Submarine(null, paper, nation_type);
+								new_unit = new Submarine(null, paper, nation_type, g);
 								break;
 							case 'bomber':
-								new_unit = new Bomber(null, paper, nation_type);
+								new_unit = new Bomber(null, paper, nation_type, g);
 								break;
 							case 'cruiser':
-								new_unit = new Cruiser(null, paper, nation_type);
+								new_unit = new Cruiser(null, paper, nation_type, g);
 								break;
 							case 'transport':
-								new_unit = new Transport(null, paper, nation_type);
+								new_unit = new Transport(null, paper, nation_type, g);
 								break;
 							case 'battleship':
-								new_unit = new Battleship(null, paper, nation_type);
+								new_unit = new Battleship(null, paper, nation_type, g);
 								break;
 						}
 
 						new_unit.drawElement();
-						new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
+						new_unit.el = new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
 						unitMouseupHandler(new_unit.el, event);
         }
@@ -174,22 +152,22 @@ window.onload = function(){
 
 			switch (nation.name){
 				case "de":
-				$(".subnav").css("background", "linear-gradient(to right, transparent, silver, transparent)");
+				$(".subnav").css("background", "linear-gradient(to right, transparent, gray, transparent)");
 				break;
 				case "uk":
 				$(".subnav").css("background", "linear-gradient(to right, transparent, tan, transparent)");
 				break;
 				case "ru":
-				$(".subnav").css("background", "linear-gradient(to right, #690000, #B30000, #690000)");
+				$(".subnav").css("background", "linear-gradient(to right, transparent, crimson, transparent)");
 				break;
 				case "fr":
-				$(".subnav").css("background", "linear-gradient(to right, #526c7a, #92A7B3, #526c7a)");
+				$(".subnav").css("background", "linear-gradient(to right, transparent, blue, transparent)");
 				break;
 				case "it":
-				$(".subnav").css("background", "linear-gradient(to right, #FFC963,#EDD54E, #FFC963)");
+				$(".subnav").css("background", "linear-gradient(to right, transparent, yellow, transparent)");
 				break;
 				case "us":
-				$(".subnav").css("background", "linear-gradient(to right, #228A00, #63C742, #228A00)");
+				$(".subnav").css("background", "linear-gradient(to right, transparent, green, transparent)");
 				break;
 			}
 		});
