@@ -5,7 +5,7 @@ function setupBoard(){
 
   //add behaviors to tap menu bar
   $("[id$='nav_option']").on('click', function() {
-    //deactive all boxes
+    //deactive all selected menu items
     $("[id$='nav_option']").parent().removeClass('active');
     //check the clicked one
     $(this).parent().addClass('active');

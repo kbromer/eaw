@@ -2,37 +2,7 @@
 window.onload = function(){
 	console.log("Window loaded.");
 
-/*  //CHANGES IMAGES INTO INLINE SVG - CONSIDER INSTEAD OF SEPARATE IMAGES
-//FOR ALL OF THE COUNTRIES
-  $('img.svg').each(function(){
-            var $img = $(this);
-            var imgID = $img.attr('id');
-            var imgClass = $img.attr('class');
-            var imgURL = $img.attr('src');
-
-            $.get(imgURL, function(data) {
-                // Get the SVG tag, ignore the rest
-                var $svg = $(data).find('svg');
-
-                // Add replaced image's ID to the new SVG
-                if(typeof imgID !== 'undefined') {
-                    $svg = $svg.attr('id', imgID);
-                }
-                // Add replaced image's classes to the new SVG
-                if(typeof imgClass !== 'undefined') {
-                    $svg = $svg.attr('class', imgClass+' replaced-svg');
-                }
-
-                // Remove any invalid XML tags as per http://validator.w3.org
-                $svg = $svg.removeAttr('xmlns:a');
-
-                // Replace image with new SVG
-                $img.replaceWith($svg);
-            }, 'xml');
-        });*/
-
 	setupBoard();
-
 
 	$.getScript("js/elements.js", function() {
   	console.log( "Loading game elements..." );
@@ -44,7 +14,7 @@ window.onload = function(){
 		paper.zone_set = new Array();// = paper.set();
 		paper.zonecount = 0;
 
-		//enable draggability for DOM unit elements
+		//enable draggability for non-canvas unit elements
 		$("[id^='unit']").draggable();
 		$("[id^='unit']").draggable("option", "helper", "clone");
 
@@ -54,6 +24,7 @@ window.onload = function(){
             var svgXY = getSvgCoordinates(event, paper);
 
 						console.log('Dropped a ' + event.originalEvent.target.id);
+
 						var target_id = event.originalEvent.target.id;
 						var unit_type = target_id.substr(0, target_id.indexOf('_'));
 						var nation_type = target_id.match(/_([^ ]*)/)[1];
@@ -134,11 +105,11 @@ window.onload = function(){
 				var nation = g.previousNation();
 			}
 
-			$("div[id^='unit_']").each(function( index ) {
+	/*		$("div[id^='unit_']").each(function( index ) {
   			var old_id = $(this).attr("id");
 				var new_id = old_id.substring(0, old_id.length - 2) + nation.name;
 				$( this ).attr("id", new_id);
-			});
+			});*/
 
 			$("img[class^='unit_'], img[class^='icon_']").each(function( index ) {
 				var old_src = $(this).attr("src");
@@ -212,3 +183,34 @@ function getSvgCoordinates(event, paper) {
 
 			}
 		}
+
+		/*
+
+			//CHANGES IMAGES INTO INLINE SVG - CONSIDER INSTEAD OF SEPARATE IMAGES
+		//FOR ALL OF THE COUNTRIES
+			$('img.svg').each(function(){
+								var $img = $(this);
+								var imgID = $img.parent().attr('id');
+								console.log('Image id: ' + imgID);
+								var imgClass = $img.attr('class');
+								var imgURL = $img.attr('src');
+
+								$.get(imgURL, function(data) {
+										// Get the SVG tag, ignore the rest
+										var $svg = $(data).find('svg');
+
+										// Add replaced image's ID to the new SVG
+										if(typeof imgID !== 'undefined') {
+												$svg = $svg.attr('id', imgID);
+										}
+										// Add replaced image's classes to the new SVG
+										if(typeof imgClass !== 'undefined') {
+												$svg = $svg.attr('class', imgClass+' replaced-svg');
+										}
+										// Remove any invalid XML tags as per http://validator.w3.org
+										$svg = $svg.removeAttr('xmlns:a');
+
+										// Replace image with new SVG
+										$img.replaceWith($svg);
+								}, 'xml');
+						});*/

@@ -108,6 +108,14 @@ function Unit(myPath, myPaper, myOwner, myGame){
   this.unit_owner = myOwner;
   this.game = myGame;
   this.location_zone = '';
+  this.country_gradient = '';
+
+  //implement drag and drop for units - may need an
+  //implementation for other non-zone game pieces later
+  //surfacing them here so we can enable/renable later
+  this.move = function(dx,dy) {this.attr({transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]});}
+  this.start = function() {this.data('origTransform', this.transform().local ); unitMousedownHandler(this, event);}
+  this.stop = function() {unitMouseupHandler(this, event);}
   GameElement.call(this, myPath, myPaper);
 }
 Unit.prototype = Object.create(GameElement.prototype);
@@ -117,42 +125,36 @@ Unit.prototype.drawElement = function (){
 
   switch(this.unit_owner){
     case 'de':
-      var country_gradient = this.paper.gradient('l(0,0,1,1)-#d3d3d3-#3f3f3f');
+      this.country_gradient = this.paper.gradient('l(0,0,1,1)-#d3d3d3-#3f3f3f');
     break;
     case 'uk':
-      var country_gradient = this.paper.gradient('l(0,0,1,1)-#A38967-#D6C5AE');
+      this.country_gradient = this.paper.gradient('l(0,0,1,1)-#A38967-#D6C5AE');
     break;
     case 'fr':
-      var country_gradient = this.paper.gradient('l(0,0,1,1)-#44CCD4-#088D9C');
+      this.country_gradient = this.paper.gradient('l(0,0,1,1)-#44CCD4-#088D9C');
     break;
     case 'it':
-      var country_gradient = this.paper.gradient('l(0,0,1,1)-#FFBF00-#BA8B00');
+      this.country_gradient = this.paper.gradient('l(0,0,1,1)-#FFBF00-#BA8B00');
     break;
     case 'us':
-      var country_gradient = this.paper.gradient('l(0,0,1,1)-#386928-#3A911D');
+      this.country_gradient = this.paper.gradient('l(0,0,1,1)-#386928-#3A911D');
     break;
     case 'ru':
-      var country_gradient = this.paper.gradient('l(0,0,1,1)-#4F3B0D-#8C6D41');
+      this.country_gradient = this.paper.gradient('l(0,0,1,1)-#4F3B0D-#8C6D41');
     break;
   }
 
   this.el = this.paper.path(this.pathstring).attr(
                                   {
                                       stroke: 'black',
-                                      fill: country_gradient,
+                                      fill: this.country_gradient,
                                       'stroke-width': 1,
                                       'stroke-linejoin': 'round'
                                   }
                             ).insertAfter(LAST_ZONE);
 
-  //implement drag and drop for units - may need an
-  //implementation for other non-zone game pieces later
-  var move = function(dx,dy) {
-	   this.attr({transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]});
-  }
-  var start = function() {this.data('origTransform', this.transform().local ); unitMousedownHandler(this, event);}
-  var stop = function() {console.log('finished dragging'); unitMouseupHandler(this, event);}
-  this.el.drag(move, start, stop );
+
+  this.el.drag(this.move, this.start, this.stop );
   //appent additional object references to the unit element for access later
   this.el.data("Unit", this);
   this.game.GAME_PIECES.push(this);
@@ -455,7 +457,6 @@ function unitMouseupHandler(unit, event){
       zone_element.attr({stroke: 'red'});
 
       var unit_id = unit.data("Unit").id;
-      console.log('unit_id ' + unit_id);
 
       var country = unit.data("Unit").unit_owner;
 
@@ -484,22 +485,10 @@ function unitMouseupHandler(unit, event){
         prop_count++;
       }
 
-      var svgc = getSvgCoordinates(event, unit.paper);
-
       if (prop_count > 1){
-        var original_path = unit.node.getAttribute("d");
-        original_path = original_path + ' ' + getNumberPath(prop_count.toString());
-        unit.node.setAttribute("d", original_path);
-        unit.attr({path: original_path});
-
-        for (var unit_id in unit_set){
-          if (unit_id != unit.data("Unit").id){
-            unit_set[unit_id].attr({'display': 'none'});
-            unit_set[unit_id].transform('t' + svgc.x + ',' + svgc.y);
-          }
-        }
+        redrawChipStack(b.x, b.y + 15, unit_set, unit);
       }
-    //break on teh first hit
+    //break on the first matching path we find
     break;
     }
   }
@@ -542,7 +531,7 @@ function unitMouseupHandler(unit, event){
         }
       }
     }
-}
+}//end unitMouseupHandler
 
 function unitMousedownHandler(unit, event){
   //pull it out of the existing unit_set
@@ -558,10 +547,11 @@ function unitMousedownHandler(unit, event){
   delete zone[set_name][unit_type][unit.data("Unit").id];
 
   //remaining units
-  var unit_set = zone[set_name][unit_type]
+  var unit_set = zone[set_name][unit_type];
 
+  //count the # of remaining units
   var prop_count = 0;
-
+  //get a reference to a unit to repaint
   var remaining_unit;
   for(var x in unit_set) {
     prop_count++;
@@ -569,25 +559,135 @@ function unitMousedownHandler(unit, event){
       remaining_unit = x;
     }
   }
+
   console.log('Units left ' + prop_count);
   if (prop_count > 0){
-    //show a remaining unit
+    console.log('redrawing a new unit...');
+    //find the remaining unit, restyle from chip back to a board piece
     var leftover_unit = unit_set[remaining_unit];
-    //delete whatever number was there originally
-    var original_path = unit.node.getAttribute("d");
-
-    var last_count = prop_count + 1;
-    var second_path_start = original_path.toLowerCase().indexOf('m', 1);
-    //trim the end of hte path
-    original_path = original_path.substr(0, second_path_start);
-    original_path = original_path + ' ' + getNumberPath(prop_count.toString());
+    var unit_obj = leftover_unit.data("Unit");
+    var original_path = unit_obj.pathstring;
     leftover_unit.node.setAttribute("d", original_path);
-    leftover_unit.attr({'display': 'initial'});
-    unit_set[remaining_unit].attr({'display': 'initial'});
+    leftover_unit.attr({'display': 'initial', fill: unit_obj.country_gradient});
+    leftover_unit.drag(unit_obj.move, unit_obj.start, unit_obj.stop);
+    console.log('leftover_unit '  + leftover_unit.data("Unit").id);
+    var b = leftover_unit.getBBox();
+    redrawChipStack(b.x, b.y + 15, unit_set, leftover_unit);
+
+  }
+
+
+}//close unitMousedownHandler
+
+
+
+function redrawChipStack(xchiploc, ychiploc, unit_set, locked_unit){
+
+  //set the path string for the marker - path of a 10-5 ellipse
+  var chip_path_string = 'M-10,0a10,5 0 1,0 20,0a10,5 0 1,0 -20,0';
+  var x_chip_location = xchiploc;
+  var y_chip_location = ychiploc;
+
+  //this code sets draws numbers on svg elements to count the stack
+/*      var original_path = unit.node.getAttribute("d");
+  original_path = original_path + ' ' + getNumberPath(prop_count.toString());
+  unit.node.setAttribute("d", original_path);
+  unit.attr({path: original_path});*/
+  var white_chips = [];
+  //for every unit of the dropped type in this zone
+  for (var unit_id in unit_set){
+
+    //if you're not referring to the unit i just dropped
+      //  - insert after the unit dropped so appears in teh right order
+      // - turn the unit into a chip
+      // - set the chip to white
+      // - move the chip to the right location
+      console.log(locked_unit.data("Unit").id + ' v ' + unit_id);
+    if (unit_id !== locked_unit.data("Unit").id){
+      console.log('Not equal');
+      //insert it behind the drawn unit
+      unit_set[unit_id].after(locked_unit);
+      //turn it into a chip
+      unit_set[unit_id].node.setAttribute("d", chip_path_string);
+      //color the chip
+      unit_set[unit_id].attr({fill: 'white', stroke: 'black', 'visibility': 'initial'});
+      //set the location to next to the unit
+      unit_set[unit_id].transform('t' + x_chip_location + ',' + y_chip_location);
+      //turn off dragging on the individual chips
+      unit_set[unit_id].undrag();
+      y_chip_location = y_chip_location - 3;
+      white_chips[white_chips.length] = unit_set[unit_id];
+    }
+  }
+
+  //recolor and display chips into red-chip 5s
+  if (white_chips.length >= 5){
+
+    var red_chip_count = Math.floor(white_chips.length / 5);
+    var white_chip_remainder = Math.floor(white_chips.length % 5);
+    var counter = 0;
+
+    //create red chips for every five whites
+    for (i = 0; i < red_chip_count; i++){
+      var u = white_chips[counter];
+      u.attr({fill: 'red'});
+      console.log('Making a red chip out of ' + u.data("Unit").id);
+      counter++;
+    }
+    //turn the remainder white ones white
+    //we may not need to do this, but it'll guarantee proper
+    //stacking when we had them)
+    for (i = 0; i < white_chip_remainder; i++){
+      var u = white_chips[counter];
+      u.attr({fill: 'white'});
+      console.log('Making a white chip out of ' + u.data("Unit").id);
+      counter++;
+    }
+    //everything else gets hidden
+    for (i = counter; i < white_chips.length; i++){
+      var u = white_chips[counter];
+      console.log('Hiding ' + u.data("Unit").id);
+      u.attr({'visibility': 'hidden'});
+      counter++;
     }
 
+  }
+  //not clear to me why i need to do this, but for wahtever reason
+  //this was getting hidden (even though it was never a white chip)
+  locked_unit.attr({'visibility': 'initial'});
+}
 
-/*** TODO: STILL HAVE DISAPPEARING FINAL ELEMENTS ***/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+//    var last_count = prop_count + 1;
+//    var second_path_start = original_path.toLowerCase().indexOf('m', 1);
+    //trim the end of hte path
+//    original_path = original_path.substr(0, second_path_start);
+//    original_path = original_path + ' ' + getNumberPath(prop_count.toString());
 
   //also clear the number of the selected unit
   var the_unit_path = unit.node.getAttribute("d");
@@ -597,8 +697,6 @@ function unitMousedownHandler(unit, event){
     the_unit_path = the_unit_path.substr(0, number_path_start);
     unit.node.setAttribute("d", the_unit_path);
   }
-}
-
 function getNumberPath(number_for_path){
   var number_path = '';
   switch (number_for_path){
@@ -631,4 +729,4 @@ function getNumberPath(number_for_path){
     break;
   }
   return number_path;
-}
+}*/
