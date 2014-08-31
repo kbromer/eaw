@@ -2,11 +2,18 @@
 window.onload = function(){
 	console.log("Window loaded.");
 
-	setupBoard();
-
+	//sets up:
+	//1. navigation
+	//2. menu bars
+	//3. non canvas images
+	eaw.setupBoard();
+	console.log("Board setup.");
+	//load the elements so we can create zones
+	//and setup unit behaviors - connect html dom elements w/ canvas ones
 	$.getScript("js/elements.js", function() {
   	console.log( "Loading game elements..." );
-		var g = new Game();
+		//a new eaw game
+		var g = new eaw.Game();
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
@@ -21,7 +28,7 @@ window.onload = function(){
     //Support DOM elements droppable to canvas
     $("#canvas_container").droppable({
         drop: function (event, ui) {
-            var svgXY = getSvgCoordinates(event, paper);
+            var svgXY = eaw.getSvgCoordinates(event, paper);
 
 						console.log('Dropped a ' + event.originalEvent.target.id);
 
@@ -66,7 +73,7 @@ window.onload = function(){
 						new_unit.drawElement();
 						new_unit.el = new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
-						unitMouseupHandler(new_unit.el, event);
+						eaw.unitMouseupHandler(new_unit.el, event);
         }
     });
 
@@ -105,12 +112,6 @@ window.onload = function(){
 				var nation = g.previousNation();
 			}
 
-	/*		$("div[id^='unit_']").each(function( index ) {
-  			var old_id = $(this).attr("id");
-				var new_id = old_id.substring(0, old_id.length - 2) + nation.name;
-				$( this ).attr("id", new_id);
-			});*/
-
 			$("img[class^='unit_'], img[class^='icon_']").each(function( index ) {
 				var old_src = $(this).attr("src");
 				var image_type = old_src.substring(old_src.length - 3, old_src.length);
@@ -141,48 +142,12 @@ window.onload = function(){
 				$(".subnav").css("background", "linear-gradient(to right, transparent, green, transparent)");
 				break;
 			}
-		});
-	});
+		});//close binding of ui elements that require game elements
+	});//close elements loading callback
+
 }//close window.onload()
 
-function getSvgCoordinates(event, paper) {
 
-	var x, y;
-
-	x = event.pageX;
-	y = event.pageY;
-
-//	p.x = x;
-//	p.y = y;
-//	p = p.matrixTransform(m.inverse());
-
-	x = x - 25;
-	y = y - 25;
-
-	x = parseFloat(x.toFixed(3));
-	y = parseFloat(y.toFixed(3));
-
-	return {x: x, y: y};
-}
-
-		function showMenuItem(selectedItem){
-			console.log('called back');
-			switch (selectedItem){
-				case 'Units':
-					$('.units_subnav').show();//.show('slide', {direction: 'down'}, 1000);
-				break;
-				case 'Tech':
-					$('.tech_subnav').show();//.show('slide', {direction: 'down'}, 1000);
-				break;
-				case 'Cards':
-				break;
-				case 'Diplomacy':
-				break;
-				case 'Stats':
-				break;
-
-			}
-		}
 
 		/*
 

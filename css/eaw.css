@@ -46,6 +46,9 @@ body {
   width: 65px;
   height: 65px;
 }
+#menu_modal {
+  padding-top: 70px;
+}
 .unit_image{
   width:65px;
   height:65px;
