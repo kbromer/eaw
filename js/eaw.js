@@ -149,6 +149,8 @@
       var unit_obj = leftover_unit.data("Unit");
       var original_path = unit_obj.pathstring;
       leftover_unit.node.setAttribute("d", original_path);
+      console.log(the_unit);
+      //leftover_unit.transform('t' + the_unit.x + ',' + the_unit.y);
       leftover_unit.attr({'display': 'initial', fill: unit_obj.country_gradient});
       leftover_unit.drag(unit_obj.move, unit_obj.start, unit_obj.stop);
       console.log('leftover_unit '  + leftover_unit.data("Unit").id);
@@ -240,23 +242,26 @@
 
 
 
+  eaw.zonehoverinHandler = function(zone){
 
+    var timer = window.setTimeout(function () {
+      zone.data('timerid', null);
+      console.log('go');
+      //pop-up the tool-tip window
+      var title = Snap.parse('<title>This is <br/><b>a title 2</b></title>');
+      zone.append(title);
 
+    }, 500);
+    zone.data('timerid', timer);
+  }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  eaw.zonehoveroutHandler = function(zone){
+    var timerid = zone.data('timerid');
+    if (timerid != null) {
+      //mouse out, didn't timeout. Kill previously started timer
+      window.clearTimeout(timerid);
+    }
+  }
 
 
 

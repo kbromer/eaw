@@ -333,6 +333,8 @@ function Zone(myPath, myPaper, myName){
   this.axis_unit_set = {};
   this.neutral_unit_set = {};
   this.ally_unit_set = {};
+  this.hoverin = function () {eaw.zonehoverinHandler(this);};
+  this.hoverout = function () {eaw.zonehoveroutHandler(this);};
   GameElement.call(this, myPath, myPaper);
 }
 
@@ -349,14 +351,13 @@ SeaZone.prototype.constructor = SeaZone;
 SeaZone.prototype.drawElement = function (){this.el = this.paper.path(this.pathstring).attr(
                                           {
                                             fill: this.paper.gradient('l(0,0,1,1)-#59ABC2-#4680A3'),
-                                            stroke: '#3b4449',
+                                            stroke: 'black',
                                             'stroke-width': 2,
                                             'stroke-linejoin': 'round'
                                   }
                             );
                             this.el.data("Zone", this);
-                            this.el.mouseover(function (){this.attr({stroke: 'yellow'});});
-                            this.el.mouseout(function (){this.attr({stroke: 'black'});});
+                            this.el.hover(this.hoverin, this.hoverout);
                       };
 
 //landzone is a type of zone
@@ -398,6 +399,9 @@ function LandZone(myPath, myPaper, myName, defaultOwner, hasFactory, pointValue)
     case 'bu':
       this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#E3BB19-#EDD54E');
     break;
+    case 'rm':
+      this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#E3BB19-#EDD54E');
+    break;
     default:
       this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#FFA33B-#FF8800');
     break;
@@ -418,4 +422,5 @@ LandZone.prototype.drawElement = function (){
                             );
 
                             this.el.data("Zone", this);
+                            this.el.hover(this.hoverin, this.hoverout);
                       };

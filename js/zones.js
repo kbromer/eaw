@@ -12,6 +12,8 @@ Budapest: {type: "land", owner:"hu", hasFactory: true, pointValue: 2},
 Debrecen: {type: "land", owner:"hu", hasFactory: true, pointValue: 1},
 /** Bulgaria **/
 Sofia: {type: "land", owner:"bu", hasFactory: true, pointValue: 2},
+Varna: {type: "land", owner:"bu", hasFactory: false, pointValue: 0},
+Burgas: {type: "land", owner: "bu", hasFactory: true, pointValue: 1},
 /** Single-Zone Neutrals **/
 Denmark: {type: "land", owner:"dk", hasFactory: true, pointValue: 1},
 Ireland: {type: "land", owner:"ir", hasFactory: true, pointValue: 1},
@@ -135,6 +137,7 @@ Estonia: {type: "land", owner: "buffer"},
 Pinsk: {type: "land", owner: "buffer"},
 Wilno: {type: "land", owner: "buffer"},
 Bjorko: {type: "land", owner: "buffer"},
+Chisinau: {type: "land", owner: "buffer", hasFactory: false, pointValue: 0},
 /** USSR **/
 Minsk: {type: "land", owner: "ru"},
 Moscow: {type: "land", owner: "ru"},
@@ -158,6 +161,13 @@ Yaroslavl: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Ryazan: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Tula: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Kharkov: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+Kargopol: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+Tver: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+Rzhev: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+Kaluga: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+Smolensk: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+/** Romania **/
+Galati: {type: "land", owner: "rm", hasFactory: false, pointValue: 0},
 
 /** Turkey **/
 Istanbul: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},

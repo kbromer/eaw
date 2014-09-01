@@ -17,8 +17,8 @@ window.onload = function(){
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-		var paper = new Snap('#canvas_container');//, 2048,1536);
-		paper.zone_set = new Array();// = paper.set();
+		var paper = new Snap('#canvas_container');
+		paper.zone_set = new Array();
 		paper.zonecount = 0;
 
 		//enable draggability for non-canvas unit elements
@@ -32,6 +32,7 @@ window.onload = function(){
 
 						console.log('Dropped a ' + event.originalEvent.target.id);
 
+					if (event.originalEvent.target){
 						var target_id = event.originalEvent.target.id;
 						var unit_type = target_id.substr(0, target_id.indexOf('_'));
 						var nation_type = target_id.match(/_([^ ]*)/)[1];
@@ -74,7 +75,8 @@ window.onload = function(){
 						new_unit.el = new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
 						eaw.unitMouseupHandler(new_unit.el, event);
-        }
+      		}
+		  	}//close drop
     });
 
 		$.get( "images/eaw.svg", function(data){

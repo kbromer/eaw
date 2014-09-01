@@ -46,9 +46,6 @@ body {
   width: 65px;
   height: 65px;
 }
-#menu_modal {
-  padding-top: 70px;
-}
 .unit_image{
   width:65px;
   height:65px;
@@ -81,4 +78,20 @@ bring-to-front{
 }
 .nav_btn_set{
   float: right;
+}
+
+/* MODAL MENU STYLING */
+#menu_modal {
+  padding-top: 70px;
+}
+.modal-content{
+  background: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0), rgba(0,0,0,1));
+  border-style: solid;
+  border-color: gold;
+}
+.modal-header{
+  color: gold;
+}
+.modal-close{
+  color: gold;
 }
