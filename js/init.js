@@ -14,10 +14,12 @@ window.onload = function(){
   	console.log( "Loading game elements..." );
 		//a new eaw game
 		var g = new eaw.Game();
+		eaw.game = g;
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
 		var paper = new Snap('#canvas_container');
+		//eaw.game.paper = paper;
 		paper.zone_set = new Array();
 		paper.zonecount = 0;
 
@@ -32,7 +34,7 @@ window.onload = function(){
 
 						console.log('Dropped a ' + event.originalEvent.target.id);
 
-					if (event.originalEvent.target){
+					if (event.originalEvent.target !== undefined){
 						var target_id = event.originalEvent.target.id;
 						var unit_type = target_id.substr(0, target_id.indexOf('_'));
 						var nation_type = target_id.match(/_([^ ]*)/)[1];

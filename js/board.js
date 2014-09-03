@@ -21,6 +21,8 @@
       }
     });
 
+    $("[id='SaveBTN']").on('click', function(){eaw.game.save();});
+
     //setup behavior of the menu modal closing
     //bind the hide handler to deselect the item
     $('#menu_modal').on('hidden.bs.modal', function (e) {

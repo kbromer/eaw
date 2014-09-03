@@ -3,9 +3,9 @@ var element_count = 0;
 //last map zone created as part of map generation
 var LAST_ZONE;
 
-function Nation(myName){
+eaw.Nation = function (myName){
   this.name = myName;
-  this.IPCs = function() {/**need to scroll add up total controlled zones*/};
+  this.occupied = [];
   this.cash = 0;
 
   switch (myName){
@@ -29,59 +29,13 @@ function Nation(myName){
       break;
   }
 }
-Nation.prototype.constructor = Nation;
 
- eaw.Game = function() {
-  //possible nations
-  this.ALL_NATIONS = ['de', 'uk', 'ru', 'fr', 'us', 'it'];
-  this.ACTIVE_NATIONS = new Array();
-  //create nations
-  for (var i = 0; i < this.ALL_NATIONS.length; i++){
-    this.ACTIVE_NATIONS.push(new Nation(this.ALL_NATIONS[i]));
-  }
-  this.GAME_TURN = 0;
-  this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
-  this.CURRENT_NATION_INDEX = 0;
-  this.INACTIVE_NATIONS = new Array();
-  this.GAME_PIECES = new Array();
-}
+eaw.Nation.prototype.constructor = eaw.Nation;
 
-
-eaw.Game.prototype = {
-  constructor: eaw.Game,
-  getCurrentNation: function(){
-      if (this.CURRENT_NATION == ''){
-        this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
-        this.CURRENT_NATION_INDEX = 0;
-      }
-      return this.CURRENT_NATION;
-  },
-  nextNation: function(){
-    if (this.CURRENT_NATION_INDEX == this.ACTIVE_NATIONS.length - 1){
-      this.CURRENT_NATION_INDEX = 0;
-    }
-    else{
-      this.CURRENT_NATION_INDEX++;
-    }
-    this.CURRENT_NATION = this.ACTIVE_NATIONS[this.CURRENT_NATION_INDEX];
-    return this.CURRENT_NATION;
-  },
-  previousNation: function(){
-    if (this.CURRENT_NATION_INDEX == 0){
-      this.CURRENT_NATION_INDEX = this.ACTIVE_NATIONS.length - 1;
-    }
-    else{
-      this.CURRENT_NATION_INDEX--;
-    }
-    this.CURRENT_NATION = this.ACTIVE_NATIONS[this.CURRENT_NATION_INDEX];
-    return this.CURRENT_NATION;
-  }
-
-};
 
 //Base level game element that encompasses all 'pieces' on the board
 //includes chits, zones, units and dice
-function GameElement(myPath, myPaper) {
+eaw.GameElement = function (myPath, myPaper) {
   this.pathstring = myPath;
   this.paper = myPaper;
   this.el;
@@ -89,8 +43,8 @@ function GameElement(myPath, myPaper) {
   element_count++;
 }
 
-GameElement.prototype = {
-  constructor: GameElement,
+eaw.GameElement.prototype = {
+  constructor: eaw.GameElement,
   drawElement: function () {
                 this.el = this.paper.path(this.pathstring).attr(
                                     {
@@ -118,9 +72,9 @@ function Unit(myPath, myPaper, myOwner, myGame){
   this.move = function(dx,dy) {this.attr({transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]});}
   this.start = function() {this.data('origTransform', this.transform().local ); eaw.unitMousedownHandler(this, event);}
   this.stop = function() {eaw.unitMouseupHandler(this, event);}
-  GameElement.call(this, myPath, myPaper);
+  eaw.GameElement.call(this, myPath, myPaper);
 }
-Unit.prototype = Object.create(GameElement.prototype);
+Unit.prototype = Object.create(eaw.GameElement.prototype);
 Unit.prototype.constructor = Unit;
 
 Unit.prototype.drawElement = function (){
@@ -335,10 +289,10 @@ function Zone(myPath, myPaper, myName){
   this.ally_unit_set = {};
   this.hoverin = function () {eaw.zonehoverinHandler(this);};
   this.hoverout = function () {eaw.zonehoveroutHandler(this);};
-  GameElement.call(this, myPath, myPaper);
+  eaw.GameElement.call(this, myPath, myPaper);
 }
 
-Zone.prototype = new GameElement();
+Zone.prototype = new eaw.GameElement();
 Zone.prototype.constructor = Zone;
 
 //seazone is a type of zone

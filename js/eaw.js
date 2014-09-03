@@ -1,5 +1,64 @@
   //set a namespace to drop funcs into as needed
   eaw = {}
+  eaw.game;
+  eaw.ALL_NATIONS = ['de', 'uk', 'ru', 'fr', 'us', 'it'];
+
+
+eaw.Game = function() {
+  //possible nations
+
+  this.ACTIVE_NATIONS = new Array();
+  //create nations
+  for (var i = 0; i < eaw.ALL_NATIONS.length; i++){
+    this.ACTIVE_NATIONS.push(new eaw.Nation(eaw.ALL_NATIONS[i]));
+  }
+  this.GAME_TURN = 0;
+  this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
+  this.CURRENT_NATION_INDEX = 0;
+  this.INACTIVE_NATIONS = new Array();
+  this.GAME_PIECES = new Array();
+}
+
+
+eaw.Game.prototype = {
+  constructor: eaw.Game,
+  getCurrentNation: function(){
+      if (this.CURRENT_NATION == ''){
+        this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
+        this.CURRENT_NATION_INDEX = 0;
+      }
+      return this.CURRENT_NATION;
+  },
+  nextNation: function(){
+    if (this.CURRENT_NATION_INDEX == this.ACTIVE_NATIONS.length - 1){
+      this.CURRENT_NATION_INDEX = 0;
+    }
+    else{
+      this.CURRENT_NATION_INDEX++;
+    }
+    this.CURRENT_NATION = this.ACTIVE_NATIONS[this.CURRENT_NATION_INDEX];
+    return this.CURRENT_NATION;
+  },
+  previousNation: function(){
+    if (this.CURRENT_NATION_INDEX == 0){
+      this.CURRENT_NATION_INDEX = this.ACTIVE_NATIONS.length - 1;
+    }
+    else{
+      this.CURRENT_NATION_INDEX--;
+    }
+    this.CURRENT_NATION = this.ACTIVE_NATIONS[this.CURRENT_NATION_INDEX];
+    return this.CURRENT_NATION;
+  },
+  save: function() {
+    var serialized = JSON.stringify(this);
+    //load it
+    var model = JSON.parse(serialized);
+    //log it
+    console.log(model);
+
+  }
+};
+
 
   eaw.unitMouseupHandler = function (unit, event){
     //use the upper left corner of the element
@@ -81,7 +140,7 @@
             3.  Move in a smarter direction then the current 'random'
             4.  Don't let other moved units overlap
             */
-
+/*
       //each element in play on the board
       for (var i = 0; i < unit.data("Unit").game.GAME_PIECES.length; i++){
 
@@ -111,7 +170,7 @@
             game_piece.el = game_piece.el.animate({transform: tstring}, 2500, mina.backout);
           }
         }
-      }
+      }*/
   }//end unitMouseupHandler
 
   eaw.unitMousedownHandler = function (unit, event){

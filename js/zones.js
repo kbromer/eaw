@@ -16,10 +16,11 @@ Varna: {type: "land", owner:"bu", hasFactory: false, pointValue: 0},
 Burgas: {type: "land", owner: "bu", hasFactory: true, pointValue: 1},
 /** Single-Zone Neutrals **/
 Denmark: {type: "land", owner:"dk", hasFactory: true, pointValue: 1},
-Ireland: {type: "land", owner:"ir", hasFactory: true, pointValue: 1},
+Ireland: {type: "land", owner:"ei", hasFactory: true, pointValue: 1},
 Belgium: {type: "land", owner:"be", hasFactory: true, pointValue: 2},
 Netherlands: {type: "land", owner:"ne", hasFactory: true, pointValue: 1},
 Switzerland: {type: "land", owner: "sz", hasFactory: true, pointValue: 3},
+Qatar: {type: "land", owner: "qa", hasFactory: true, pointValue: 3},
 /** Germany **/
 Hamburg: {type: "land", owner:"de", hasFactory: true, pointValue: 3},
 Munich: {type: "land", owner:"de", hasFactory: true, pointValue: 4},
@@ -60,6 +61,11 @@ Mostar: {type: "land", owner: "yu", hasFactory: false, pointValue: 0},
 Baghdad: {type: "land", owner: "iq", hasFactory: true, pointValue: 1},
 Mosul: {type: "land", owner: "iq", hasFactory: false, pointValue: 0},
 Basra: {type: "land", owner: "iq", hasFactory: true, pointValue: 2},
+/** Iran **/
+Khoi: {type: "land", owner: "ir", hasFactory: false, pointValue: 0},
+Tabriz: {type: "land", owner: "ir", hasFactory: false, pointValue: 0},
+Aveh: {type: "land", owner: "ir", hasFactory: false, pointValue: 0},
+Shustar: {type: "land", owner: "ir", hasFactory: true, pointValue: 2},
 /** France **/
 Paris: {type: "land", owner:"fr", hasFactory: true, pointValue: 2},
 LeMans: {type: "land", owner:"fr", hasFactory: true, pointValue: 1},
@@ -166,8 +172,16 @@ Tver: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Rzhev: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Kaluga: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Smolensk: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+Grozny: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 /** Romania **/
 Galati: {type: "land", owner: "rm", hasFactory: false, pointValue: 0},
+
+/** Saudi Arabia **/
+AlJawf: {type: "land", owner: "sa", hasFactory: false, pointValue: 0},
+Haql: {type: "land", owner: "sa", hasFactory: false, pointValue: 0},
+AtTurayf: {type: "land", owner: "sa", hasFactory: false, pointValue: 0},
+AlQaysumah: {type: "land", owner: "sa", hasFactory: false, pointValue: 0},
+AdDamman: {type: "land", owner: "sa", hasFactory: true, pointValue: 3},
 
 /** Turkey **/
 Istanbul: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
@@ -178,6 +192,7 @@ Adana: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
 Selinoi: {type: "land", owner: "tr", hasFactory: false, pointValue: 0},
 Konya: {type: "land", owner: "tr", hasFactory: false, pointValue: 0},
 Mugla: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
+Trabzon: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
 /** Ocean **/
 SevastapolHarbor: {type: "sea"},
 DenmarkSeazone: {type: "sea"},
@@ -231,5 +246,6 @@ IstanbulHarbor: {type: "sea"},
 WesternBlackSea: {type: "sea"},
 EasternBlackSea: {type: "sea"},
 RedSea: {type: "sea"},
-LeningradLake: {type: "sea"}
+LeningradLake: {type: "sea"},
+PersianGulf: {type: "sea"}
 };
