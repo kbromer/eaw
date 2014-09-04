@@ -173,6 +173,8 @@ Rzhev: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Kaluga: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Smolensk: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Grozny: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
+Gurev:  {type: "land", owner: "ru", hasFactory: true, pointValue : 3},
+Astrakhan:  {type: "land", owner: "ru", hasFactory: true, pointValue : 4},
 /** Romania **/
 Galati: {type: "land", owner: "rm", hasFactory: false, pointValue: 0},
 

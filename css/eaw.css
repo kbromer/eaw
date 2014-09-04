@@ -84,6 +84,9 @@ bring-to-front{
 #menu_modal {
   padding-top: 70px;
 }
+#gamestart_modal {
+  padding-top: 70px;
+}
 .modal-content{
   background: linear-gradient(to right, rgba(0,0,0,1), rgba(0,0,0,0), rgba(0,0,0,1));
   border-style: solid;

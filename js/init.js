@@ -2,6 +2,11 @@
 window.onload = function(){
 	console.log("Window loaded.");
 
+
+	//connect socket
+	var socket = io.connect();
+	
+
 	//sets up:
 	//1. navigation
 	//2. menu bars
@@ -12,9 +17,7 @@ window.onload = function(){
 	//and setup unit behaviors - connect html dom elements w/ canvas ones
 	$.getScript("js/elements.js", function() {
   	console.log( "Loading game elements..." );
-		//a new eaw game
-		var g = new eaw.Game();
-		eaw.game = g;
+
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
@@ -147,8 +150,22 @@ window.onload = function(){
 				break;
 			}
 		});//close binding of ui elements that require game elements
-	});//close elements loading callback
 
+
+		//and finally, pop our load screen, or load the game
+		//based on a cookie
+
+		//if cookie exists, load the game that way
+		//else{
+
+		$('#gamestart_modal').modal('show', {backdrop: 'static'});
+		//a new eaw game
+		var g = new eaw.Game();
+		eaw.game = g;
+
+
+
+	});//close elements loading callback
 }//close window.onload()
 
 
