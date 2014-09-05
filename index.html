@@ -46,6 +46,7 @@
 						<ul class="nav navbar-nav">
 							<li class="active" ><a href="#" id="select_units_nav_option">Units</a></li>
 							<li ><a href="#" id="techs_nav_option">Tech</a></li>
+							<li ><a href="#" id="ipcs_nav_option">IPCs</a></li>
 							<li ><a href="#" id="cards_nav_option" >Cards</a></li>
 							<li ><a href="#" id="diplomacy_nav_option">Diplomacy</a></li>
 							<li ><a href="#" id="techs_nav_option">Menu</a></li>
@@ -113,63 +114,34 @@
 					</tr>
 				</table>
 			</div>
-			<div class="subnav tech_subnav default_hide">
+
+			<div class="subnav ipcs_subnav default_hide">
 				<table style="width:100%;">
 					<tr>
-						<div id="tech_de" class="images_hz">
+						<div id="ipcs_de" class="images_hz">
 							<td>
-								<div id="icon_logo_de" class="icon_image"><img src="images/icon_de.png" class="icon_image svg" id="icon_de"></div>
+								<div id="icon_logo_de" class="icon_image"><img src="images/icon_de.png" class="marker_image svg" id="marker_de"></div>
 							</td>
 							<td>
-								Infantry
+								<div id="icon_logo_uk" class="icon_image"><img src="images/icon_uk.png" class="marker_image svg" id="icon_uk"></div>
 							</td>
 							<td>
-								Armor
+								<div id="icon_logo_it" class="icon_image"><img src="images/icon_it.png" class="marker_image svg" id="icon_it"></div>
 							</td>
 							<td>
-								Artillery
+								<div id="icon_logo_us" class="icon_image"><img src="images/icon_us.png" class="marker_image svg" id="icon_us"></div>
 							</td>
 							<td>
-								Fighter
+								<div id="icon_logo_fr" class="icon_image"><img src="images/icon_fr.png" class="marker_image svg" id="icon_fr"></div>
 							</td>
 							<td>
-								Bomber
+								<div id="icon_logo_ru" class="icon_image"><img src="images/icon_ru.png" class="marker_image svg" id="icon_ru"></div>
 							</td>
-							<td>
-								Submarine
-							</td>
-							<td>
-								Escorts
-							</td>
-							<td>
-								Battleships
-							</td>
-							<td>
-								Carriers
-							</td>
-							<td>
-								Transports
-							</td>
-							<td>
-								Espionage
-							</td>
-							<td>
-								ECW
-							</td>
-							<td>
-								Industrial
-							</td>
-							<td>
-								Rockets
-							</td>
-							<td>
-								A-Bomb
-							</td>
+
 						</div>
 					</tr>
 				</table>
 			</div>
-
 
 
 		</div><!-- Navbar row-->
@@ -196,6 +168,87 @@
 
 
 
+
+
+					<!-- Tech Modal -->
+					<div class="modal fade" id="tech_modal" tabindex="-1" role="dialog" aria-labelledby="EAW Main Menu" aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close modal-close" data-dismiss="modal"><span aria-hidden="true" class="modal-close">&times;</span><span class="sr-only">Close</span></button>
+									<h4 class="modal-title" id="myModalLabel">Technology</h4>
+								</div>
+								<div class="modal-body">
+
+									<table style="width:100%;">
+										<tr>
+												<td>
+													Infantry
+												</td>
+												<td>
+													Armor
+												</td>
+										</tr>
+										<tr>
+												<td>
+													Artillery
+												</td>
+												<td>
+													Fighter
+												</td>
+										</tr>
+										<tr>
+												<td>
+													Bomber
+												</td>
+												<td>
+													Submarine
+												</td>
+										</tr>
+										<tr>
+												<td>
+													Escorts
+												</td>
+												<td>
+													Battleships
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Carriers
+												</td>
+												<td>
+													Transports
+												</td>
+											</tr>
+											<tr>
+												<td>
+													Espionage
+												</td>
+												<td>
+													ECW
+												</td>
+											</tr>
+												<tr>
+												<td>
+													Industrial
+												</td>
+												<td>
+													Rockets
+												</td>
+											</tr>
+												<tr>
+												<td>
+													A-Bomb
+												</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+
+		<!-- Game Start Modal -->
 		<div class="modal fade" id="gamestart_modal" tabindex="-1" role="dialog" aria-labelledby="It Comes For You." aria-hidden="true" data-backdrop="static" >
 			<div class="modal-dialog">
 				<div class="modal-content">

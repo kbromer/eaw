@@ -38,6 +38,10 @@ body {
 .units_subnav{
   background: linear-gradient(to right, transparent, gray, transparent);
 }
+.ipcs_subnav{
+  background: linear-gradient(to right, black, transparent, black);
+}
+
 #fighter_img {
   width: 65px;
   height: 65px;
@@ -53,6 +57,12 @@ body {
   z-index: 99999;
 }
 .icon_image{
+  width:65px;
+  height:65px;
+  position: relative;
+  z-index: 99999;
+}
+.marker_image{
   width:65px;
   height:65px;
   position: relative;

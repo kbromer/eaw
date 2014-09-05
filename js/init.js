@@ -5,7 +5,7 @@ window.onload = function(){
 
 	//connect socket
 	var socket = io.connect();
-	
+
 
 	//sets up:
 	//1. navigation
@@ -22,7 +22,6 @@ window.onload = function(){
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
 		var paper = new Snap('#canvas_container');
-		//eaw.game.paper = paper;
 		paper.zone_set = new Array();
 		paper.zonecount = 0;
 
@@ -97,8 +96,52 @@ window.onload = function(){
 					LAST_ZONE = zone.el;
 					paper.zone_set[paper.zone_set.length] = zone.el;
 				}else{
-				  var zone = new LandZone(path_string, paper, zone_id, zone_data["owner"]);
+				  var zone = new LandZone(path_string, paper, zone_id, zone_data["owner"], zone_data["hasFactory"], zone_data["pointValue"]);
 					zone.drawElement();
+					var b = zone.el.getBBox();
+					var x = b.x + (b.width/2);
+					var y = b.y + (b.height/2);
+
+					//make text adjustments as needed based on the zone
+					if (zone.name == 'Bristol'){
+						y=y+20;x=x+15;
+					}else if (zone.name == 'Newcastle'){
+						y=y-10;x=x+5;
+					}else if (zone.name == 'Hamburg'){
+						y=y+20;x=x+10;
+					}else if (zone.name == 'Ireland'){
+						x=x+10;
+					}else if (zone.name == 'Denmark'){
+						x=x-15;
+					}else if (zone.name == 'Konigsberg'){
+						y=y+20;x=x+5;
+					}else if (zone.name == 'Danzig'){
+						y=y+25;
+					}else if (zone.name == 'Leipzig'){
+						x=x-15;
+					}else if (zone.name == 'Debrecen'){
+						y=y-10;x=x-20;
+					}else if (zone.name == 'Thessalonika'){
+						x=x-20;y=y-5;
+					}else if (zone.name == 'Taranto'){
+						y=y-30;x=x-15;
+					}else if (zone.name == 'Athens'){
+						x=x-15;
+					}else if (zone.name == 'Valencia'){
+						x=x-10;
+					}else if (zone.name == 'Trondheim'){
+						y=y+20;
+					}
+
+
+					if (zone.point_value > 0){
+						paper.text(x,y+10, '(' + zone.point_value + ')').attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
+						paper.text(x,y, zone.name).attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Arial Black'});
+					}else{
+						paper.text(x,y, zone.name).attr({ fontSize: '7px', "text-anchor": "middle"});
+					}
+
+
 					LAST_ZONE = zone.el;
 					paper.zone_set[paper.zone_set.length] = zone.el;
 				}

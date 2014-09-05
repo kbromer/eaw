@@ -58,7 +58,7 @@
         $('.units_subnav').show();//.show('slide', {direction: 'down'}, 1000);
       break;
       case 'Tech':
-        $('.tech_subnav').show();//.show('slide', {direction: 'down'}, 1000);
+        $('#tech_modal').modal('show');
       break;
       case 'Cards':
       break;
@@ -66,6 +66,9 @@
       break;
       case 'Menu':
         $('#menu_modal').modal('show');
+      break;
+      case 'IPCs':
+        $('.ipcs_subnav').show();//.show('slide', {direction: 'down'}, 1000);
       break;
 
     }
