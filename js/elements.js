@@ -296,7 +296,8 @@ Zone.prototype = new eaw.GameElement();
 Zone.prototype.constructor = Zone;
 
 //seazone is a type of zone
-function SeaZone(myPath, myPaper, myName){
+function SeaZone(myPath, myPaper, myName, majorHarbor){
+  this.major_harbor = majorHarbor;
   Zone.call(this, myPath, myPaper, myName);
 }
 SeaZone.prototype = Object.create(Zone.prototype);
@@ -355,6 +356,9 @@ function LandZone(myPath, myPaper, myName, defaultOwner, hasFactory, pointValue)
     break;
     case 'rm':
       this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#E3BB19-#EDD54E');
+    break;
+    case 'na':
+      this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#297A25-#22631F');
     break;
     default:
       this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#FFA33B-#FF8800');

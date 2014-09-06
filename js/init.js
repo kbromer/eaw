@@ -84,6 +84,7 @@ window.onload = function(){
     });
 
 		$.get( "images/eaw.svg", function(data){
+			console.log('Painting map...');
 			$(data).find('path').each(function(){
 				var path_string = $(this).attr("d");
 				var zone_id = $(this).attr("id");
@@ -91,10 +92,20 @@ window.onload = function(){
 				if (typeof zone_data == 'undefined')
 					console.log(zone_id + ' was not found in the zone list.');
 				if (zone_data["type"] == "sea"){
-					var zone = new SeaZone(path_string, paper, zone_id);
+					var majorHarbor = zone_data["majorHarbor"];
+					var zone = new SeaZone(path_string, paper, zone_id, majorHarbor);
 					zone.drawElement();
 					LAST_ZONE = zone.el;
 					paper.zone_set[paper.zone_set.length] = zone.el;
+					if (zone.major_harbor){
+						var b = zone.el.getBBox();
+						var x = b.x + (b.width/2);
+						var y = b.y + (b.height/2);
+						//load the anchor
+						var anchor_path = 'M 20.00,17.50 C 20.00,17.50 20.00,12.50 20.00,12.50 20.00,12.50 15.00,12.50 15.00,12.50 15.00,12.50 16.37,13.87 16.37,13.87 15.27,15.70 13.43,17.01 11.25,17.38 11.25,17.38 11.25,9.82 11.25,9.82 13.40,9.27 15.00,7.33 15.00,5.00 15.00,2.24 12.76,0.00 10.00,0.00 7.24,0.00 5.00,2.24 5.00,5.00 5.00,7.33 6.60,9.27 8.75,9.82 8.75,9.82 8.75,17.38 8.75,17.38 6.57,17.01 4.73,15.70 3.63,13.87 3.63,13.87 5.00,12.50 5.00,12.50 5.00,12.50 0.00,12.50 0.00,12.50 0.00,12.50 0.00,17.50 0.00,17.50 0.00,17.50 1.53,15.97 1.53,15.97 3.36,18.46 6.56,20.03 10.00,20.00 13.43,20.03 16.64,18.46 18.47,15.97 18.47,15.97 20.00,17.50 20.00,17.50 Z M 10.00,7.50 C 8.62,7.50 7.50,6.38 7.50,5.00 7.50,3.62 8.62,2.50 10.00,2.50 11.38,2.50 12.50,3.62 12.50,5.00 12.50,6.38 11.38,7.50 10.00,7.50 Z';
+						var anchor_el = paper.path(anchor_path).attr({stroke: 'black', fill: 'black', 'stroke-width': 1}).insertAfter(zone.el);
+						anchor_el.transform('t' + x + ',' + y);
+  				}
 				}else{
 				  var zone = new LandZone(path_string, paper, zone_id, zone_data["owner"], zone_data["hasFactory"], zone_data["pointValue"]);
 					zone.drawElement();
@@ -122,7 +133,7 @@ window.onload = function(){
 					}else if (zone.name == 'Debrecen'){
 						y=y-10;x=x-20;
 					}else if (zone.name == 'Thessalonika'){
-						x=x-20;y=y-5;
+						x=x-17;y=y-5;
 					}else if (zone.name == 'Taranto'){
 						y=y-30;x=x-15;
 					}else if (zone.name == 'Athens'){
@@ -131,22 +142,36 @@ window.onload = function(){
 						x=x-10;
 					}else if (zone.name == 'Trondheim'){
 						y=y+20;
+					}else if (zone.name == 'Belgium'){
+						y=y-10;
+					}else if (zone.name == 'Brest'){
+						y=y+10;
+					}else if (zone.name == 'Bordeaux'){
+						x=x+3;
+					}else if (zone.name == 'Amman'){
+						x=x-10;y=y+20;
+					}else if (zone.name == 'Ryazan'){
+						y=y+20;
+					}else if (zone.name == 'Sevastapol'){
+						x=x-10;
+					}else if (zone.name == 'Poti'){
+						x=x+10;
+					}else if (zone.name == 'Astrakhan'){
+						x=x-10;
+					}else if (zone.name == 'Chisinau'){
+						x=x+5;
 					}
-
-
 					if (zone.point_value > 0){
 						paper.text(x,y+10, '(' + zone.point_value + ')').attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
 						paper.text(x,y, zone.name).attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Arial Black'});
 					}else{
 						paper.text(x,y, zone.name).attr({ fontSize: '7px', "text-anchor": "middle"});
 					}
-
-
 					LAST_ZONE = zone.el;
 					paper.zone_set[paper.zone_set.length] = zone.el;
 				}
 			});
-			console.log('Zone drawing complete.');
+			console.log('Map painting complete.');
 		});
 
 		//bind interface click handlers that need game elements

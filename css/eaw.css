@@ -72,8 +72,8 @@ body {
   display: inline;
 }
 #canvas_container {
-  height: 1536px;
-  width: 2280px;
+  height: 1480px;
+  width: 2120px;
   z-index:0;
   /*margin-top:100px;*/
 }

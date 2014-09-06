@@ -55,9 +55,21 @@ eaw.Game.prototype = {
     var model = JSON.parse(serialized);
     //log it
     console.log(model);
-
+  },
+  load: function (){
+    var model = JSON.parse(serialized);
+    eaw.game = model;
   }
 };
+
+
+  eaw.Player = function () {
+
+
+  }
+  eaw.Player.prototype = {
+    constructor: eaw.Player
+  };
 
 
   eaw.unitMouseupHandler = function (unit, event){
