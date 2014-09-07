@@ -21,9 +21,9 @@ window.onload = function(){
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 
-		var paper = new Snap('#canvas_container');
-		paper.zone_set = new Array();
-		paper.zonecount = 0;
+		eaw.paper = new Snap('#canvas_container');
+		eaw.paper.zone_set = new Array();
+		eaw.paper.zonecount = 0;
 
 		//enable draggability for non-canvas unit elements
 		$("[id^='unit']").draggable();
@@ -32,7 +32,7 @@ window.onload = function(){
     //Support DOM elements droppable to canvas
     $("#canvas_container").droppable({
         drop: function (event, ui) {
-            var svgXY = eaw.getSvgCoordinates(event, paper);
+            var svgXY = eaw.getSvgCoordinates(event, eaw.paper);
 
 						console.log('Dropped a ' + event.originalEvent.target.id);
 
@@ -44,34 +44,34 @@ window.onload = function(){
 
 						switch (unit_type){
 							case 'fighter':
-								new_unit = new Fighter(null, paper, nation_type, g);
+								new_unit = new Fighter(null, nation_type);
 								break;
 							case 'armor':
-								new_unit = new Armor(null, paper, nation_type, g);
+								new_unit = new Armor(null, nation_type);
 								break;
 							case 'infantry':
-								new_unit = new Infantry(null, paper, nation_type, g);
+								new_unit = new Infantry(null, nation_type);
 								break;
 							case 'carrier':
-								new_unit = new Carrier(null, paper, nation_type, g);
+								new_unit = new Carrier(null, nation_type);
 								break;
 							case 'artillery':
-								new_unit = new Artillery(null, paper, nation_type, g);
+								new_unit = new Artillery(null, nation_type);
 								break;
 							case 'sub':
-								new_unit = new Submarine(null, paper, nation_type, g);
+								new_unit = new Submarine(null, nation_type);
 								break;
 							case 'bomber':
-								new_unit = new Bomber(null, paper, nation_type, g);
+								new_unit = new Bomber(null, nation_type);
 								break;
 							case 'cruiser':
-								new_unit = new Cruiser(null, paper, nation_type, g);
+								new_unit = new Cruiser(null, nation_type);
 								break;
 							case 'transport':
-								new_unit = new Transport(null, paper, nation_type, g);
+								new_unit = new Transport(null, nation_type);
 								break;
 							case 'battleship':
-								new_unit = new Battleship(null, paper, nation_type, g);
+								new_unit = new Battleship(null, nation_type);
 								break;
 						}
 
@@ -93,21 +93,21 @@ window.onload = function(){
 					console.log(zone_id + ' was not found in the zone list.');
 				if (zone_data["type"] == "sea"){
 					var majorHarbor = zone_data["majorHarbor"];
-					var zone = new SeaZone(path_string, paper, zone_id, majorHarbor);
+					var zone = new SeaZone(path_string, eaw.paper, zone_id, majorHarbor);
 					zone.drawElement();
 					LAST_ZONE = zone.el;
-					paper.zone_set[paper.zone_set.length] = zone.el;
+					eaw.paper.zone_set[eaw.paper.zone_set.length] = zone.el;
 					if (zone.major_harbor){
 						var b = zone.el.getBBox();
 						var x = b.x + (b.width/2);
 						var y = b.y + (b.height/2);
 						//load the anchor
 						var anchor_path = 'M 20.00,17.50 C 20.00,17.50 20.00,12.50 20.00,12.50 20.00,12.50 15.00,12.50 15.00,12.50 15.00,12.50 16.37,13.87 16.37,13.87 15.27,15.70 13.43,17.01 11.25,17.38 11.25,17.38 11.25,9.82 11.25,9.82 13.40,9.27 15.00,7.33 15.00,5.00 15.00,2.24 12.76,0.00 10.00,0.00 7.24,0.00 5.00,2.24 5.00,5.00 5.00,7.33 6.60,9.27 8.75,9.82 8.75,9.82 8.75,17.38 8.75,17.38 6.57,17.01 4.73,15.70 3.63,13.87 3.63,13.87 5.00,12.50 5.00,12.50 5.00,12.50 0.00,12.50 0.00,12.50 0.00,12.50 0.00,17.50 0.00,17.50 0.00,17.50 1.53,15.97 1.53,15.97 3.36,18.46 6.56,20.03 10.00,20.00 13.43,20.03 16.64,18.46 18.47,15.97 18.47,15.97 20.00,17.50 20.00,17.50 Z M 10.00,7.50 C 8.62,7.50 7.50,6.38 7.50,5.00 7.50,3.62 8.62,2.50 10.00,2.50 11.38,2.50 12.50,3.62 12.50,5.00 12.50,6.38 11.38,7.50 10.00,7.50 Z';
-						var anchor_el = paper.path(anchor_path).attr({stroke: 'black', fill: 'black', 'stroke-width': 1}).insertAfter(zone.el);
+						var anchor_el = eaw.paper.path(anchor_path).attr({stroke: 'black', fill: 'black', 'stroke-width': 1}).insertAfter(zone.el);
 						anchor_el.transform('t' + x + ',' + y);
   				}
 				}else{
-				  var zone = new LandZone(path_string, paper, zone_id, zone_data["owner"], zone_data["hasFactory"], zone_data["pointValue"]);
+				  var zone = new LandZone(path_string, eaw.paper, zone_id, zone_data["owner"], zone_data["hasFactory"], zone_data["pointValue"]);
 					zone.drawElement();
 					var b = zone.el.getBBox();
 					var x = b.x + (b.width/2);
@@ -162,14 +162,15 @@ window.onload = function(){
 						x=x+5;
 					}
 					if (zone.point_value > 0){
-						paper.text(x,y+10, '(' + zone.point_value + ')').attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
-						paper.text(x,y, zone.name).attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Arial Black'});
+						eaw.paper.text(x,y+10, '(' + zone.point_value + ')').attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
+						eaw.paper.text(x,y, zone.name).attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Arial Black'});
 					}else{
-						paper.text(x,y, zone.name).attr({ fontSize: '7px', "text-anchor": "middle"});
+						eaw.paper.text(x,y, zone.name).attr({ fontSize: '7px', "text-anchor": "middle"});
 					}
-					LAST_ZONE = zone.el;
-					paper.zone_set[paper.zone_set.length] = zone.el;
 				}
+				LAST_ZONE = zone.el;
+				eaw.paper.zone_set[eaw.paper.zone_set.length] = zone.el;
+				eaw.game.ZONE_SET[eaw.game.ZONE_SET.length] = zone;
 			});
 			console.log('Map painting complete.');
 		});

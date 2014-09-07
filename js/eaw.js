@@ -1,8 +1,10 @@
   //set a namespace to drop funcs into as needed
   eaw = {}
   eaw.game;
+  eaw.savegame;
   eaw.ALL_NATIONS = ['de', 'uk', 'ru', 'fr', 'us', 'it'];
-
+  eaw.UNIT_TYPES = ['infantry', 'fighter', 'armor', 'artillery', 'bomber', 'cruiser', 'battleship', 'carrier', 'transport'];
+  eaw.paper;
 
 eaw.Game = function() {
   //possible nations
@@ -16,7 +18,8 @@ eaw.Game = function() {
   this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
   this.CURRENT_NATION_INDEX = 0;
   this.INACTIVE_NATIONS = new Array();
-  this.GAME_PIECES = new Array();
+  this.GAME_PIECES = [];
+  this.ZONE_SET = [];
 }
 
 
@@ -50,15 +53,51 @@ eaw.Game.prototype = {
     return this.CURRENT_NATION;
   },
   save: function() {
-    var serialized = JSON.stringify(this);
-    //load it
-    var model = JSON.parse(serialized);
-    //log it
-    console.log(model);
+    eaw.savegame = JSON.stringify(this, function (key, value){
+      if (key == 'node' || key == 'paper' || key == 'el' || key == '_drag' || key == 'anims' || key == 'events'){
+        //kill any vars we don't want to save time/space
+        return;
+      }
+      return value;
+    });
+    console.log(eaw.savegame);
+
   },
-  load: function (){
-    var model = JSON.parse(serialized);
-    eaw.game = model;
+  load: function (game){
+
+    console.log('Loading data...');
+    var model = JSON.parse(eaw.savegame);
+    console.log('Clearing existing game...');
+    for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
+      var zone = eaw.game.ZONE_SET[i];
+      for (var countryname in zone){
+        if (countryname !== undefined && countryname.substr(3,11) == 'unit_set'){
+
+          var name = countryname.slice(3,11);
+
+          if(name == 'unit_set'){
+            var countryset = zone[countryname];
+            for (var unittype in countryset){
+              if (unittype !== undefined && eaw.UNIT_TYPES.indexOf(unittype) > -1){
+                var unitcollection = countryset[unittype];
+                for (var elname in unitcollection){
+                  console.log(elname);
+                  console.log(elname.substr(0,2));
+                  if (elname.substr(0, 2) == 'ge'){
+                    var el = unitcollection[elname];
+                    console.log('deleting');
+                    el.remove();
+                    delete zone[countryname][unittype][elname];
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    //eaw.game = model;
+    console.log(eaw.game);
   }
 };
 
@@ -101,35 +140,35 @@ eaw.Game.prototype = {
     /*** Figure out what zone we've been dropped into
          and assign unit to the appropriate array [country][type]  ***/
 
-    for (var i = 0; i < unit.paper.zone_set.length; i++){
-      var zone_element = unit.paper.zone_set[i];
-
-      if (Snap.path.isPointInside(zone_element.attr('path'), b.x, b.y)){
-
-        zone_element.attr({stroke: 'red'});
+    for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
+      var zone_element = eaw.game.ZONE_SET[i];
+      if (Snap.path.isPointInside(zone_element.el.attr('path'), b.x, b.y)){
+        console.log('HIT');
+        console.log('zone_element ' + zone_element);
+        zone_element.el.attr({stroke: 'red'});
 
         var unit_id = unit.data("Unit").id;
 
         var country = unit.data("Unit").unit_owner;
 
         //set the units location to the zone it was dropped on
-        unit.data("Unit").location_zone = zone_element.data("Zone");
+        unit.data("Unit").location_zone = zone_element;
         var set_name = country + '_unit_set';
-        console.log(country + ' ' + unit_type + ' ' + unit_id + ' landed in ' + zone_element.data("Zone").name);
+        console.log(country + ' ' + unit_type + ' ' + unit_id + ' landed in ' + zone_element.name);
 
-        var t = unit.paper.text(b.x, b.y, country + ' ' + unit_type + ' added to ' + zone_element.data("Zone").name).animate({ opacity : 0 }, 2000, function () { this.remove() });;
+        var t = unit.paper.text(b.x, b.y, country + ' ' + unit_type + ' added to ' + zone_element.name).animate({ opacity : 0 }, 2000, function () { this.remove() });;
 
         //build the zone arrays to stack armies
-        if (zone_element.data("Zone")[set_name] === undefined){
-          zone_element.data("Zone")[set_name] = {};
+        if (zone_element[set_name] === undefined){
+          zone_element[set_name] = {};
         }
         //create an empty array for this unit type if required
-        if (zone_element.data("Zone")[set_name][unit_type] === undefined){
-            zone_element.data("Zone")[set_name][unit_type] = {};
+        if (zone_element[set_name][unit_type] === undefined){
+            zone_element[set_name][unit_type] = {};
         }
 
-        zone_element.data("Zone")[set_name][unit_type][unit_id] = unit;
-        var unit_set = zone_element.data("Zone")[set_name][unit_type];
+        zone_element[set_name][unit_type][unit_id] = unit;
+        var unit_set = zone_element[set_name][unit_type];
 
         var prop_count = 0;
 
@@ -140,6 +179,7 @@ eaw.Game.prototype = {
         if (prop_count > 1){
           eaw.redrawChipStack(b.x, b.y + 15, unit_set, unit);
         }
+        eaw.game.ZONE_SET[i] = zone_element;
       //break on the first matching path we find
       break;
       }

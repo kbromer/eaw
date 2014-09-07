@@ -3,6 +3,33 @@ var element_count = 0;
 //last map zone created as part of map generation
 var LAST_ZONE;
 
+
+Snap.plugin(function (Snap, Element, Paper, global, Fragment) {
+
+    Element.prototype.draw = function () {
+
+
+
+    };
+
+
+
+
+
+
+
+
+});
+
+
+
+
+
+
+
+
+
+
 eaw.Nation = function (myName){
   this.name = myName;
   this.occupied = [];
@@ -37,12 +64,11 @@ eaw.Nation.prototype.constructor = eaw.Nation;
 //includes chits, zones, units and dice
 eaw.GameElement = function (myPath, myPaper) {
   this.pathstring = myPath;
-  this.paper = myPaper;
+  this.paper = eaw.paper;
   this.el;
   this.id = 'ge' + element_count;
   element_count++;
 }
-
 eaw.GameElement.prototype = {
   constructor: eaw.GameElement,
   drawElement: function () {
@@ -60,9 +86,8 @@ eaw.GameElement.prototype = {
 /************************ UNITS **********************************************************************/
 
 //unit types of elements
-function Unit(myPath, myPaper, myOwner, myGame){
+function Unit(myPath, myOwner){
   this.unit_owner = myOwner;
-  this.game = myGame;
   this.location_zone = '';
   this.country_gradient = '';
 
@@ -72,7 +97,7 @@ function Unit(myPath, myPaper, myOwner, myGame){
   this.move = function(dx,dy) {this.attr({transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]});}
   this.start = function() {this.data('origTransform', this.transform().local ); eaw.unitMousedownHandler(this, event);}
   this.stop = function() {eaw.unitMouseupHandler(this, event);}
-  eaw.GameElement.call(this, myPath, myPaper);
+  eaw.GameElement.call(this, myPath);
 }
 Unit.prototype = Object.create(eaw.GameElement.prototype);
 Unit.prototype.constructor = Unit;
@@ -112,12 +137,12 @@ Unit.prototype.drawElement = function (){
 
   this.el.drag(this.move, this.start, this.stop );
   //appent additional object references to the unit element for access later
-  this.el.data("Unit", this);
-  this.game.GAME_PIECES.push(this);
+  //this.el.data("Unit", this);
+  //eaw.game.GAME_PIECES[eaw.game.GAME_PIECES.length] = this;
   this.el.data("unit_owner", this.unit_owner);
 };
 
-function Armor(myPath, myPaper, myOwner, myGame) {
+function Armor(myPath, myOwner) {
   var ps;
 
   if (myPath === null){
@@ -128,13 +153,13 @@ function Armor(myPath, myPaper, myOwner, myGame) {
   }
   this.unit_type = 'armor';
 
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Armor.prototype = Object.create(Unit.prototype);
 Armor.prototype.constructor = Armor;
 
 //fighter types of units
-function Fighter(myPath, myPaper, myOwner, myGame){
+function Fighter(myPath, myOwner){
   //provide a default element for fighters
   var ps;
   if (myPath === null){
@@ -144,13 +169,13 @@ function Fighter(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'fighter';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Fighter.prototype = Object.create(Unit.prototype)
 Fighter.prototype.constructor = Fighter;
 
 //fighter types of units
-function Bomber(myPath, myPaper, myOwner, myGame){
+function Bomber(myPath, myOwner){
   //provide a default element for fighters
   var ps;
   if (myPath === null){
@@ -160,14 +185,14 @@ function Bomber(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'bomber';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Bomber.prototype = Object.create(Unit.prototype)
 Bomber.prototype.constructor = Bomber;
 
 
 //infantry types of units
-function Infantry(myPath, myPaper, myOwner, myGame){
+function Infantry(myPath, myOwner){
   //provide a default element for infantry
   var ps;
   if (myPath === null){
@@ -177,13 +202,13 @@ function Infantry(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'infantry';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Infantry.prototype = Object.create(Unit.prototype)
 Infantry.prototype.constructor = Infantry;
 
 //artillery types of units
-function Artillery(myPath, myPaper, myOwner, myGame){
+function Artillery(myPath, myOwner){
   //provide a default element for infantry
   var ps;
   if (myPath === null){
@@ -193,13 +218,13 @@ function Artillery(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'artillery';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Artillery.prototype = Object.create(Unit.prototype)
 Artillery.prototype.constructor = Artillery;
 
 
-function Carrier(myPath, myPaper, myOwner, myGame){
+function Carrier(myPath, myOwner){
   //provide a default element for carrier
   var ps;
   if (myPath === null){
@@ -209,12 +234,12 @@ function Carrier(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'carrier';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Carrier.prototype = Object.create(Unit.prototype)
 Carrier.prototype.constructor = Carrier;
 
-function Cruiser(myPath, myPaper, myOwner, myGame){
+function Cruiser(myPath, myOwner){
   //provide a default element for cruiser
   var ps;
   if (myPath === null){
@@ -224,12 +249,12 @@ function Cruiser(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'cruiser';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Cruiser.prototype = Object.create(Unit.prototype)
 Cruiser.prototype.constructor = Cruiser;
 
-function Transport(myPath, myPaper, myOwner, myGame){
+function Transport(myPath, myOwner){
   //provide a default element for transport
   var ps;
   if (myPath === null){
@@ -239,12 +264,12 @@ function Transport(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'transport';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Transport.prototype = Object.create(Unit.prototype)
 Transport.prototype.constructor = Transport;
 
-function Battleship(myPath, myPaper, myOwner, myGame){
+function Battleship(myPath, myOwner){
   //provide a default element for Battleship
   var ps;
   if (myPath === null){
@@ -254,13 +279,13 @@ function Battleship(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'battleship';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Battleship.prototype = Object.create(Unit.prototype)
 Battleship.prototype.constructor = Battleship;
 
 
-function Submarine(myPath, myPaper, myOwner, myGame){
+function Submarine(myPath, myOwner){
   //provide a default element for carrier
   var ps;
   if (myPath === null){
@@ -270,7 +295,7 @@ function Submarine(myPath, myPaper, myOwner, myGame){
     ps = myPath;
   }
   this.unit_type = 'submarine';
-  Unit.call(this, ps, myPaper, myOwner, myGame);
+  Unit.call(this, ps, myOwner);
 }
 Submarine.prototype = Object.create(Unit.prototype)
 Submarine.prototype.constructor = Submarine;
@@ -280,13 +305,6 @@ Submarine.prototype.constructor = Submarine;
 
 function Zone(myPath, myPaper, myName){
   this.name = myName;
-  this.de_unit_set = {};
-  this.uk_unit_set = {};
-  this.us_unit_set = {};
-  this.russian_unit_set = {};
-  this.axis_unit_set = {};
-  this.neutral_unit_set = {};
-  this.ally_unit_set = {};
   this.hoverin = function () {eaw.zonehoverinHandler(this);};
   this.hoverout = function () {eaw.zonehoveroutHandler(this);};
   eaw.GameElement.call(this, myPath, myPaper);

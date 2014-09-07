@@ -22,6 +22,7 @@
     });
 
     $("[id='SaveBTN']").on('click', function(){eaw.game.save();});
+    $("[id='LoadBTN']").on('click', function(){eaw.game.load();});
 
     //setup behavior of the menu modal closing
     //bind the hide handler to deselect the item
