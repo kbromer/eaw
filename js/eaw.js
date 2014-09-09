@@ -2,9 +2,53 @@
   eaw = {}
   eaw.game;
   eaw.savegame;
+  eaw.socket;
   eaw.ALL_NATIONS = ['de', 'uk', 'ru', 'fr', 'us', 'it'];
   eaw.UNIT_TYPES = ['infantry', 'fighter', 'armor', 'artillery', 'bomber', 'cruiser', 'battleship', 'carrier', 'transport'];
   eaw.paper;
+  eaw.loadGame = function (game) {
+    eaw.removeAllPieces();
+
+    console.log('Loading data...');
+    var model = JSON.parse(game);
+
+    //eaw.game = model;
+    console.log(eaw.game);
+
+  }
+
+
+  eaw.removeAllPieces = function () {
+    console.log('Clearing existing game...');
+    for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
+      var zone = eaw.game.ZONE_SET[i];
+      for (var countryname in zone){
+        if (countryname !== undefined && countryname.substr(3,11) == 'unit_set'){
+
+          var name = countryname.slice(3,11);
+
+          if(name == 'unit_set'){
+            var countryset = zone[countryname];
+            for (var unittype in countryset){
+              if (unittype !== undefined && eaw.UNIT_TYPES.indexOf(unittype) > -1){
+                var unitcollection = countryset[unittype];
+                for (var elname in unitcollection){
+                  console.log(elname);
+                  console.log(elname.substr(0,2));
+                  if (elname.substr(0, 2) == 'ge'){
+                    var el = unitcollection[elname];
+                    console.log('deleting');
+                    el.remove();
+                    delete zone[countryname][unittype][elname];
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
 eaw.Game = function() {
   //possible nations
@@ -62,42 +106,6 @@ eaw.Game.prototype = {
     });
     console.log(eaw.savegame);
 
-  },
-  load: function (game){
-
-    console.log('Loading data...');
-    var model = JSON.parse(eaw.savegame);
-    console.log('Clearing existing game...');
-    for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
-      var zone = eaw.game.ZONE_SET[i];
-      for (var countryname in zone){
-        if (countryname !== undefined && countryname.substr(3,11) == 'unit_set'){
-
-          var name = countryname.slice(3,11);
-
-          if(name == 'unit_set'){
-            var countryset = zone[countryname];
-            for (var unittype in countryset){
-              if (unittype !== undefined && eaw.UNIT_TYPES.indexOf(unittype) > -1){
-                var unitcollection = countryset[unittype];
-                for (var elname in unitcollection){
-                  console.log(elname);
-                  console.log(elname.substr(0,2));
-                  if (elname.substr(0, 2) == 'ge'){
-                    var el = unitcollection[elname];
-                    console.log('deleting');
-                    el.remove();
-                    delete zone[countryname][unittype][elname];
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-    //eaw.game = model;
-    console.log(eaw.game);
   }
 };
 
@@ -111,7 +119,7 @@ eaw.Game.prototype = {
   };
 
 
-  eaw.unitMouseupHandler = function (unit, event){
+  eaw.unitMouseupHandler = function (unit, event, remoteDraw){
     //use the upper left corner of the element
     var b = unit.getBBox();
     var unit_type = unit.data("Unit").unit_type;
@@ -143,8 +151,7 @@ eaw.Game.prototype = {
     for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
       var zone_element = eaw.game.ZONE_SET[i];
       if (Snap.path.isPointInside(zone_element.el.attr('path'), b.x, b.y)){
-        console.log('HIT');
-        console.log('zone_element ' + zone_element);
+
         zone_element.el.attr({stroke: 'red'});
 
         var unit_id = unit.data("Unit").id;
@@ -154,6 +161,7 @@ eaw.Game.prototype = {
         //set the units location to the zone it was dropped on
         unit.data("Unit").location_zone = zone_element;
         var set_name = country + '_unit_set';
+
         console.log(country + ' ' + unit_type + ' ' + unit_id + ' landed in ' + zone_element.name);
 
         var t = unit.paper.text(b.x, b.y, country + ' ' + unit_type + ' added to ' + zone_element.name).animate({ opacity : 0 }, 2000, function () { this.remove() });;
@@ -180,6 +188,39 @@ eaw.Game.prototype = {
           eaw.redrawChipStack(b.x, b.y + 15, unit_set, unit);
         }
         eaw.game.ZONE_SET[i] = zone_element;
+        console.log(remoteDraw);
+        if (!remoteDraw){
+          console.log('Sending move.');
+          var message_body = {};
+          message_body.unitid = unit_id;
+          message_body.zonename = zone_element.name;
+          message_body.unit_x = unit.matrix.e;
+          message_body.unit_y = unit.matrix.f;
+          message_body.unit_country = country;
+          message_body.unit_path = unit.pathstring;
+          message_body.unit_pathstring = unit.data("Unit").pathstring;
+          message_body.unit_type = unit_type;
+          var message = JSON.stringify(message_body);
+          //send the server the zone with its new unit
+          eaw.socket.emit('unit_dropped', message);
+        }
+        /*
+
+        var deflated_zone = JSON.stringify(zone_element, function (key, value){
+          if (key == 'node' || key == 'paper' || key == '_drag' || key == 'anims' || key == 'events'){
+            //kill any vars we don't want to save time/space
+            return;
+          }
+          return value;
+        });
+        var deflated_unit = JSON.stringify(zone_element, function (key, value){
+          if (key == 'node' || key == 'paper' || key == '_drag' || key == 'anims' || key == 'events'){
+            //kill any vars we don't want to save time/space
+            return;
+          }
+          return value;
+        });*/
+
       //break on the first matching path we find
       break;
       }
@@ -374,6 +415,79 @@ eaw.Game.prototype = {
     }
   }
 
+
+  eaw.networkDropHandler = function(data){
+    console.log('Dropped data');
+    console.log(data);
+    var udp = JSON.parse(data);
+    //this is a stupid way to do this, reevaluate soon
+    for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
+      var z = eaw.game.ZONE_SET[i];
+      if (z.name === udp.zonename){
+        var country_set = udp.unit_country + '_unit_set';
+        var type_set = udp.unit_type;
+        var unitid = udp.unitid;
+        console.log('cset: ' + country_set);
+        console.log('typeset: ' + type_set);
+        console.log('unitid: ' + unitid);
+        console.log(z);
+
+        if (z[country_set] !== undefined && z[country_set][type_set] !== undefined && z[country_set][type_set][unitid] !== undefined){
+            console.log('existing unit');
+            var existing_unit = z[country_set][type_set][unitid];
+        }
+
+        else{
+          console.log('Creating unit');
+          var new_unit = '';
+          switch (type_set){
+            case 'fighter':
+              new_unit = new Fighter(null, udp.unit_country);
+              break;
+            case 'armor':
+              new_unit = new Armor(null, udp.unit_country);
+              break;
+            case 'infantry':
+              new_unit = new Infantry(null, udp.unit_country);
+              break;
+            case 'carrier':
+              new_unit = new Carrier(null, udp.unit_country);
+              break;
+            case 'artillery':
+              new_unit = new Artillery(null, udp.unit_country);
+              break;
+            case 'sub':
+              new_unit = new Submarine(null, udp.unit_country);
+              break;
+            case 'bomber':
+              new_unit = new Bomber(null, udp.unit_country);
+              break;
+            case 'cruiser':
+              new_unit = new Cruiser(null, udp.unit_country);
+              break;
+            case 'transport':
+              new_unit = new Transport(null, udp.unit_country);
+              break;
+            case 'battleship':
+              new_unit = new Battleship(null, udp.unit_country);
+              break;
+          }
+          new_unit.drawElement();
+          new_unit.el = new_unit.el.transform('t' + udp.unit_x + ',' + udp.unit_y);
+          new_unit.el.data("Unit", new_unit);
+          eaw.unitMouseupHandler(new_unit.el, event, true);
+        }
+
+        break;
+
+
+
+      }
+    }
+
+
+
+  }
 
 
 

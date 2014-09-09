@@ -15,9 +15,48 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
+
+
+
   console.log('A user connected');
+  socket.userid = guid();
+  socket.emit('onconnected', {id: socket.userid});
+  //Useful to know when someone connects
+  console.log('\t socket.io:: player ' + socket.userid + ' connected');
+
+  //When this client disconnects
+  socket.on('disconnect', function () {
+    //Useful to know when someone disconnects
+    console.log('\t socket.io:: client disconnected ' + socket.userid );
+  }); //client.on disconnect
+
+  //fired when a unit is dropped on the players board
+  //contains the zone which has the unit and other information
+  socket.on('unit_dropped', function(zone){
+    socket.broadcast.emit('unit_drop_notify', zone);
+  });
+
 });
+
 
 http.listen(port, function(){
   console.log('Listening on port ' + port);
 });
+
+
+
+
+
+
+
+    var guid = (function() {
+      function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000)
+                 .toString(16)
+                 .substring(1);
+      }
+      return function() {
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+             s4() + '-' + s4() + s4() + s4();
+    };
+    })();

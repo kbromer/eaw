@@ -4,8 +4,21 @@ window.onload = function(){
 
 
 	//connect socket
-	var socket = io.connect();
+	eaw.socket = io.connect();
+	eaw.socket.on('onconnected', function( data ) {
+		//Note that the data is the object we sent from the server, as is. So we can assume its id exists.
+		console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
 
+
+	//when a unit is dropped on another player's board
+	//in the same game
+	eaw.socket.on('unit_drop_notify', function (data){
+		eaw.networkDropHandler(data);
+	});
+
+
+
+	});
 
 	//sets up:
 	//1. navigation
@@ -78,7 +91,7 @@ window.onload = function(){
 						new_unit.drawElement();
 						new_unit.el = new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
-						eaw.unitMouseupHandler(new_unit.el, event);
+						eaw.unitMouseupHandler(new_unit.el, event, false);
       		}
 		  	}//close drop
     });

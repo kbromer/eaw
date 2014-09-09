@@ -91,12 +91,13 @@ function Unit(myPath, myOwner){
   this.location_zone = '';
   this.country_gradient = '';
 
+
   //implement drag and drop for units - may need an
   //implementation for other non-zone game pieces later
   //surfacing them here so we can enable/renable later
   this.move = function(dx,dy) {this.attr({transform: this.data('origTransform') + (this.data('origTransform') ? "T" : "t") + [dx, dy]});}
-  this.start = function() {this.data('origTransform', this.transform().local ); eaw.unitMousedownHandler(this, event);}
-  this.stop = function() {eaw.unitMouseupHandler(this, event);}
+  this.start = function() {this.data('origTransform', this.transform().local ); eaw.unitMousedownHandler(this, window.event);}
+  this.stop = function() {eaw.unitMouseupHandler(this, window.event);}
   eaw.GameElement.call(this, myPath);
 }
 Unit.prototype = Object.create(eaw.GameElement.prototype);

@@ -197,6 +197,8 @@ Nyezhin:  {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Kursk:  {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 Kiev: {type: "land", owner: "ru", hasFactory: true, pointValue : 1},
 Beridichev: {type: "land", owner: "ru", hasFactory: true, pointValue : 1},
+/** Off-Map Build **/
+FarEastT1: {type: "land", owner: "ru", hasFactory: false, pointValue : 0},
 
 /** Romania **/
 Galati: {type: "land", owner: "rm", hasFactory: false, pointValue: 0},
@@ -225,6 +227,7 @@ Trabzon: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
 Kars: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
 Bitilis: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
 Urfa: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
+
 /** Ocean **/
 SevastapolHarbor: {type: "sea", majorHarbor: true},
 DenmarkSeazone: {type: "sea", majorHarbor: false},
