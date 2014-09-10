@@ -71,6 +71,9 @@
       case 'IPCs':
         $('.ipcs_subnav').show();//.show('slide', {direction: 'down'}, 1000);
       break;
+      case 'Dice':
+        eaw.loadDice();
+      break;
 
     }
   }

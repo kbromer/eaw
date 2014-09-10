@@ -91,6 +91,7 @@ window.onload = function(){
 						new_unit.drawElement();
 						new_unit.el = new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
+						eaw.game.GAME_PIECES[eaw.game.GAME_PIECES.length] = new_unit;						
 						eaw.unitMouseupHandler(new_unit.el, event, false);
       		}
 		  	}//close drop
