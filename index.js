@@ -32,8 +32,12 @@ io.on('connection', function(socket){
 
   //fired when a unit is dropped on the players board
   //contains the zone which has the unit and other information
-  socket.on('unit_dropped', function(zone){
-    socket.broadcast.emit('unit_drop_notify', zone);
+  socket.on('unit_dropped', function(msg){
+    socket.broadcast.emit('unit_drop_notify', msg);
+  });
+
+  socket.on('unit_dragging', function (msg){
+    socket.broadcast.emit('unit_dragging_notify', msg);
   });
 
 });

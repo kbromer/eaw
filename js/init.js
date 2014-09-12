@@ -15,7 +15,9 @@ window.onload = function(){
 	eaw.socket.on('unit_drop_notify', function (data){
 		eaw.networkDropHandler(data);
 	});
-
+	eaw.socket.on('unit_dragging_notify', function (data){
+		eaw.networkDragHandler(data);
+	});
 
 
 	});
@@ -53,45 +55,11 @@ window.onload = function(){
 						var target_id = event.originalEvent.target.id;
 						var unit_type = target_id.substr(0, target_id.indexOf('_'));
 						var nation_type = target_id.match(/_([^ ]*)/)[1];
-						var new_unit = '';
-
-						switch (unit_type){
-							case 'fighter':
-								new_unit = new Fighter(null, nation_type);
-								break;
-							case 'armor':
-								new_unit = new Armor(null, nation_type);
-								break;
-							case 'infantry':
-								new_unit = new Infantry(null, nation_type);
-								break;
-							case 'carrier':
-								new_unit = new Carrier(null, nation_type);
-								break;
-							case 'artillery':
-								new_unit = new Artillery(null, nation_type);
-								break;
-							case 'sub':
-								new_unit = new Submarine(null, nation_type);
-								break;
-							case 'bomber':
-								new_unit = new Bomber(null, nation_type);
-								break;
-							case 'cruiser':
-								new_unit = new Cruiser(null, nation_type);
-								break;
-							case 'transport':
-								new_unit = new Transport(null, nation_type);
-								break;
-							case 'battleship':
-								new_unit = new Battleship(null, nation_type);
-								break;
-						}
-
+						var params = {myPath: null, myOwner: nation_type, myId: null};
+						var new_unit = eaw.createUnit(unit_type, params);
 						new_unit.drawElement();
 						new_unit.el = new_unit.el.transform('t' + svgXY.x + ',' + svgXY.y);
 						new_unit.el.data("Unit", new_unit);
-						eaw.game.GAME_PIECES[eaw.game.GAME_PIECES.length] = new_unit;						
 						eaw.unitMouseupHandler(new_unit.el, event, false);
       		}
 		  	}//close drop

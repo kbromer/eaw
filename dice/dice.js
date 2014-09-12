@@ -334,9 +334,13 @@
         that.scale = Math.sqrt(this.w * this.w + this.h * this.h) / 13;
         this.use_adapvite_timestep = true;
 
+
+        var canvas_container = $('canvas')[0];
+        console.log(canvas);
         this.renderer = window.WebGLRenderingContext
-            ? new THREE.WebGLRenderer({ antialias: true })
+            ? new THREE.WebGLRenderer({ antialias: true, canvas: canvas_container})
             : new THREE.CanvasRenderer({ antialias: true });
+
         this.renderer.setSize(this.cw * 2, this.ch * 2);
         this.renderer.shadowMapEnabled = true;
         this.renderer.shadowMapSoft = true;
@@ -346,6 +350,7 @@
         this.scene = new THREE.Scene();
         this.world = new CANNON.World();
 
+        console.log(this.renderer.domElement);
         container.appendChild(this.renderer.domElement);
 
         this.world.gravity.set(0, 0, -9.8 * 800);
@@ -363,6 +368,8 @@
         light.position.set(-mw / 2, mw / 2, mw * 2);
         light.target.position.set(0, 0, 0);
         light.castShadow = true;
+        //light.onlyShadow = true;
+        light.intensity = 0.6;
         light.shadowCameraNear = mw / 10;
         light.shadowCameraFar = mw * 3;
         light.shadowCameraFov = 50;

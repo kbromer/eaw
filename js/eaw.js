@@ -118,10 +118,11 @@ eaw.Game.prototype = {
 
 
   eaw.unitMouseupHandler = function (unit, event, remoteDraw){
+    console.log(unit);
     //use the upper left corner of the element
     var b = unit.getBBox();
     var unit_type = unit.data("Unit").unit_type;
-
+    console.log('init');
 
     unit.paper.zone_set.forEach(function (el) {
         el.attr({stroke:'black'});
@@ -145,7 +146,7 @@ eaw.Game.prototype = {
 
     /*** Figure out what zone we've been dropped into
          and assign unit to the appropriate array [country][type]  ***/
-
+    console.log('To zoneset');
     for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
       var zone_element = eaw.game.ZONE_SET[i];
       if (Snap.path.isPointInside(zone_element.el.attr('path'), b.x, b.y)){
@@ -186,7 +187,6 @@ eaw.Game.prototype = {
           eaw.redrawChipStack(b.x, b.y + 15, unit_set, unit);
         }
         eaw.game.ZONE_SET[i] = zone_element;
-        console.log(remoteDraw);
         if (!remoteDraw){
           console.log('Sending move.');
           var message_body = {};
@@ -208,15 +208,16 @@ eaw.Game.prototype = {
     }
   }//end unitMouseupHandler
 
-  eaw.unitMousedownHandler = function (unit, event){
+  eaw.unitMousedownHandler = function (unit, event, remoteDraw){
     //pull it out of the existing unit_set
 
     var country = unit.data("Unit").unit_owner;
     var zone = unit.data("Unit").location_zone;
     var unit_type = unit.data("Unit").unit_type;
     var set_name = country + '_unit_set';
+    var unit_id = unit.data("Unit").id
 
-    console.log('Removing ' + unit.data("Unit").id + ' ' + unit_type + ' from ' + zone.name);
+    console.log('Removing ' + unit_id + ' ' + unit_type + ' from ' + zone.name);
 
     var the_unit = zone[set_name][unit_type][unit.data("Unit").id];
     delete zone[set_name][unit_type][unit.data("Unit").id];
@@ -250,7 +251,22 @@ eaw.Game.prototype = {
       console.log('leftover_unit '  + leftover_unit.data("Unit").id);
       var b = leftover_unit.getBBox();
       eaw.redrawChipStack(b.x, b.y + 15, unit_set, leftover_unit);
+    }
 
+    if (!remoteDraw){
+      console.log('Sending click move.');
+      var message_body = {};
+      message_body.unitid = unit_id;
+      message_body.zonename = zone.name;
+      message_body.unit_x = unit.matrix.e;
+      message_body.unit_y = unit.matrix.f;
+      message_body.unit_country = country;
+      message_body.unit_path = unit.pathstring;
+      message_body.unit_pathstring = unit.data("Unit").pathstring;
+      message_body.unit_type = unit_type;
+      var message = JSON.stringify(message_body);
+      //send the server the zone with its new unit
+      eaw.socket.emit('unit_dragging', message);
     }
 
 
@@ -279,9 +295,7 @@ eaw.Game.prototype = {
         // - turn the unit into a chip
         // - set the chip to white
         // - move the chip to the right location
-        console.log(locked_unit.data("Unit").id + ' v ' + unit_id);
       if (unit_id !== locked_unit.data("Unit").id){
-        console.log('Not equal');
         //insert it behind the drawn unit
         unit_set[unit_id].after(locked_unit);
         //turn it into a chip
@@ -308,7 +322,6 @@ eaw.Game.prototype = {
       for (i = 0; i < red_chip_count; i++){
         var u = white_chips[counter];
         u.attr({fill: 'red'});
-        console.log('Making a red chip out of ' + u.data("Unit").id);
         counter++;
       }
       //turn the remainder white ones white
@@ -317,24 +330,19 @@ eaw.Game.prototype = {
       for (i = 0; i < white_chip_remainder; i++){
         var u = white_chips[counter];
         u.attr({fill: 'white'});
-        console.log('Making a white chip out of ' + u.data("Unit").id);
         counter++;
       }
       //everything else gets hidden
       for (i = counter; i < white_chips.length; i++){
         var u = white_chips[counter];
-        console.log('Hiding ' + u.data("Unit").id);
         u.attr({'visibility': 'hidden'});
         counter++;
       }
-
     }
     //not clear to me why i need to do this, but for wahtever reason
     //this was getting hidden (even though it was never a white chip)
     locked_unit.attr({'visibility': 'initial'});
   }
-
-
 
   eaw.zonehoverinHandler = function(zone){
 
@@ -357,92 +365,116 @@ eaw.Game.prototype = {
     }
   }
 
+  eaw.networkDragHandler = function(data){
+    console.log('Picked a unit up');
+    console.log(data);
+    var udp = JSON.parse(data);
+    var local_unit = '';
+    var unitid = udp.unitid;
+    for (var i=0; i < eaw.game.GAME_PIECES.length; i++){
+      console.log(eaw.game.GAME_PIECES[i] + ' v ' + unitid);
+      if (eaw.game.GAME_PIECES[i].id === unitid){
+        isExistingPiece = true;
+        local_unit = eaw.game.GAME_PIECES[i];
+      }
+    }
+    console.log(local_unit);
+    console.log(local_unit.el);
+    console.log('creating a shadow');
+//    var f = eaw.paper.filter(Snap.filter.shadow(0, 2,'yellow', 3));
+    //var f = eaw.paper.filter('');
+    console.log('filter created');
+    local_unit.el.attr({stroke: 'red'});
+    console.log('shadow added');
+
+    eaw.unitMousedownHandler(local_unit.el, event, true);
+  }
+
+
   //handles drop events from other players
   eaw.networkDropHandler = function(data){
     console.log('Dropped data');
-    console.log(data);
     var udp = JSON.parse(data);
-    //this is a stupid way to do this, reevaluate soon
-    for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
-      var z = eaw.game.ZONE_SET[i];
-      if (z.name === udp.zonename){
-        var country_set = udp.unit_country + '_unit_set';
-        var type_set = udp.unit_type;
-        var unitid = udp.unitid;
-        console.log('cset: ' + country_set);
-        console.log('typeset: ' + type_set);
-        console.log('unitid: ' + unitid);
-        console.log(z);
 
-        if (z[country_set] !== undefined && z[country_set][type_set] !== undefined && z[country_set][type_set][unitid] !== undefined){
-
-            var existing_unit = z[country_set][type_set][unitid];
-            console.log(existing_unit);
-            existing_unit = existing_unit.transform('t' + udp.unit_x + ',' + udp.unit_y);
-            console.log('mouseuphandler?');
-            eaw.unitMouseupHandler(existing_unit, event, true);
-        }
-
-        else{
-          console.log('Creating unit');
-          var new_unit = '';
-          switch (type_set){
-            case 'fighter':
-              new_unit = new Fighter(null, udp.unit_country);
-              break;
-            case 'armor':
-              new_unit = new Armor(null, udp.unit_country);
-              break;
-            case 'infantry':
-              new_unit = new Infantry(null, udp.unit_country);
-              break;
-            case 'carrier':
-              new_unit = new Carrier(null, udp.unit_country);
-              break;
-            case 'artillery':
-              new_unit = new Artillery(null, udp.unit_country);
-              break;
-            case 'sub':
-              new_unit = new Submarine(null, udp.unit_country);
-              break;
-            case 'bomber':
-              new_unit = new Bomber(null, udp.unit_country);
-              break;
-            case 'cruiser':
-              new_unit = new Cruiser(null, udp.unit_country);
-              break;
-            case 'transport':
-              new_unit = new Transport(null, udp.unit_country);
-              break;
-            case 'battleship':
-              new_unit = new Battleship(null, udp.unit_country);
-              break;
-          }
-          new_unit.drawElement();
-          new_unit.el = new_unit.el.transform('t' + udp.unit_x + ',' + udp.unit_y);
-          new_unit.el.data("Unit", new_unit);
-          eaw.unitMouseupHandler(new_unit.el, event, true);
-        }
-        break;
+    var country_set = udp.unit_country + '_unit_set';
+    var type_set = udp.unit_type;
+    var unitid = udp.unitid;
+console.log('Step1');
+    //does this unit exist already for this game?, look for it
+    var isExistingPiece = false;
+    var unit = '';
+    for (var i=0; i < eaw.game.GAME_PIECES.length; i++){
+      if (eaw.game.GAME_PIECES[i].id === unitid){
+        isExistingPiece = true;
+        unit = eaw.game.GAME_PIECES[i];
       }
     }
+    console.log('Step2');
+    //if unit is already on the board, just apply a transformation and call unitMouseupHandler
+    if (isExistingPiece){
+      unit.el = unit.el.transform('t' + udp.unit_x + ',' + udp.unit_y);
+    }
+    //if its a brand new unit from off-board, create a new unit with the same id, draw, drop it, move it, then call unitMouseupHandler
+    else {
+      var params = {myPath: null, myOwner: udp.unit_country, myId: unitid};
+      unit = eaw.createUnit(type_set, params);
+      unit.drawElement();
+      unit.el = unit.el.transform('t' + udp.unit_x + ',' + udp.unit_y);
+      unit.el.data("Unit", unit);
+    }
+    unit.el.attr({stroke: 'black'});
+    console.log('unitMouseupHandler');
+    eaw.unitMouseupHandler(unit.el, event, true);
   }//close networkDropHandler
 
   eaw.loadDice = function (){
       console.log('loading dice');
 
-
-
-
-
-
               $.getScript( "dice/dice.js", function(){
                 $.getScript( "dice/main.js", function(){
-
                     dice_initialize(document.body, window.innerWidth - 1, window.innerHeight - 1);
                     console.log('Loaded dice elements.');
-
                 });
               });
+    }
 
+
+    eaw.createUnit = function (type, params){
+      console.log('Creating unit');
+      var new_unit = '';
+      switch (type){
+        case 'fighter':
+          new_unit = new eaw.Fighter(params);
+          break;
+        case 'armor':
+          new_unit = new eaw.Armor(params);
+          break;
+        case 'infantry':
+          new_unit = new eaw.Infantry(params);
+          break;
+        case 'carrier':
+          new_unit = new eaw.Carrier(params);
+          break;
+        case 'artillery':
+          new_unit = new eaw.Artillery(params);
+          break;
+        case 'sub':
+          new_unit = new eaw.Submarine(params);
+          break;
+        case 'bomber':
+          new_unit = new eaw.Bomber(params);
+          break;
+        case 'cruiser':
+          new_unit = new eaw.Cruiser(params);
+          break;
+        case 'transport':
+          new_unit = new eaw.Transport(params);
+          break;
+        case 'battleship':
+          new_unit = new eaw.Battleship(params);
+          break;
+      }
+      console.log('returning unit');
+      eaw.game.GAME_PIECES[eaw.game.GAME_PIECES.length] = new_unit;
+      return new_unit;
     }
