@@ -173,14 +173,14 @@ window.onload = function(){
 			$("img[class^='unit_'], img[class^='icon_']").each(function( index ) {
 				var old_src = $(this).attr("src");
 				var image_type = old_src.substring(old_src.length - 3, old_src.length);
-				var new_src = old_src.substring(0, old_src.length - 6) + nation.name + "." + image_type;
+				var new_src = old_src.substring(0, old_src.length - 6) + nation.id + "." + image_type;
 				$( this ).attr("src", new_src);
 				var old_id = $(this).attr("id");
-				var new_id = old_id.substring(0, old_id.length - 2) + nation.name;
+				var new_id = old_id.substring(0, old_id.length - 2) + nation.id;
 				$( this ).attr("id", new_id);
 			});
 
-			switch (nation.name){
+			switch (nation.id){
 				case "de":
 				$(".subnav").css("background", "linear-gradient(to right, transparent, gray, transparent)");
 				break;

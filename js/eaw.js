@@ -14,6 +14,41 @@
 
     //eaw.game = model;
     console.log(model);
+    eaw.game = new eaw.Game();
+    //create new nations
+    eaw.game.ACTIVE_NATIONS =[];
+    for (var i = 0; i < model.ACTIVE_NATIONS.length; i++){
+
+      var new_nation = new eaw.Nation(model.ACTIVE_NATIONS[i]);
+      new_nation.cash = model.ACTIVE_NATIONS[i].cash;
+      eaw.game.ACTIVE_NATIONS[i] = new_nation;
+
+    }
+    //set the game turn
+    eaw.game.GAME_TURN = model.GAME_TURN;
+    //set the current nation
+    for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
+        if (eaw.game.ACTIVE_NATIONS[i].name === model.CURRENT_NATION.name){
+          eaw.game.CURRENT_NATION = eaw.game.ACTIVE_NATIONS[i];
+          break;
+        }
+    }
+
+
+    /*
+    this.ACTIVE_NATIONS = new Array();
+    //create nations
+    for (var i = 0; i < eaw.ALL_NATIONS.length; i++){
+      this.ACTIVE_NATIONS.push(new eaw.Nation(eaw.ALL_NATIONS[i]));
+    }
+    this.GAME_TURN = 0;
+    this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
+    this.CURRENT_NATION_INDEX = 0;
+    this.INACTIVE_NATIONS = new Array();
+    this.GAME_PIECES = [];
+    this.ZONE_SET = [];
+    */
+
 
   }
 
@@ -98,12 +133,16 @@ eaw.Game.prototype = {
   },
   save: function() {
     eaw.savegame = JSON.stringify(this, function (key, value){
-      if (key == 'node' || key == 'paper' || key == 'el' || key == '_drag' || key == 'anims' || key == 'events'){
+      if (key == 'node' || key == 'paper' || key == 'el' || key == '_drag' || key == 'anims' || key == 'events' || key === 'pathstring'){
         //kill any vars we don't want to save time/space
         return;
       }
       return value;
     });
+
+    var model = JSON.parse(eaw.savegame);
+    console.log(model);
+
   }
 };
 
@@ -118,16 +157,9 @@ eaw.Game.prototype = {
 
 
   eaw.unitMouseupHandler = function (unit, event, remoteDraw){
-    console.log(unit);
     //use the upper left corner of the element
     var b = unit.getBBox();
     var unit_type = unit.data("Unit").unit_type;
-    console.log('init');
-
-    unit.paper.zone_set.forEach(function (el) {
-        el.attr({stroke:'black'});
-    });
-
 
   /* FIGURING OUT BEST DROP POINT TO USE
     console.log('BX: ' + b.x);
@@ -137,21 +169,13 @@ eaw.Game.prototype = {
     py = py - 125;
     console.log('event.y: ' + py);*/
 
-
-    //CREATE GROUPS IN EACH ZONE
-    //ENTIRE GROUP GETS SAME TRANSFORMATION APPLIED
-    //EACH GROUP GETS AN ELEMENT ADDED AFTER UNIT THAT HAS NUMBER OF UNIT IN GROUP
-
-
-
     /*** Figure out what zone we've been dropped into
          and assign unit to the appropriate array [country][type]  ***/
-    console.log('To zoneset');
     for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
       var zone_element = eaw.game.ZONE_SET[i];
       if (Snap.path.isPointInside(zone_element.el.attr('path'), b.x, b.y)){
 
-        zone_element.el.attr({stroke: 'red'});
+        zone_element.flash();
 
         var unit_id = unit.data("Unit").id;
 
@@ -162,8 +186,27 @@ eaw.Game.prototype = {
         var set_name = country + '_unit_set';
 
         console.log(country + ' ' + unit_type + ' ' + unit_id + ' landed in ' + zone_element.name);
+        var country_name = '';
+        //increment the alliance counters for this zone
+        for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
+          var nation = eaw.game.ACTIVE_NATIONS[i];
+          if (country === nation.id){
+            country_name = nation.unit_name;            
+            switch (nation.alliance){
+              case "allies":
+                zone_element.ally_count += 1;
+                break;
+              case "axis":
+                zone_element.axis_count += 1;
+                break;
+              case "russia":
+                zone_element.russia_count += 1;
+                break;
+              }
+          }
+        }
 
-        var t = unit.paper.text(b.x, b.y, country + ' ' + unit_type + ' added to ' + zone_element.name).animate({ opacity : 0 }, 2000, function () { this.remove() });;
+        var t = unit.paper.text(b.x, b.y, country_name + ' ' + unit_type + ' added to ' + zone_element.name).animate({ opacity : 0 }, 2000, function () { this.remove() });;
 
         //build the zone arrays to stack armies
         if (zone_element[set_name] === undefined){
@@ -188,7 +231,7 @@ eaw.Game.prototype = {
         }
         eaw.game.ZONE_SET[i] = zone_element;
         if (!remoteDraw){
-          console.log('Sending move.');
+          console.log('Sending move to server.');
           var message_body = {};
           message_body.unitid = unit_id;
           message_body.zonename = zone_element.name;
@@ -202,10 +245,21 @@ eaw.Game.prototype = {
           //send the server the zone with its new unit
           eaw.socket.emit('unit_dropped', message);
         }
+
+
+        //check if zone is now occupied, contested or liberated
+        zone_element.checkOwnerStatus();
+
       //break on the first matching path we find
       break;
       }
     }
+
+
+
+
+
+
   }//end unitMouseupHandler
 
   eaw.unitMousedownHandler = function (unit, event, remoteDraw){
@@ -222,6 +276,25 @@ eaw.Game.prototype = {
     var the_unit = zone[set_name][unit_type][unit.data("Unit").id];
     delete zone[set_name][unit_type][unit.data("Unit").id];
 
+    //decrement the unit counter for this zone
+    for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
+      var nation = eaw.game.ACTIVE_NATIONS[i];
+
+      if (country === nation.name){
+        switch (nation.alliance){
+          case "allies":
+            zone.ally_count--;
+            break;
+          case "axis":
+            zone.axis_count--;
+            break;
+          case "russia":
+            zone.russia_count--;
+            break;
+          }
+      }
+    }
+
     //remaining units
     var unit_set = zone[set_name][unit_type];
 
@@ -235,20 +308,15 @@ eaw.Game.prototype = {
         remaining_unit = x;
       }
     }
-
-    console.log('Units left ' + prop_count);
     if (prop_count > 0){
-      console.log('redrawing a new unit...');
       //find the remaining unit, restyle from chip back to a board piece
       var leftover_unit = unit_set[remaining_unit];
       var unit_obj = leftover_unit.data("Unit");
       var original_path = unit_obj.pathstring;
       leftover_unit.node.setAttribute("d", original_path);
-      console.log(the_unit);
       //leftover_unit.transform('t' + the_unit.x + ',' + the_unit.y);
       leftover_unit.attr({'display': 'initial', fill: unit_obj.country_gradient});
       leftover_unit.drag(unit_obj.move, unit_obj.start, unit_obj.stop);
-      console.log('leftover_unit '  + leftover_unit.data("Unit").id);
       var b = leftover_unit.getBBox();
       eaw.redrawChipStack(b.x, b.y + 15, unit_set, leftover_unit);
     }
@@ -345,24 +413,25 @@ eaw.Game.prototype = {
   }
 
   eaw.zonehoverinHandler = function(zone){
-
+/*
     var timer = window.setTimeout(function () {
       zone.data('timerid', null);
       console.log('go');
       //pop-up the tool-tip window
+      var mouseoverstr = '<title>';
       var title = Snap.parse('<title>This is <br/><b>a title 2</b></title>');
       zone.append(title);
 
     }, 500);
-    zone.data('timerid', timer);
+    zone.data('timerid', timer);*/
   }
 
   eaw.zonehoveroutHandler = function(zone){
-    var timerid = zone.data('timerid');
+    /*var timerid = zone.data('timerid');
     if (timerid != null) {
       //mouse out, didn't timeout. Kill previously started timer
       window.clearTimeout(timerid);
-    }
+    }*/
   }
 
   eaw.networkDragHandler = function(data){

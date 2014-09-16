@@ -3,63 +3,6 @@ var element_count = 0;
 //last map zone created as part of map generation
 var LAST_ZONE;
 
-
-Snap.plugin(function (Snap, Element, Paper, global, Fragment) {
-
-    Element.prototype.draw = function () {
-
-
-
-    };
-
-
-
-
-
-
-
-
-});
-
-
-
-
-
-
-
-
-
-
-eaw.Nation = function (myName){
-  this.name = myName;
-  this.occupied = [];
-  this.cash = 0;
-
-  switch (myName){
-    case "us":
-      this.alliance = 'allies';
-      break;
-    case "ru":
-      this.alliance = 'soviets';
-      break;
-    case "uk":
-      this.alliance = 'allies';
-      break;
-    case "fr":
-      this.alliance = 'allies';
-      break;
-    case "de":
-      this.alliance = 'axis';
-      break;
-    case "it":
-      this.alliance = 'axis';
-      break;
-  }
-}
-
-eaw.Nation.prototype.constructor = eaw.Nation;
-
-
 //Base level game element that encompasses all 'pieces' on the board
 //includes chits, zones, units and dice
 eaw.GameElement = function (myPath, myPaper, myId) {
@@ -82,6 +25,20 @@ eaw.GameElement.prototype = {
                               );
                             }
 };
+
+eaw.GameElement.prototype.flash = function(){
+
+  //gradients don't seem to work w/ animation, so we can't change the zone fill itself in an animated way
+  //var original_gradient = eaw.paper.gradient('l(0,0,1,1)-#C7C7C7-#ADADAD');
+  //this.el.attr({fill: '#FFFFD1'}).animate(this.el.attr({fill: original_gradient}), 2000);
+  //this works, but the above doesn't :/
+  //this.el.animate({fill: 'blue' }, 2000);
+
+  //flash the zone when a unit is dropped on top
+  this.paper.path(this.pathstring).attr({fill: '#FFFFD1'}).animate({opacity:0},250,function(){this.remove()});
+};
+
+
 
 /************************ UNITS **********************************************************************/
 
@@ -303,24 +260,37 @@ eaw.Submarine.prototype.constructor = eaw.Submarine;
 /************************ ZONES **********************************************************************/
 /*****************************************************************************************************/
 
-function Zone(myPath, myPaper, myName){
+function Zone(myPath, myPaper, myName, defaultOwner){
   this.name = myName;
+  this.axis_count = 0;
+  this.ally_count = 0;
+  this.russia_count = 0;
+  //set the zone owner to the
+  this.original_owner = defaultOwner;
+  this.current_owner = defaultOwner;
   this.hoverin = function () {eaw.zonehoverinHandler(this);};
   this.hoverout = function () {eaw.zonehoveroutHandler(this);};
+  this.el;
   eaw.GameElement.call(this, myPath, myPaper);
 }
-
 Zone.prototype = new eaw.GameElement();
 Zone.prototype.constructor = Zone;
-
+Zone.prototype.checkOwnerStatus = function(){
+  //are we contested?
+  if (this.axis_count > 0 && (this.ally_count > 0 || this.russia_count > 0)){
+    this.isContested = true;
+    //show a contested zone
+    this.el.attr({stroke: 'red', 'stroke-width': 6});
+  }
+};
 //seazone is a type of zone
 function SeaZone(myPath, myPaper, myName, majorHarbor){
   this.major_harbor = majorHarbor;
-  Zone.call(this, myPath, myPaper, myName);
+
+  Zone.call(this, myPath, myPaper, myName, '');
 }
 SeaZone.prototype = Object.create(Zone.prototype);
 SeaZone.prototype.constructor = SeaZone;
-
 SeaZone.prototype.drawElement = function (){this.el = this.paper.path(this.pathstring).attr(
                                           {
                                             fill: this.paper.gradient('l(0,0,1,1)-#59ABC2-#4680A3'),
@@ -332,15 +302,13 @@ SeaZone.prototype.drawElement = function (){this.el = this.paper.path(this.paths
                             this.el.data("Zone", this);
                             this.el.hover(this.hoverin, this.hoverout);
                       };
-
 //landzone is a type of zone
 function LandZone(myPath, myPaper, myName, defaultOwner, hasFactory, pointValue){
-  //set the zone owner to the
-  this.original_owner = defaultOwner;
-  this.current_owner = defaultOwner;
   this.factory = hasFactory;
   this.point_value = pointValue;
+  this.has_aa = '';
   this.zone_gradient;
+  this.gradient_string = 'l(0,0,1,1)-#C7C7C7-#ADADAD';
   switch (defaultOwner){
     case 'de':
       this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#C7C7C7-#ADADAD');
@@ -382,7 +350,7 @@ function LandZone(myPath, myPaper, myName, defaultOwner, hasFactory, pointValue)
       this.zone_gradient = myPaper.gradient('l(0,0,1,1)-#FFA33B-#FF8800');
     break;
   }
-  Zone.call(this, myPath, myPaper, myName);
+  Zone.call(this, myPath, myPaper, myName, defaultOwner);
 }
 LandZone.prototype = Object.create(Zone.prototype);
 LandZone.prototype.constructor = LandZone;

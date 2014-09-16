@@ -15,9 +15,6 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', function(socket){
-
-
-
   console.log('A user connected');
   socket.userid = guid();
   socket.emit('onconnected', {id: socket.userid});
@@ -35,32 +32,21 @@ io.on('connection', function(socket){
   socket.on('unit_dropped', function(msg){
     socket.broadcast.emit('unit_drop_notify', msg);
   });
-
+  //fired when a unit is being dragged
   socket.on('unit_dragging', function (msg){
     socket.broadcast.emit('unit_dragging_notify', msg);
   });
-
 });
-
 
 http.listen(port, function(){
   console.log('Listening on port ' + port);
 });
 
-
-
-
-
-
-
-    var guid = (function() {
-      function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-                 .toString(16)
-                 .substring(1);
-      }
-      return function() {
-        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-             s4() + '-' + s4() + s4() + s4();
-    };
-    })();
+var guid = (function() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  return function() {
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+  };
+})();
