@@ -38,3 +38,51 @@ eaw.Nation = function (id, cash){
 }
 
 eaw.Nation.prototype.constructor = eaw.Nation;
+
+/*
+roperties = {
+// Off Map Areas
+OffMapPersia: {type: "land", owner: "na", hasFactory: false, pointValue: 0},
+OffMapRussia: {type: "land", owner: "na", hasFactory: false, pointValue: 0},
+// Norway
+Oslo: {type: "land", owner:"nr", hasFactory: true, pointValue: 1},
+/** Finland
+Helsinki: {type: "land", owner:"fn", hasFactory: true, pointValue: 2},
+//* Hungary
+Budapest: {type: "land", owner:"hu", hasFactory: true, pointValue: 2},
+//* Bulgaria
+Sofia: {type: "land", owner:"bu", hasFactory: true, pointValue: 2},
+//* Single-Zone Neutrals
+Denmark: {type: "land", owner:"dk", hasFactory: true, pointValue: 1},
+Ireland: {type: "land", owner:"ei", hasFactory: true, pointValue: 1},
+Belgium: {type: "land", owner:"be", hasFactory: true, pointValue: 2},
+Netherlands: {type: "land", owner:"ne", hasFactory: true, pointValue: 1},
+Switzerland: {type: "land", owner: "sz", hasFactory: true, pointValue: 3},
+Qatar: {type: "land", owner: "qa", hasFactory: true, pointValue: 3},
+//* Sweden
+Sundsvall: {type: "land", owner: "sw", hasFactory: true, pointValue: 1},
+//* Poland
+Danzig: {type: "land", owner:"po", hasFactory: true, pointValue: 1},
+//* Greece
+Rhodes: {type: "land", owner:"gr", hasFactory: false, pointValue: 0},
+//* Yugoslavia
+Zagreb: {type: "land", owner: "yu", hasFactory: true, pointValue: 1},
+//* Iraq
+Baghdad: {type: "land", owner: "iq", hasFactory: true, pointValue: 1},
+//* Iran
+Khoi: {type: "land", owner: "ir", hasFactory: false, pointValue: 0},
+//* Spain
+Spanish_Morocco: {type: "land", owner: "sp", hasFactory: false, pointValue: 0},
+//* Portugal
+Porto: {type: "land", owner: "pr", hasFactory: true, pointValue: 1},
+
+//* Romania
+Galati: {type: "land", owner: "rm", hasFactory: false, pointValue: 0},
+
+//* Saudi Arabia
+AlJawf: {type: "land", owner: "sa", hasFactory: false, pointValue: 0},
+
+//* Turkey
+Istanbul: {type: "land", owner: "tr", hasFactory: true, pointValue: 1},
+
+*/

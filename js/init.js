@@ -3,30 +3,13 @@ window.onload = function(){
 	console.log("Window loaded.");
 
 
-	//connect socket
-	eaw.socket = io.connect();
-	eaw.socket.on('onconnected', function( data ) {
-		//Note that the data is the object we sent from the server, as is. So we can assume its id exists.
-		console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
-
-
-	//when a unit is dropped on another player's board
-	//in the same game
-	eaw.socket.on('unit_drop_notify', function (data){
-		eaw.networkDropHandler(data);
-	});
-	eaw.socket.on('unit_dragging_notify', function (data){
-		eaw.networkDragHandler(data);
-	});
-
-
-	});
+	eaw.io.connectToServer();
 
 	//sets up:
 	//1. navigation
 	//2. menu bars
 	//3. non canvas images
-	eaw.setupBoard();
+	eaw.ui.setupBoard();
 	console.log("Board setup.");
 	//load the elements so we can create zones
 	//and setup unit behaviors - connect html dom elements w/ canvas ones
@@ -47,7 +30,7 @@ window.onload = function(){
     //Support DOM elements droppable to canvas
     $("#canvas_container").droppable({
         drop: function (event, ui) {
-            var svgXY = eaw.getSvgCoordinates(event, eaw.paper);
+            var svgXY = eaw.ui.getSvgCoordinates(event, eaw.paper);
 
 						console.log('Dropped a ' + event.originalEvent.target.id);
 
@@ -161,7 +144,7 @@ window.onload = function(){
 		$(".unit_nav_btn").click(function(event){
 
 			var nation_to_hide = g.getCurrentNation().name;
-			console.log('Hiding: ' + nation_to_hide);
+
 			//shift one player in the game player array
 			if (this.id == 'right_nav_btn'){
 				var nation = g.nextNation();
@@ -170,36 +153,7 @@ window.onload = function(){
 				var nation = g.previousNation();
 			}
 
-			$("img[class^='unit_'], img[class^='icon_']").each(function( index ) {
-				var old_src = $(this).attr("src");
-				var image_type = old_src.substring(old_src.length - 3, old_src.length);
-				var new_src = old_src.substring(0, old_src.length - 6) + nation.id + "." + image_type;
-				$( this ).attr("src", new_src);
-				var old_id = $(this).attr("id");
-				var new_id = old_id.substring(0, old_id.length - 2) + nation.id;
-				$( this ).attr("id", new_id);
-			});
-
-			switch (nation.id){
-				case "de":
-				$(".subnav").css("background", "linear-gradient(to right, transparent, gray, transparent)");
-				break;
-				case "uk":
-				$(".subnav").css("background", "linear-gradient(to right, transparent, tan, transparent)");
-				break;
-				case "ru":
-				$(".subnav").css("background", "linear-gradient(to right, transparent, crimson, transparent)");
-				break;
-				case "fr":
-				$(".subnav").css("background", "linear-gradient(to right, transparent, blue, transparent)");
-				break;
-				case "it":
-				$(".subnav").css("background", "linear-gradient(to right, transparent, yellow, transparent)");
-				break;
-				case "us":
-				$(".subnav").css("background", "linear-gradient(to right, transparent, green, transparent)");
-				break;
-			}
+			eaw.ui.switchNation(nation);
 		});//close binding of ui elements that require game elements
 
 

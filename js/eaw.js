@@ -1,5 +1,5 @@
   //set a namespace to drop funcs into as needed
-  eaw = {}
+  eaw = {};
   eaw.game;
   eaw.savegame;
   eaw.socket;
@@ -18,22 +18,20 @@
     //create new nations
     eaw.game.ACTIVE_NATIONS =[];
     for (var i = 0; i < model.ACTIVE_NATIONS.length; i++){
-
-      var new_nation = new eaw.Nation(model.ACTIVE_NATIONS[i]);
-      new_nation.cash = model.ACTIVE_NATIONS[i].cash;
+      var new_nation = new eaw.Nation(model.ACTIVE_NATIONS[i].id, model.ACTIVE_NATIONS[i].cash);
       eaw.game.ACTIVE_NATIONS[i] = new_nation;
-
     }
     //set the game turn
     eaw.game.GAME_TURN = model.GAME_TURN;
+
     //set the current nation
     for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
-        if (eaw.game.ACTIVE_NATIONS[i].name === model.CURRENT_NATION.name){
+        if (eaw.game.ACTIVE_NATIONS[i].id === model.CURRENT_NATION.id){
           eaw.game.CURRENT_NATION = eaw.game.ACTIVE_NATIONS[i];
           break;
         }
     }
-
+    eaw.ui.switchNation(eaw.game.CURRENT_NATION);
 
     /*
     this.ACTIVE_NATIONS = new Array();
@@ -191,7 +189,7 @@ eaw.Game.prototype = {
         for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
           var nation = eaw.game.ACTIVE_NATIONS[i];
           if (country === nation.id){
-            country_name = nation.unit_name;            
+            country_name = nation.unit_name;
             switch (nation.alliance){
               case "allies":
                 zone_element.ally_count += 1;
@@ -231,19 +229,7 @@ eaw.Game.prototype = {
         }
         eaw.game.ZONE_SET[i] = zone_element;
         if (!remoteDraw){
-          console.log('Sending move to server.');
-          var message_body = {};
-          message_body.unitid = unit_id;
-          message_body.zonename = zone_element.name;
-          message_body.unit_x = unit.matrix.e;
-          message_body.unit_y = unit.matrix.f;
-          message_body.unit_country = country;
-          message_body.unit_path = unit.pathstring;
-          message_body.unit_pathstring = unit.data("Unit").pathstring;
-          message_body.unit_type = unit_type;
-          var message = JSON.stringify(message_body);
-          //send the server the zone with its new unit
-          eaw.socket.emit('unit_dropped', message);
+          eaw.io.sendMove(unit, 'drop');
         }
 
 
@@ -322,19 +308,7 @@ eaw.Game.prototype = {
     }
 
     if (!remoteDraw){
-      console.log('Sending click move.');
-      var message_body = {};
-      message_body.unitid = unit_id;
-      message_body.zonename = zone.name;
-      message_body.unit_x = unit.matrix.e;
-      message_body.unit_y = unit.matrix.f;
-      message_body.unit_country = country;
-      message_body.unit_path = unit.pathstring;
-      message_body.unit_pathstring = unit.data("Unit").pathstring;
-      message_body.unit_type = unit_type;
-      var message = JSON.stringify(message_body);
-      //send the server the zone with its new unit
-      eaw.socket.emit('unit_dragging', message);
+      eaw.io.sendMove(unit, 'drag');
     }
 
 
@@ -434,67 +408,6 @@ eaw.Game.prototype = {
     }*/
   }
 
-  eaw.networkDragHandler = function(data){
-    console.log('Picked a unit up');
-    console.log(data);
-    var udp = JSON.parse(data);
-    var local_unit = '';
-    var unitid = udp.unitid;
-    for (var i=0; i < eaw.game.GAME_PIECES.length; i++){
-      console.log(eaw.game.GAME_PIECES[i] + ' v ' + unitid);
-      if (eaw.game.GAME_PIECES[i].id === unitid){
-        isExistingPiece = true;
-        local_unit = eaw.game.GAME_PIECES[i];
-      }
-    }
-    console.log(local_unit);
-    console.log(local_unit.el);
-    console.log('creating a shadow');
-//    var f = eaw.paper.filter(Snap.filter.shadow(0, 2,'yellow', 3));
-    //var f = eaw.paper.filter('');
-    console.log('filter created');
-    local_unit.el.attr({stroke: 'red'});
-    console.log('shadow added');
-
-    eaw.unitMousedownHandler(local_unit.el, event, true);
-  }
-
-
-  //handles drop events from other players
-  eaw.networkDropHandler = function(data){
-    console.log('Dropped data');
-    var udp = JSON.parse(data);
-
-    var country_set = udp.unit_country + '_unit_set';
-    var type_set = udp.unit_type;
-    var unitid = udp.unitid;
-console.log('Step1');
-    //does this unit exist already for this game?, look for it
-    var isExistingPiece = false;
-    var unit = '';
-    for (var i=0; i < eaw.game.GAME_PIECES.length; i++){
-      if (eaw.game.GAME_PIECES[i].id === unitid){
-        isExistingPiece = true;
-        unit = eaw.game.GAME_PIECES[i];
-      }
-    }
-    console.log('Step2');
-    //if unit is already on the board, just apply a transformation and call unitMouseupHandler
-    if (isExistingPiece){
-      unit.el = unit.el.transform('t' + udp.unit_x + ',' + udp.unit_y);
-    }
-    //if its a brand new unit from off-board, create a new unit with the same id, draw, drop it, move it, then call unitMouseupHandler
-    else {
-      var params = {myPath: null, myOwner: udp.unit_country, myId: unitid};
-      unit = eaw.createUnit(type_set, params);
-      unit.drawElement();
-      unit.el = unit.el.transform('t' + udp.unit_x + ',' + udp.unit_y);
-      unit.el.data("Unit", unit);
-    }
-    unit.el.attr({stroke: 'black'});
-    console.log('unitMouseupHandler');
-    eaw.unitMouseupHandler(unit.el, event, true);
-  }//close networkDropHandler
 
   eaw.loadDice = function (){
       console.log('loading dice');
