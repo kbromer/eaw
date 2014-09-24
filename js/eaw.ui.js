@@ -16,7 +16,7 @@ eaw.ui.setupBoard = function(){
 
     if ($('.subnav').is(':visible')){
       console.log('vis');
-      $('.subnav:visible').hide(eaw.showMenuItem(bar));
+      $('.subnav:visible').hide(eaw.ui.showMenuItem(bar));
     }
     else{
         eaw.ui.showMenuItem(bar);
@@ -71,6 +71,7 @@ eaw.ui.showMenuItem = function (selectedItem){
       $('#menu_modal').modal('show');
     break;
     case 'IPCs':
+      eaw.ui.displayIPCMarkers();
       $('.ipcs_subnav').show();//.show('slide', {direction: 'down'}, 1000);
     break;
     case 'Dice':
@@ -112,4 +113,26 @@ eaw.ui.switchNation = function (nation){
     $(".subnav").css("background", "linear-gradient(to right, transparent, green, transparent)");
     break;
   }
+}
+
+eaw.ui.displayIPCMarkers = function (){
+
+  $("[id^='marker_logo']").each(function( index, element ) {
+    var country_id = element.id.slice(-2);
+    console.log(element.id);
+    var display_ipcs = 0;
+    for (i=0; i < eaw.game.NATIONS.length; i++){
+      if (eaw.game.NATIONS[i].id === country_id){
+        display_ipcs = eaw.game.NATIONS[i].getIPCs();
+        console.log("IPCS: " + display_ipcs);
+      }
+
+    }
+
+
+
+  });
+
+
+
 }

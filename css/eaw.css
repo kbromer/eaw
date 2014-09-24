@@ -41,6 +41,9 @@ body {
 .ipcs_subnav{
   background: linear-gradient(to right, black, transparent, black);
 }
+#ipcs{
+  position: relative;
+}
 
 #fighter_img {
   width: 65px;
@@ -63,6 +66,12 @@ body {
   z-index: 99999;
 }
 .marker_image{
+  width:65px;
+  height:65px;
+  position: absolute;
+  z-index: 99999;
+}
+.image_holder{
   width:65px;
   height:65px;
   position: relative;

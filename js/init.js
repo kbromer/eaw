@@ -13,7 +13,7 @@ window.onload = function(){
 	console.log("Board setup.");
 	//load the elements so we can create zones
 	//and setup unit behaviors - connect html dom elements w/ canvas ones
-	$.getScript("js/elements.js", function() {
+	$.getScript("js/eaw.elements.js", function() {
   	console.log( "Loading game elements..." );
 
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
@@ -53,7 +53,7 @@ window.onload = function(){
 			$(data).find('path').each(function(){
 				var path_string = $(this).attr("d");
 				var zone_id = $(this).attr("id");
-				var zone_data = ZoneProperties[zone_id];
+				var zone_data = eaw.ZoneProperties[zone_id];
 				if (typeof zone_data == 'undefined')
 					console.log(zone_id + ' was not found in the zone list.');
 				if (zone_data["type"] == "sea"){
@@ -133,6 +133,7 @@ window.onload = function(){
 						eaw.paper.text(x,y, zone.name).attr({ fontSize: '7px', "text-anchor": "middle"});
 					}
 				}
+				
 				LAST_ZONE = zone.el;
 				eaw.paper.zone_set[eaw.paper.zone_set.length] = zone.el;
 				eaw.game.ZONE_SET[eaw.game.ZONE_SET.length] = zone;

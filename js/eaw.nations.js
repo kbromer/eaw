@@ -1,4 +1,7 @@
-eaw.Nation = function (id, cash){
+eaw.nations = {};
+eaw.nations.ALL_NATIONS = ['de', 'uk', 'ru', 'fr', 'us', 'it'];
+
+eaw.nations.Nation = function (id, cash){
   this.id = id;
   switch (this.id){
     case "us":
@@ -34,10 +37,28 @@ eaw.Nation = function (id, cash){
   }
 //  this.occupied = [];
   this.cash = cash;
-
+  this.status = status;
+  //owner for purposes of adding up ipcs
+  //could be minor allies, etc.
+  this.ipc_owner = this.id;
 }
 
-eaw.Nation.prototype.constructor = eaw.Nation;
+eaw.nations.Nation.prototype.constructor = eaw.Nation;
+eaw.nations.Nation.prototype.getIPCs = function () {
+  var ipcs = 0;
+
+  for (i = 0; i < eaw.game.ZONE_SET.length; i++){
+    var zone = eaw.game.ZONE_SET[i];
+    if (zone.current_owner === this.ipc_owner && zone.point_value > 0) {
+      ipcs = ipcs + zone.point_value;
+    }
+  }
+
+  //handle boxes, special cases, offboard IPCs, 
+  //damaged factories, etc.
+  return ipcs;
+}
+
 
 /*
 roperties = {

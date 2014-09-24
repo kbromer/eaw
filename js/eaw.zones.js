@@ -1,4 +1,4 @@
-var ZoneProperties = {
+eaw.ZoneProperties = {
 /** Off Map Areas **/
 OffMapPersia: {type: "land", owner: "na", hasFactory: false, pointValue: 0},
 OffMapRussia: {type: "land", owner: "na", hasFactory: false, pointValue: 0},

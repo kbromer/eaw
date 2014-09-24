@@ -3,7 +3,6 @@
   eaw.game;
   eaw.savegame;
   eaw.socket;
-  eaw.ALL_NATIONS = ['de', 'uk', 'ru', 'fr', 'us', 'it'];
   eaw.UNIT_TYPES = ['infantry', 'fighter', 'armor', 'artillery', 'bomber', 'cruiser', 'battleship', 'carrier', 'transport'];
   eaw.paper;
   eaw.loadGame = function (game) {
@@ -12,37 +11,37 @@
     console.log('Loading data...');
     var model = JSON.parse(game);
 
-    //eaw.game = model;
     console.log(model);
     eaw.game = new eaw.Game();
-    //create new nations
-    eaw.game.ACTIVE_NATIONS =[];
-    for (var i = 0; i < model.ACTIVE_NATIONS.length; i++){
-      var new_nation = new eaw.Nation(model.ACTIVE_NATIONS[i].id, model.ACTIVE_NATIONS[i].cash);
-      eaw.game.ACTIVE_NATIONS[i] = new_nation;
-    }
+
     //set the game turn
     eaw.game.GAME_TURN = model.GAME_TURN;
 
-    //set the current nation
-    for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
-        if (eaw.game.ACTIVE_NATIONS[i].id === model.CURRENT_NATION.id){
-          eaw.game.CURRENT_NATION = eaw.game.ACTIVE_NATIONS[i];
+
+
+    //create new nations
+    eaw.game.NATIONS =[];
+    for (var i = 0; i < model.NATIONS.length; i++){
+      var new_nation = new eaw.Nation(model.NATIONS[i].id, model.NATIONS[i].cash);
+      eaw.game.NATIONS[i] = new_nation;
+    }
+
+    //find and set the current nation
+    for (var i = 0; i < eaw.game.NATIONS.length; i++){
+        if (eaw.game.NATIONS[i].id === model.CURRENT_NATION.id){
+          eaw.game.CURRENT_NATION = eaw.game.NATIONS[i];
           break;
         }
     }
     eaw.ui.switchNation(eaw.game.CURRENT_NATION);
 
+
+
+
+
     /*
-    this.ACTIVE_NATIONS = new Array();
-    //create nations
-    for (var i = 0; i < eaw.ALL_NATIONS.length; i++){
-      this.ACTIVE_NATIONS.push(new eaw.Nation(eaw.ALL_NATIONS[i]));
-    }
-    this.GAME_TURN = 0;
-    this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
     this.CURRENT_NATION_INDEX = 0;
-    this.INACTIVE_NATIONS = new Array();
+    this.INNATIONS = new Array();
     this.GAME_PIECES = [];
     this.ZONE_SET = [];
     */
@@ -85,16 +84,15 @@
 
 eaw.Game = function() {
   //possible nations
-
-  this.ACTIVE_NATIONS = new Array();
+  this.NATIONS = new Array();
   //create nations
-  for (var i = 0; i < eaw.ALL_NATIONS.length; i++){
-    this.ACTIVE_NATIONS.push(new eaw.Nation(eaw.ALL_NATIONS[i]));
+  for (var i = 0; i < eaw.nations.ALL_NATIONS.length; i++){
+    this.NATIONS.push(new eaw.nations.Nation(eaw.nations.ALL_NATIONS[i]));
   }
   this.GAME_TURN = 0;
-  this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
+  this.CURRENT_NATION = this.NATIONS[0];
   this.CURRENT_NATION_INDEX = 0;
-  this.INACTIVE_NATIONS = new Array();
+  this.INNATIONS = new Array();
   this.GAME_PIECES = [];
   this.ZONE_SET = [];
 }
@@ -104,29 +102,29 @@ eaw.Game.prototype = {
   constructor: eaw.Game,
   getCurrentNation: function(){
       if (this.CURRENT_NATION == ''){
-        this.CURRENT_NATION = this.ACTIVE_NATIONS[0];
+        this.CURRENT_NATION = this.NATIONS[0];
         this.CURRENT_NATION_INDEX = 0;
       }
       return this.CURRENT_NATION;
   },
   nextNation: function(){
-    if (this.CURRENT_NATION_INDEX == this.ACTIVE_NATIONS.length - 1){
+    if (this.CURRENT_NATION_INDEX == this.NATIONS.length - 1){
       this.CURRENT_NATION_INDEX = 0;
     }
     else{
       this.CURRENT_NATION_INDEX++;
     }
-    this.CURRENT_NATION = this.ACTIVE_NATIONS[this.CURRENT_NATION_INDEX];
+    this.CURRENT_NATION = this.NATIONS[this.CURRENT_NATION_INDEX];
     return this.CURRENT_NATION;
   },
   previousNation: function(){
     if (this.CURRENT_NATION_INDEX == 0){
-      this.CURRENT_NATION_INDEX = this.ACTIVE_NATIONS.length - 1;
+      this.CURRENT_NATION_INDEX = this.NATIONS.length - 1;
     }
     else{
       this.CURRENT_NATION_INDEX--;
     }
-    this.CURRENT_NATION = this.ACTIVE_NATIONS[this.CURRENT_NATION_INDEX];
+    this.CURRENT_NATION = this.NATIONS[this.CURRENT_NATION_INDEX];
     return this.CURRENT_NATION;
   },
   save: function() {
@@ -159,19 +157,16 @@ eaw.Game.prototype = {
     var b = unit.getBBox();
     var unit_type = unit.data("Unit").unit_type;
 
-  /* FIGURING OUT BEST DROP POINT TO USE
-    console.log('BX: ' + b.x);
-    console.log('BY: ' + b.y);
-    console.log('event.x: ' + event.pageX);
-    var py = event.pageY;
-    py = py - 125;
-    console.log('event.y: ' + py);*/
+    //use the centered of the bottom of the unit
+    //bounding box as the drop point
+    var x = b.x + (b.width / 2);
+    var y = b.y + b.height;
 
     /*** Figure out what zone we've been dropped into
          and assign unit to the appropriate array [country][type]  ***/
     for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
       var zone_element = eaw.game.ZONE_SET[i];
-      if (Snap.path.isPointInside(zone_element.el.attr('path'), b.x, b.y)){
+      if (Snap.path.isPointInside(zone_element.el.attr('path'), x, y)){
 
         zone_element.flash();
 
@@ -186,8 +181,8 @@ eaw.Game.prototype = {
         console.log(country + ' ' + unit_type + ' ' + unit_id + ' landed in ' + zone_element.name);
         var country_name = '';
         //increment the alliance counters for this zone
-        for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
-          var nation = eaw.game.ACTIVE_NATIONS[i];
+        for (var i = 0; i < eaw.game.NATIONS.length; i++){
+          var nation = eaw.game.NATIONS[i];
           if (country === nation.id){
             country_name = nation.unit_name;
             switch (nation.alliance){
@@ -232,7 +227,6 @@ eaw.Game.prototype = {
           eaw.io.sendMove(unit, 'drop');
         }
 
-
         //check if zone is now occupied, contested or liberated
         zone_element.checkOwnerStatus();
 
@@ -240,12 +234,6 @@ eaw.Game.prototype = {
       break;
       }
     }
-
-
-
-
-
-
   }//end unitMouseupHandler
 
   eaw.unitMousedownHandler = function (unit, event, remoteDraw){
@@ -261,25 +249,6 @@ eaw.Game.prototype = {
 
     var the_unit = zone[set_name][unit_type][unit.data("Unit").id];
     delete zone[set_name][unit_type][unit.data("Unit").id];
-
-    //decrement the unit counter for this zone
-    for (var i = 0; i < eaw.game.ACTIVE_NATIONS.length; i++){
-      var nation = eaw.game.ACTIVE_NATIONS[i];
-
-      if (country === nation.name){
-        switch (nation.alliance){
-          case "allies":
-            zone.ally_count--;
-            break;
-          case "axis":
-            zone.axis_count--;
-            break;
-          case "russia":
-            zone.russia_count--;
-            break;
-          }
-      }
-    }
 
     //remaining units
     var unit_set = zone[set_name][unit_type];
@@ -306,15 +275,45 @@ eaw.Game.prototype = {
       var b = leftover_unit.getBBox();
       eaw.redrawChipStack(b.x, b.y + 15, unit_set, leftover_unit);
     }
+    //cleanup after ourselves
+    //if we don't need the array-like objs
+    else{
+      delete zone[set_name][unit_type];
+      var prop2_count = 0;
+      for (var x in zone[set_name]){
+        prop2_count++;
+      }
+      if (prop2_count === 0){
+        delete zone[set_name];
+      }
+    }
+
+    //decrement the unit counter for this zone
+    for (var i = 0; i < eaw.game.NATIONS.length; i++){
+      var nation = eaw.game.NATIONS[i];
+
+      if (country === nation.id){
+        switch (nation.alliance){
+          case "allies":
+            zone.ally_count--;
+            break;
+          case "axis":
+            zone.axis_count--;
+            break;
+          case "russia":
+            zone.russia_count--;
+            break;
+          }
+      }
+    }
+
+    //check if zone is now occupied, contested or liberated
+    zone.checkOwnerStatus();
 
     if (!remoteDraw){
       eaw.io.sendMove(unit, 'drag');
     }
-
-
   }//close unitMousedownHandler
-
-
 
   eaw.redrawChipStack = function (xchiploc, ychiploc, unit_set, locked_unit){
 
