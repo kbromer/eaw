@@ -8,7 +8,7 @@
 .center_field * {
     position: relative;
     font-family: Trebuchet MS;
-    background-color: rgba(255, 255, 255, 0.6);
+    background-color: rgba(255, 255, 255, 0.0);
     padding: 5px 15px;
 }
 
@@ -54,7 +54,7 @@
 #selector_div button {
     font-size: 20pt;
     color: rgb(255, 255, 255);
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0);
     cursor: pointer;
     border: none;
     width: 5em;

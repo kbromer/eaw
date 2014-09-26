@@ -66,13 +66,37 @@ body {
   z-index: 99999;
 }
 .marker_image{
-  width:65px;
-  height:65px;
+  width:55px;
+  height:55px;
   position: absolute;
-  z-index: 99999;
+  z-index: 98;
+}
+.marker_wrapper{
+  position: relative;
+  height: 65px;
+  width: 100%;
+}
+.ipc_num{
+  position: absolute;
+  text-align:center;
+  width: 100%;
+  top: 75%;
+  z-index: 99;
+
+  color: white;
+}
+.container-canvas{
+  position: relative;
+}
+#dice_container{
+  position: absolute;
+  z-index: 10;
+}
+.center_field{
+  z-index: 9999;
 }
 .image_holder{
-  width:65px;
+  width:100%;
   height:65px;
   position: relative;
   z-index: 99999;
@@ -83,7 +107,8 @@ body {
 #canvas_container {
   height: 1480px;
   width: 2120px;
-  z-index:0;
+  z-index: -1;
+  position: absolute;
   /*margin-top:100px;*/
 }
 bring-to-front{

@@ -117,17 +117,35 @@ eaw.ui.switchNation = function (nation){
 
 eaw.ui.displayIPCMarkers = function (){
 
+  var ipcObj = eaw.nations.getIPCs();
+  console.log(ipcObj);
+
   $("[id^='marker_logo']").each(function( index, element ) {
     var country_id = element.id.slice(-2);
     console.log(element.id);
-    var display_ipcs = 0;
-    for (i=0; i < eaw.game.NATIONS.length; i++){
-      if (eaw.game.NATIONS[i].id === country_id){
-        display_ipcs = eaw.game.NATIONS[i].getIPCs();
+    var display_ipcs = ipcObj[country_id];
+    console.log(display_ipcs);
+    var perc = (display_ipcs/120) * 100;
+
+    this.style.left = perc + '%';
+    var spanid = 'disipc_' + country_id;
+
+    $('#' + spanid).text(display_ipcs);
+
+
+
+
+
+    /*
+    for (i=0; i < eaw.game.PLAYABLE_NATIONS.length; i++){
+      if (eaw.game.PLAYABLE_NATIONS[i].id === country_id){
+        display_ipcs = eaw.game.PLAYABLE_NATIONS[i].getIPCs();
         console.log("IPCS: " + display_ipcs);
       }
+    }*/
 
-    }
+    //now display the IPCs and move the marker an appropriate distance along the bar
+
 
 
 

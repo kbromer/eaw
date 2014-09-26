@@ -336,15 +336,15 @@
 
 
         var canvas_container = $('canvas')[0];
-        console.log(canvas);
         this.renderer = window.WebGLRenderingContext
-            ? new THREE.WebGLRenderer({ antialias: true, canvas: canvas_container})
-            : new THREE.CanvasRenderer({ antialias: true });
+            ? new THREE.WebGLRenderer({ antialias: true, canvas: canvas_container, alpha: true})
+            : new THREE.CanvasRenderer({ antialias: true, canvas: canvas_container, alpha: true});
 
         this.renderer.setSize(this.cw * 2, this.ch * 2);
         this.renderer.shadowMapEnabled = true;
         this.renderer.shadowMapSoft = true;
-        this.renderer.setClearColor(0xffffff, 1);
+        this.renderer.autoClear = true;
+        //this.renderer
 
         this.dices = [];
         this.scene = new THREE.Scene();
@@ -382,15 +382,16 @@
         this.dice_body_material = new CANNON.Material();
         var desk_body_material = new CANNON.Material();
         var barrier_body_material = new CANNON.Material();
+
         this.world.addContactMaterial(new CANNON.ContactMaterial(
                     desk_body_material, this.dice_body_material, 0.01, 0.5));
         this.world.addContactMaterial(new CANNON.ContactMaterial(
-                    barrier_body_material, this.dice_body_material, 0, 1.0));
+                    barrier_body_material, this.dice_body_material, 0, 0.5));
         this.world.addContactMaterial(new CANNON.ContactMaterial(
                     this.dice_body_material, this.dice_body_material, 0, 0.5));
 
         this.desk = new THREE.Mesh(new THREE.PlaneGeometry(this.w * 2, this.h * 2, 1, 1),
-                new THREE.MeshLambertMaterial({ color: 0xffffff }));
+                new THREE.MeshLambertMaterial({ color: 0xffffff, opacity: 0, transparent: true}));
         this.desk.receiveShadow = true;
         this.scene.add(this.desk);
 
@@ -605,7 +606,7 @@
         this.clear();
         var step = this.w / 4.5;
         this.pane = new THREE.Mesh(new THREE.PlaneGeometry(this.cw * 20, this.ch * 20, 1, 1),
-                new THREE.MeshPhongMaterial({ color: 0, ambient: 0xfbfbfb, emissive: 0 }));
+                new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0, transparent: true}));
         this.pane.receiveShadow = true;
         this.pane.position.set(0, 0, 1);
         this.scene.add(this.pane);
