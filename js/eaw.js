@@ -1,11 +1,13 @@
+'use strict';
   //set a namespace to drop funcs into as needed
-  eaw = {};
-  eaw.game;
-  eaw.savegame;
-  eaw.socket;
+  var eaw = {};
+  eaw.game = {};
+  eaw.savegame = {};
+  eaw.socket = {};
   eaw.UNIT_TYPES = ['infantry', 'fighter', 'armor', 'artillery', 'bomber', 'cruiser', 'battleship', 'carrier', 'transport'];
   eaw.NATION_LOOKUP = {};
-  eaw.paper;
+  eaw.paper = {};
+  eaw.map_data = null;
 
   eaw.loadGame = function (game) {
     eaw.removeAllPieces();
@@ -19,12 +21,20 @@
     //set the game turn
     eaw.game.GAME_TURN = model.GAME_TURN;
 
-
-
     //create new nations
     eaw.game.PLAYABLE_NATIONS =[];
     for (var i = 0; i < model.PLAYABLE_NATIONS.length; i++){
-      var new_nation = new eaw.nations.Nation(model.PLAYABLE_NATIONS[i].id, model.PLAYABLE_NATIONS[i].cash);
+
+      var obj = {
+        id: model.PLAYABLE_NATIONS[i].id,
+        name: model.PLAYABLE_NATIONS[i].name,
+        alliance: model.PLAYABLE_NATIONS[i].alliance,
+        unit_name: model.PLAYABLE_NATIONS[i].unit_name,
+        cash: model.PLAYABLE_NATIONS[i].cash
+      }
+
+      var new_nation = new eaw.nations.Nation(obj);
+      console.log(new_nation);
       eaw.game.PLAYABLE_NATIONS[i] = new_nation;
     }
 
@@ -40,28 +50,32 @@
 
     //loop through all the zones and recreate the zone and unit
     //configuration
-    for (var i = 0; i < model.ZONE_SET.length; i++){
-      var z = model.ZONE_SET[i];
+    eaw.zones.loadZones();
 
-      if (z.type === "SeaZone"){
+    /*** REWRITE THE WHOLE THING TO USE THE GAME PIECES ARRAY
+    //*** SINCE THAT HAS EVERYTHING YOU NEED */
 
-      } else if (z.type === "LandZone"){
+    for (var i = 0; i < model.GAME_PIECES.length; i++){
+      var saved_unit = model.GAME_PIECES[i];
+      var location_zone = saved_unit.location_zone;
+      var owner = saved_unit.unit_owner;
+      var type = saved_unit.unit_type;
 
+      var params = {
+          myId: saved_unit.id,
+          myOwner: owner,
+      };
 
-      }
-
-
-
+      /*** COPY OBJECT PARAMETERS FROM THE GAME PIECE LIST ***/
+      var new_unit = eaw.createUnit(type, params)
+      new_unit.drawElement();
+      var unitx = saved_unit.el.matrix.e;
+      var unity = saved_unit.el.matrix.f;
+      var unit_zone = saved_unit.location_zone.name;
+      new_unit.el = new_unit.el.transform('t' + unitx + ',' + unity);
+      new_unit.el.data("Unit", new_unit);
+      eaw.unitMouseupHandler(new_unit.el, event, false, unit_zone);
     }
-
-    /*
-
-    this.INNATIONS = new Array();
-    this.GAME_PIECES = [];
-    this.ZONE_SET = [];
-    */
-
-
   }
 
 
@@ -151,7 +165,7 @@ eaw.Game.prototype = {
   },
   save: function() {
     eaw.savegame = JSON.stringify(this, function (key, value){
-      if (key == 'node' || key == 'paper' || key == 'el' || key == '_drag' || key == 'anims' || key == 'events' || key === 'pathstring'){
+      if (key == 'node' || key == 'paper' || key == '_drag' || key == 'anims' || key == 'events' || key === 'pathstring'){
         //kill any vars we don't want to save time/space
         return;
       }
@@ -174,7 +188,7 @@ eaw.Game.prototype = {
   };
 
 
-  eaw.unitMouseupHandler = function (unit, event, remoteDraw){
+  eaw.unitMouseupHandler = function (unit, event, remoteDraw, zone_name){
     //use the upper left corner of the element
     var b = unit.getBBox();
     var unit_type = unit.data("Unit").unit_type;
@@ -184,12 +198,17 @@ eaw.Game.prototype = {
     var x = b.x + (b.width / 2);
     var y = b.y + b.height;
 
+    var zone_hit = false;
+
+    if (zone_name == undefined){ zone_name = '';} ;
+
     /*** Figure out what zone we've been dropped into
          and assign unit to the appropriate array [country][type]  ***/
     for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
       var zone_element = eaw.game.ZONE_SET[i];
-      if (Snap.path.isPointInside(zone_element.el.attr('path'), x, y)){
-
+      //if its the zone passed in by the caller or if its a hit inside the drop zone
+      if (zone_element.name === zone_name || Snap.path.isPointInside(zone_element.el.attr('path'), x, y)){
+        zone_hit = true;
         zone_element.flash();
 
         var unit_id = unit.data("Unit").id;
@@ -203,8 +222,8 @@ eaw.Game.prototype = {
         console.log(country + ' ' + unit_type + ' ' + unit_id + ' landed in ' + zone_element.name);
         var country_name = '';
         //increment the alliance counters for this zone
-        for (var i = 0; i < eaw.game.PLAYABLE_NATIONS.length; i++){
-          var nation = eaw.game.PLAYABLE_NATIONS[i];
+        for (var j = 0; j < eaw.game.PLAYABLE_NATIONS.length; j++){
+          var nation = eaw.game.PLAYABLE_NATIONS[j];
           if (country === nation.id){
             country_name = nation.unit_name;
             switch (nation.alliance){
@@ -244,7 +263,10 @@ eaw.Game.prototype = {
         if (prop_count > 1){
           eaw.redrawChipStack(b.x, b.y + 15, unit_set, unit);
         }
-        eaw.game.ZONE_SET[i] = zone_element;
+
+        //its not clear if this is needed, lets remove it
+        //eaw.game.ZONE_SET[i] = zone_element;
+
         if (!remoteDraw){
           eaw.io.sendMove(unit, 'drop');
         }
@@ -266,8 +288,18 @@ eaw.Game.prototype = {
 
       //break on the first matching path we find
       break;
-      }
+      }//end if
+    }//end for
+    //if the unit wasn't dropped in a valid zone, delete it
+    if (!zone_hit){
+      console.log('Adjusting location and re-evaluating drop');
+      var x = b.cx + 1;
+      var y = b.cy + 1;
+      unit.transform('t'+ x + ',' + y);
+      eaw.unitMouseupHandler(unit, event, remoteDraw);
+
     }
+
   }//end unitMouseupHandler
 
   eaw.unitMousedownHandler = function (unit, event, remoteDraw){
@@ -369,7 +401,7 @@ eaw.Game.prototype = {
     for (var unit_id in unit_set){
 
       //if you're not referring to the unit i just dropped
-        //  - insert after the unit dropped so appears in teh right order
+        // - insert after the unit dropped so it appears in the right order
         // - turn the unit into a chip
         // - set the chip to white
         // - move the chip to the right location
@@ -397,7 +429,7 @@ eaw.Game.prototype = {
       var counter = 0;
 
       //create red chips for every five whites
-      for (i = 0; i < red_chip_count; i++){
+      for (var i = 0; i < red_chip_count; i++){
         var u = white_chips[counter];
         u.attr({fill: 'red'});
         counter++;
@@ -480,7 +512,7 @@ eaw.Game.prototype = {
         case 'artillery':
           new_unit = new eaw.Artillery(params);
           break;
-        case 'sub':
+        case 'submarine':
           new_unit = new eaw.Submarine(params);
           break;
         case 'bomber':

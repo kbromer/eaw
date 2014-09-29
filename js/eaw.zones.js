@@ -1,3 +1,8 @@
+eaw.zones = {};
+//holds data preloaded from an svg path image for rendering
+//the squares.  this better supports loading games previously saved
+eaw.zones.map_data = null;
+
 eaw.ZoneProperties = {
 /** Off Map Areas **/
 OffMapPersia: {type: "land", owner: "na", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
@@ -282,3 +287,109 @@ LeningradLake: {type: "sea", majorHarbor: false},
 PersianGulf: {type: "sea", majorHarbor: false},
 CaspianSea: {type: "sea", majorHarbor: false}
 };
+
+
+//load the elements so we can create zones
+//and setup unit behaviors - connect html dom elements w/ canvas ones
+  eaw.zones.loadZones = function () {
+    if (eaw.zones.map_data !== null){
+      console.log('USING PRE LOADED DATA');
+      eaw.zones.createMap(eaw.zones.map_data);
+    }
+    else{
+      $.get( "images/eaw.svg", function(data){
+        eaw.zones.map_data = data;
+        eaw.zones.createMap(data);
+      });
+    }
+  }
+
+
+
+  eaw.zones.createMap = function (data) {
+
+      console.log('Painting map...');
+      $(data).find('path').each(function(){
+        var path_string = $(this).attr("d");
+        var zone_id = $(this).attr("id");
+        var zone_data = eaw.ZoneProperties[zone_id];
+        if (typeof zone_data == 'undefined')
+          console.log(zone_id + ' was not found in the zone list.');
+        if (zone_data["type"] == "sea"){
+          var majorHarbor = zone_data["majorHarbor"];
+
+          var zone = new eaw.SeaZone(path_string, eaw.paper, zone_id, majorHarbor);
+          zone.drawElement();
+          var b = zone.el.getBBox();
+          var x = b.x + (b.width/2);
+          var y = b.y + (b.height/2);
+          LAST_ZONE = zone.el;
+          eaw.paper.zone_set[eaw.paper.zone_set.length] = zone.el;
+          if (zone.major_harbor){
+            //load the anchor
+            var anchor_path = 'M 20.00,17.50 C 20.00,17.50 20.00,12.50 20.00,12.50 20.00,12.50 15.00,12.50 15.00,12.50 15.00,12.50 16.37,13.87 16.37,13.87 15.27,15.70 13.43,17.01 11.25,17.38 11.25,17.38 11.25,9.82 11.25,9.82 13.40,9.27 15.00,7.33 15.00,5.00 15.00,2.24 12.76,0.00 10.00,0.00 7.24,0.00 5.00,2.24 5.00,5.00 5.00,7.33 6.60,9.27 8.75,9.82 8.75,9.82 8.75,17.38 8.75,17.38 6.57,17.01 4.73,15.70 3.63,13.87 3.63,13.87 5.00,12.50 5.00,12.50 5.00,12.50 0.00,12.50 0.00,12.50 0.00,12.50 0.00,17.50 0.00,17.50 0.00,17.50 1.53,15.97 1.53,15.97 3.36,18.46 6.56,20.03 10.00,20.00 13.43,20.03 16.64,18.46 18.47,15.97 18.47,15.97 20.00,17.50 20.00,17.50 Z M 10.00,7.50 C 8.62,7.50 7.50,6.38 7.50,5.00 7.50,3.62 8.62,2.50 10.00,2.50 11.38,2.50 12.50,3.62 12.50,5.00 12.50,6.38 11.38,7.50 10.00,7.50 Z';
+            var anchor_el = eaw.paper.path(anchor_path).attr({stroke: 'black', fill: 'black', 'stroke-width': 1}).insertAfter(zone.el);
+
+            switch(zone.name){
+              case 'LeningradHarbor':
+                x = x - 65;
+                y = y - 20;
+              break;
+              case 'TrondheimHarbor':
+                x = x - 50;
+                y = y + 30;
+              break;
+              case 'IstanbulHarbor':
+                y = y - 7;
+              break;
+            }
+            anchor_el.transform('t' + x + ',' + y);
+          }
+
+          if (zone.name.substr(0, 7) === "Seazone"){
+              var t = '';
+              switch(zone.name){
+                case 'Seazone8':
+                  x = x - 70;
+                  t = ' 8 ';
+                break;
+                case 'Seazone3':
+                  x = x - 200;
+                  t = ' 3 ';
+                break;
+                case 'Seazone4':
+                  x = x - 90;
+                  t = ' 4 ';
+                break;
+                case 'Seazone10':
+                  x = x - 10;
+                  y = y + 30;
+                  t = ' 10 ';
+                break;
+              }
+              eaw.paper.text(x,y, t).attr({ fontSize: '32px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
+          }
+        }else{
+          var zone = new eaw.LandZone(path_string, eaw.paper, zone_id, zone_data["owner"], zone_data["hasFactory"], zone_data["pointValue"]);
+          zone.drawElement();
+          var b = zone.el.getBBox();
+          var x = b.x + (b.width/2);
+          var y = b.y + (b.height/2);
+
+          x = x + eaw.ZoneProperties[zone.name].center.x;
+          y = y + eaw.ZoneProperties[zone.name].center.y;
+
+          if (zone.point_value > 0){
+            eaw.paper.text(x,y+10, '(' + zone.point_value + ')').attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
+            eaw.paper.text(x,y, zone.name).attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Arial Black'});
+          }else{
+            eaw.paper.text(x,y, zone.name).attr({ fontSize: '7px', "text-anchor": "middle"});
+          }
+        }
+
+        LAST_ZONE = zone.el;
+        eaw.paper.zone_set[eaw.paper.zone_set.length] = zone.el;
+        eaw.game.ZONE_SET[eaw.game.ZONE_SET.length] = zone;
+      });
+      console.log('Map painting complete.');
+    }
