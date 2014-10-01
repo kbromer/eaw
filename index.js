@@ -9,7 +9,7 @@ var logfmt = require("logfmt");
 var pg = require('pg');
 var params = process.env.DATABASE_URL ? process.env.DATABASE_URL : { host: 'ec2-54-243-48-227.compute-1.amazonaws.com',user: 'pyknnfhllbshxm',password: 'pU30R6b8fwRmLUT_rFGSqm7Jvf',database: 'dd3btnvauc5ffj',ssl: true, port: 5432 };
 
-app.use(logfmt.requestLogger());
+app.use(logfmt.requestLogger()); 
 app.use(express.static(__dirname + '/'));
 
 app.get('/', function(req, res){
