@@ -15,10 +15,10 @@ window.onload = function(){
 	//and setup unit behaviors - connect html dom elements w/ canvas ones
 	$.getScript("js/eaw.elements.js", function() {
   	console.log( "Loading game elements..." );
-
+/*
 		var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-
+*/
 		eaw.paper = new Snap('#canvas_container');
 		eaw.paper.zone_set = new Array();
 		eaw.paper.zonecount = 0;
@@ -36,7 +36,6 @@ window.onload = function(){
 					if (event.originalEvent.target !== undefined){
 						var target_id = event.originalEvent.target.id;
 						var unit_type = target_id.substr(0, target_id.indexOf('_'));
-						console.log(unit_type);
 						var nation_type = target_id.match(/_([^ ]*)/)[1];
 						var params = {myPath: null, myOwner: nation_type, myId: null};
 						var new_unit = eaw.createUnit(unit_type, params);

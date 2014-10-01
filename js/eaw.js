@@ -4,7 +4,7 @@
   eaw.game = {};
   eaw.savegame = {};
   eaw.socket = {};
-  eaw.UNIT_TYPES = ['infantry', 'fighter', 'armor', 'artillery', 'bomber', 'cruiser', 'battleship', 'carrier', 'transport'];
+  eaw.UNIT_TYPES = ['infantry', 'fighter', 'armor', 'artillery', 'bomber', 'cruiser', 'battleship', 'carrier', 'transport', 'submarine'];
   eaw.NATION_LOOKUP = {};
   eaw.paper = {};
   eaw.map_data = null;
@@ -173,6 +173,7 @@ eaw.Game.prototype = {
     });
 
     var model = JSON.parse(eaw.savegame);
+    eaw.io.sendSaveGame(eaw.savegame);
     console.log(model);
 
   }
@@ -207,7 +208,7 @@ eaw.Game.prototype = {
     for (var i = 0; i < eaw.game.ZONE_SET.length; i++){
       var zone_element = eaw.game.ZONE_SET[i];
       //if its the zone passed in by the caller or if its a hit inside the drop zone
-      if (zone_element.name === zone_name || Snap.path.isPointInside(zone_element.el.attr('path'), x, y)){
+      if (zone_name.length > 0 ? zone_element.name === zone_name : Snap.path.isPointInside(zone_element.el.attr('path'), x, y)){
         zone_hit = true;
         zone_element.flash();
 
@@ -275,31 +276,23 @@ eaw.Game.prototype = {
         if (!zone_element.checkContested()){
           //don't bother w/ sea zone owners for now
           if (zone_element.type === 'LandZone'){
-
-
             var n = eaw.NATION_LOOKUP[country];
             var owner = eaw.NATION_LOOKUP[zone_element.current_owner];
             if (n.alliance !== owner.alliance){
               console.log('Attack!');
             }
           }
-
         }
-
       //break on the first matching path we find
       break;
       }//end if
     }//end for
-    //if the unit wasn't dropped in a valid zone, delete it
+    //isPointInsidePath seems to fail often re-evaluate the loop again
     if (!zone_hit){
-      console.log('Adjusting location and re-evaluating drop');
-      var x = b.cx + 1;
-      var y = b.cy + 1;
-      unit.transform('t'+ x + ',' + y);
+      console.log('Re-evaluating drop');
+      unit.transform('t'+ b.x + ',' + b.y);
       eaw.unitMouseupHandler(unit, event, remoteDraw);
-
     }
-
   }//end unitMouseupHandler
 
   eaw.unitMousedownHandler = function (unit, event, remoteDraw){
@@ -375,9 +368,6 @@ eaw.Game.prototype = {
 
     //check if zone is still contested
     zone.checkContested();
-
-
-
 
     if (!remoteDraw){
       eaw.io.sendMove(unit, 'drag');
@@ -478,19 +468,15 @@ eaw.Game.prototype = {
 
 
   eaw.loadDice = function (){
-      console.log('loading dice');
-
-              $.getScript( "dice/dice.js", function(){
-                $.getScript( "dice/main.js", function(){
-                    dice_initialize(document.body, window.innerWidth - 1, window.innerHeight - 1);
-                    console.log('Loaded dice elements.');
-              //      $("canvas").attr("background-color", "rgba(0, 0, 0, 0.5)");
-
-
-
-                });
-              });
-    }
+    console.log('loading dice');
+    $.getScript( "dice/dice.js", function(){
+      $.getScript( "dice/main.js", function(){
+          dice_initialize(document.body, window.innerWidth - 1, window.innerHeight - 1);
+          console.log('Loaded dice elements.');
+    //      $("canvas").attr("background-color", "rgba(0, 0, 0, 0.5)");
+      });
+    });
+  }
 
 
     eaw.createUnit = function (type, params){
@@ -528,7 +514,6 @@ eaw.Game.prototype = {
           new_unit = new eaw.Battleship(params);
           break;
       }
-      console.log('returning unit');
       eaw.game.GAME_PIECES[eaw.game.GAME_PIECES.length] = new_unit;
       return new_unit;
     }

@@ -6,11 +6,9 @@ function dice_initialize(container, w, h) {
     var canvas = $t.id('canvas');
     canvas.style.width = w + 'px';
     canvas.style.height = h + 'px';
-    canvas.style.backgroundColor = "rgba(0, 0, 0, 0.0)";
     var label = $t.id('label');
     var set = $t.id('set');
     var selector_div = $t.id('selector_div');
-    selector_div.style.backgroundColor = 'transparent';
     var info_div = $t.id('info_div');
     on_set_change();
 

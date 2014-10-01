@@ -285,7 +285,10 @@ EasternBlackSea: {type: "sea", majorHarbor: false},
 RedSea: {type: "sea", majorHarbor: false},
 LeningradLake: {type: "sea", majorHarbor: false},
 PersianGulf: {type: "sea", majorHarbor: false},
-CaspianSea: {type: "sea", majorHarbor: false}
+CaspianSea: {type: "sea", majorHarbor: false},
+Box8: {type: "sea", majorHarbor: false},
+Box4: {type: "sea", majorHarbor: false},
+Box10: {type: "sea", majorHarbor: false}
 };
 
 
@@ -346,7 +349,7 @@ CaspianSea: {type: "sea", majorHarbor: false}
             anchor_el.transform('t' + x + ',' + y);
           }
 
-          if (zone.name.substr(0, 7) === "Seazone"){
+          if (zone.name.substr(0, 7) === "Seazone" || zone.name.substr(0,3) === "Box"){
               var t = '';
               switch(zone.name){
                 case 'Seazone8':
@@ -364,6 +367,15 @@ CaspianSea: {type: "sea", majorHarbor: false}
                 case 'Seazone10':
                   x = x - 10;
                   y = y + 30;
+                  t = ' 10 ';
+                break;
+                case 'Box8':
+                  t = ' 8 ';
+                break;
+                case 'Box4':
+                  t = ' 4 ';
+                break;
+                case 'Box10':
                   t = ' 10 ';
                 break;
               }

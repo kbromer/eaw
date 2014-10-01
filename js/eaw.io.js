@@ -16,7 +16,11 @@
         eaw.io.networkDragHandler(data);
       });
     });
-  }
+  };
+
+  eaw.io.sendSaveGame = function (message) {
+    eaw.io.socket.emit('new_save_game', message);
+  };
 
   eaw.io.sendMove = function (unit, action){
 
@@ -24,7 +28,7 @@
     var zone = unit.data("Unit").location_zone;
     var unit_type = unit.data("Unit").unit_type;
     var set_name = country + '_unit_set';
-    var unit_id = unit.data("Unit").id
+    var unit_id = unit.data("Unit").id;
 
     console.log('Sending click move.');
     var message_body = {};
@@ -42,31 +46,25 @@
       eaw.io.socket.emit('unit_dragging', message);
     else if (action === 'drop')
       eaw.io.socket.emit('unit_dropped', message);
-  }
+  };
 
   eaw.io.networkDragHandler = function(data){
-    console.log('Picked a unit up');
-    console.log(data);
+    console.log('Remote player picked a unit up');
     var udp = JSON.parse(data);
     var local_unit = '';
     var unitid = udp.unitid;
     for (var i=0; i < eaw.game.GAME_PIECES.length; i++){
-      console.log(eaw.game.GAME_PIECES[i] + ' v ' + unitid);
       if (eaw.game.GAME_PIECES[i].id === unitid){
         isExistingPiece = true;
         local_unit = eaw.game.GAME_PIECES[i];
       }
     }
-    console.log(local_unit);
-    console.log(local_unit.el);
-    console.log('creating a shadow');
     //var f = eaw.paper.filter(Snap.filter.shadow(0, 2,'yellow', 3));
     //var f = eaw.paper.filter('');
-    console.log('filter created');
     local_unit.el.attr({stroke: 'red'});
-    console.log('shadow added');
+    console.log('Highlighted local unit, calling unitMousedownHandler');
     eaw.unitMousedownHandler(local_unit.el, event, true);
-  }
+  };
 
 
     //handles drop events from other players
@@ -103,4 +101,4 @@
     unit.el.attr({stroke: 'black'});
     console.log('unitMouseupHandler');
     eaw.unitMouseupHandler(unit.el, event, true);
-  }//close networkDropHandler
+  };//close networkDropHandler
