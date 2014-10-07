@@ -8,6 +8,7 @@
   eaw.NATION_LOOKUP = {};
   eaw.paper = {};
   eaw.map_data = null;
+  eaw.dice_rendered = false;
 
   eaw.loadGame = function (game) {
     eaw.removeAllPieces();
@@ -469,13 +470,39 @@ eaw.Game.prototype = {
 
   eaw.loadDice = function (){
     console.log('loading dice');
-    $.getScript( "dice/dice.js", function(){
-      $.getScript( "dice/main.js", function(){
-          dice_initialize(document.body, window.innerWidth - 1, window.innerHeight - 1);
-          console.log('Loaded dice elements.');
-    //      $("canvas").attr("background-color", "rgba(0, 0, 0, 0.5)");
+    if (!eaw.dice_rendered){
+      $.getScript( "dice/dice.js", function(){
+        $.getScript( "dice/main.js", function(){
+
+            var dice_div = document.getElementById("dice_container");
+            dice_initialize(document.body, window.innerWidth - 1, window.innerHeight - 1);
+            console.log('Loaded dice elements.');
+            eaw.dice_rendered = true;
+      //      $("canvas").attr("background-color", "rgba(0, 0, 0, 0.5)");
+        });
       });
-    });
+    }
+    //un-render dice
+    else{
+      //unbind handlers
+      //delete secondary canvas
+      $('canvas').remove();
+      $('#dice_container').remove();
+
+/*      for (var i = 0; i < eaw.game.GAME_PIECES.length; i++){
+        var p = eaw.game.GAME_PIECES[i];
+
+        console.log('trying this');
+        console.log(p);
+        p.stop();
+
+      }*/
+
+
+
+    }
+
+
   }
 
 

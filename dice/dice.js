@@ -110,6 +110,7 @@
             if (text == undefined) return null;
             var canvas = document.createElement("canvas");
             var context = canvas.getContext("2d");
+            canvas.id = 'dice_canvas';
             canvas.width = size + margin;
             canvas.height = size + margin;
             context.font = size + "pt Arial";
@@ -334,11 +335,12 @@
         that.scale = Math.sqrt(this.w * this.w + this.h * this.h) / 13;
         this.use_adapvite_timestep = true;
 
+        console.log('eh');
+        console.log(container);
 
-        var canvas_container = $('canvas')[0];
         this.renderer = window.WebGLRenderingContext
-            ? new THREE.WebGLRenderer({ antialias: true, canvas: canvas_container, alpha: true})
-            : new THREE.CanvasRenderer({ antialias: true, canvas: canvas_container, alpha: true});
+            ? new THREE.WebGLRenderer({ antialias: true, alpha: true})
+            : new THREE.CanvasRenderer({ antialias: true, alpha: true});
 
         this.renderer.setSize(this.cw * 2, this.ch * 2);
         this.renderer.shadowMapEnabled = true;
@@ -628,7 +630,7 @@
 
     this.dice_box.prototype.bind_mouse = function(container, notation_getter, before_roll, after_roll) {
         var box = this;
-        $t.bind(container, ['mousedown', 'touchstart'], function(ev) {
+/*        $t.bind(container, ['mousedown', 'touchstart'], function(ev) {
             box.mouse_time = (new Date()).getTime();
             box.mouse_start = { x: ev.clientX, y: ev.clientY };
         });
@@ -654,12 +656,12 @@
                     box.rolling = false;
                 });
             }
-        });
+        });*/
     }
 
     this.dice_box.prototype.bind_throw = function(button, notation_getter, before_roll, after_roll) {
         var box = this;
-        $t.bind(button, ['mouseup', 'touchend', 'touchcancel'], function(ev) {
+  /*      $t.bind(button, ['mouseup', 'touchend', 'touchcancel'], function(ev) {
             if (box.rolling) return;
             ev.stopPropagation();
             var vector = { x: (rnd() * 2 - 1) * box.w, y: -(rnd() * 2 - 1) * box.h };
@@ -679,7 +681,7 @@
                     box.rolling = false;
                 });
             }
-        });
+        });*/
     }
 
 
