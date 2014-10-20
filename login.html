@@ -7,24 +7,135 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../favicon.ico">
+
     <title>EaW</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/bootstrap-glyphicons.css" rel="stylesheet">
+
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script>
+      $(document).ready(function(){
+        var header = $('body');
+
+        var backgrounds = new Array(
+            'url(http://i.imgur.com/fLykXdO.jpg)'
+          , 'url(http://i.imgur.com/6OMKlo5.jpg)'
+          , 'url(http://i.imgur.com/phoHVep.jpg)'
+          , 'url(http://i.imgur.com/1RP7nqY.png)'
+          , 'url(http://i.imgur.com/ODudqKl.png)'
+          , 'url(http://i.imgur.com/OVVTWiB.jpg)'
+          , 'url(http://i.imgur.com/md1Wa6f.jpg)'
+          , 'url(http://i.imgur.com/J6I4oIE.jpg)'
+          , 'url(http://i.imgur.com/MmmYxqH.jpg)'
+          , 'url(http://i.imgur.com/zCy0HYn.jpg)'
+          , 'url(http://i.imgur.com/nwiRSeT.jpg)'
+          , 'url(http://i.imgur.com/eMbQnmK.jpg)'
+          , 'url(http://i.imgur.com/9IhdBOx.jpg)'
+          , 'url(http://i.imgur.com/0pPfFJH.jpg)'
+          , 'url(http://i.imgur.com/pgA2pjw.jpg)'
+          , 'url(http://i.imgur.com/LINmYbi.png)'
+          , 'url(http://i.imgur.com/fFnet8W.png)'
+          , 'url(http://i.imgur.com/Q6ENVMg.jpg)'
+          , 'url(http://i.imgur.com/hyiHCMp.png)'
+          , 'url(http://i.imgur.com/IGOYUqa.png)'
+          , 'url(http://i.imgur.com/8jMZZZs.png)'
+          , 'url(http://i.imgur.com/Z3QsuSC.png)'
+          , 'url(http://i.imgur.com/IT515C7.jpg)'
+          , 'url(http://i.imgur.com/grRKhcY.jpg)'
+          , 'url(http://i.imgur.com/7z9zRSG.jpg)'
+          , 'url(http://i.imgur.com/ltNN1ZT.jpg)'
+          , 'url(http://i.imgur.com/E8yCAif.jpg)'
+          , 'url(http://i.imgur.com/Vlu7ljO.jpg)'
+          , 'url(http://i.imgur.com/IiCB5pS.jpg)'
+          , 'url(http://i.imgur.com/16oFVUG.jpg)'
+          , 'url(http://i.imgur.com/zvahTm7.jpg)'
+        );
+
+        var current = Math.floor((Math.random() * 31) + 1);
+        function nextBackground() {
+            current = Math.floor((Math.random() * 31) + 1);
+            header.css('background-image', backgrounds[current]);
+        }
+
+        var i = setInterval(nextBackground, 5000);
+        header.css('background-image', backgrounds[current]);
+        setTimeout(function(){clearInterval(i)}, 240000);
+      });
+    </script>
+
+
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+      html {
+        height: 100%;
+      }
+      body {
+        transition: 1.0s;
+        font-family: 'Courier New';
+        padding-top: 40px;
+        padding-bottom: 40px;
+        background-color: gray;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
+
+      .form-signin {
+        max-width: 330px;
+        padding: 35px;
+        margin: 0 auto;
+        background: #222222;
+        border-radius: 25px;
+        border-style: solid;
+        border-color: #AAAD3D;
+        color: #AAAD3D;
+      }
+      .form-signin-heading {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .form-signin .checkbox {
+        font-weight: bold;
+      }
+      .form-signin .form-control {
+        position: relative;
+        height: auto;
+        -webkit-box-sizing: border-box;
+           -moz-box-sizing: border-box;
+                box-sizing: border-box;
+        padding: 10px;
+        font-size: 16px;
+      }
+      .form-signin .form-control:focus {
+        z-index: 2;
+      }
+      .form-signin input[type="email"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+      .form-signin input[type="password"] {
+        margin-bottom: 10px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    </style>
+
   </head>
+
   <body>
 
-<form action="/login" method="post">
-    <div>
-        <label>Username:</label>
-        <input type="text" name="username"/>
-    </div>
-    <div>
-        <label>Password:</label>
-        <input type="password" name="password"/>
-    </div>
-    <div>
-        <input type="submit" value="Log In"/>
-    </div>
-</form>
-</body>
+    <div class="container">
+      <form class="form-signin" role="form" action="/login" method="post">
+        <h2 class="form-signin-heading">Europe@War</h2><h3>It Comes for You.</h3>
+        <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
+        <input type="password" class="form-control" placeholder="Password" name="password"required>
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" style="background-color: #AAAD3D;" type="submit">Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
+
+
+  </body>
 </html>
