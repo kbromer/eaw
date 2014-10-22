@@ -48,11 +48,40 @@
           , 'url(http://i.imgur.com/IiCB5pS.jpg)'
           , 'url(http://i.imgur.com/16oFVUG.jpg)'
           , 'url(http://i.imgur.com/zvahTm7.jpg)'
+          , 'url(http://i.imgur.com/D93kiYZ.jpg)'
+          , 'url(http://i.imgur.com/nQoCfAt.jpg)'
+          , 'url(http://i.imgur.com/de5FOLz.jpg)'
+          , 'url(http://i.imgur.com/8R9WVo9.jpg)'
+          , 'url(http://i.imgur.com/PfoESE5.jpg)'
+          , 'url(http://i.imgur.com/FsPUQko.png)'
+          , 'url(http://i.imgur.com/desj2NT.jpg)'
+          , 'url(http://i.imgur.com/Rq8bBzq.jpg)'
+          , 'url(http://i.imgur.com/sBLmziA.jpg)'
+          , 'url(http://i.imgur.com/K5HX2ea.jpg)'
+          , 'url(http://i.imgur.com/MY4fGpx.jpg)'
+          , 'url(http://i.imgur.com/afosDf3.jpg)'
+          , 'url(http://i.imgur.com/XBux9MQ.jpg)'
+          , 'url(http://i.imgur.com/b0hVjFo.jpg)'
+          , 'url(http://i.imgur.com/z982tc8.jpg)'
+          , 'url(https://upload.wikimedia.org/wikipedia/commons/e/ea/Bundesarchiv_Bild_101III-Weill-059-04%2C_Metz%2C_Heinrich_Himmler_neben_Panzer.jpg)'
+          , 'url(http://i.imgur.com/utjWAaq.jpg)'
+          , 'url(http://i.imgur.com/pHiBV9b.jpg)'
+          , 'url(http://i.imgur.com/axif0Zn.jpg)'
+          , 'url(http://i.imgur.com/936ZnuB.jpg)'
+          , 'url(http://i.imgur.com/kTGclnw.jpg)'
+          , 'url(http://i.imgur.com/uDAdnAo.jpg)'
+          , 'url(http://i.imgur.com/RvaZKdO.jpg)'
+          , 'url(http://i.imgur.com/rDnjx8m.jpg)'
+          , 'url(http://i.imgur.com/BW4Jsjl.jpg)'
+          , 'url(http://i.imgur.com/2wPN30j.jpg)'
+          , 'url(http://i.imgur.com/gn2oZgf.jpg)'
+          , 'url(http://i.imgur.com/G5Nnq73.jpg)'
         );
 
-        var current = Math.floor((Math.random() * 31) + 1);
+        var current = Math.floor((Math.random() * 58) + 1);
         function nextBackground() {
-            current = Math.floor((Math.random() * 31) + 1);
+            current = Math.floor((Math.random() * 58) + 1);
+            console.log(current);
             header.css('background-image', backgrounds[current]);
         }
 
@@ -61,7 +90,6 @@
         setTimeout(function(){clearInterval(i)}, 240000);
       });
     </script>
-
 
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <style>
@@ -77,7 +105,6 @@
         background-size: 100% 100%;
         background-repeat: no-repeat;
       }
-
       .form-signin {
         max-width: 330px;
         padding: 35px;
@@ -118,24 +145,16 @@
         border-top-right-radius: 0;
       }
     </style>
-
   </head>
 
   <body>
-
     <div class="container">
       <form class="form-signin" role="form" action="/login" method="post">
         <h2 class="form-signin-heading">Europe@War</h2><h3>It Comes for You.</h3>
         <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
         <input type="password" class="form-control" placeholder="Password" name="password"required>
-        <label class="checkbox">
-          <input type="checkbox" value="remember-me"> Remember me
-        </label>
         <button class="btn btn-lg btn-primary btn-block" style="background-color: #AAAD3D;" type="submit">Sign in</button>
       </form>
-
-    </div> <!-- /container -->
-
-
+    </div> 
   </body>
 </html>

@@ -24,14 +24,16 @@ eaw.ui.setupBoard = function(){
   });
 
   $("[id='SaveBTN']").on('click', function(){eaw.game.save();});
-  $("[id='LoadBTN']").on('click', function(){eaw.loadGame(eaw.savegame);});
+  $("[id='LoadBTN']").on('click', function(){eaw.loadGame(eaw.savegame);});//<---temporary hack
+  $("[id='LoadDefaultBTN']").on('click', function(){eaw.loadGame('default_new_game');});//<---temporary hack
+  $("[id='SaveDefaultBTN']").on('click', function(){eaw.game.saveDefault();});
 
   //setup behavior of the menu modal closing
   //bind the hide handler to deselect the item
   $('#menu_modal').on('hidden.bs.modal', function (e) {
       $("[id$='nav_option']").parent().removeClass('active');
   });
-}
+};
 
 
 eaw.ui.getSvgCoordinates = function (event, paper) {
@@ -52,7 +54,7 @@ eaw.ui.getSvgCoordinates = function (event, paper) {
   y = parseFloat(y.toFixed(3));
 
   return {x: x, y: y};
-}
+};
 
 eaw.ui.showMenuItem = function (selectedItem){
 
@@ -79,8 +81,7 @@ eaw.ui.showMenuItem = function (selectedItem){
     break;
 
   }
-}
-
+};
 eaw.ui.switchNation = function (nation){
   console.log('Switching nation to ' + nation.name);
   $("img[class^='unit_'], img[class^='icon_']").each(function( index ) {
@@ -113,7 +114,7 @@ eaw.ui.switchNation = function (nation){
     $(".subnav").css("background", "linear-gradient(to right, transparent, green, transparent)");
     break;
   }
-}
+};
 
 eaw.ui.displayIPCMarkers = function (){
 
@@ -153,4 +154,4 @@ eaw.ui.displayIPCMarkers = function (){
 
 
 
-}
+};

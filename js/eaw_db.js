@@ -3,7 +3,24 @@ var params = process.env.DATABASE_URL ? process.env.DATABASE_URL : { host: 'ec2-
 var client = new pg.Client(params);
 module.exports = {
 
+  saveBaseGame: function (msg) {
+    client = new pg.Client(params);
+    client.connect(function(err) {
+      if(err){
+        return console.error('could not connect to postgres', err);
+      }
+      client.query("UPDATE eaw.save_games SET modified_datetime=now(), game_data = '" + msg + "' WHERE name='default_new_game'", function(err, result) {
+        if(err) {
+          return console.error('Failed to save game.', err);
+        }
+      client.end();
+      });
+    });
+  },
+
   saveGame: function (msg) {
+
+    client = new pg.Client(params);
     client.connect(function(err) {
       if(err){
         return console.error('could not connect to postgres', err);
@@ -17,19 +34,22 @@ module.exports = {
     });
   },
 
-  loadGame: function (game) {
+  loadGame: function (game, callback) {
+    client = new pg.Client(params);
     client.connect(function(err) {
       if(err){
-        return console.error('could not connect to postgres', err);
+        return callback(console.error('could not connect to postgres', err));
       }
-      client.query("SELECT game_data FROM eaw.save_games WHERE name = '" + save_name + "'", function(err, result) {
+      client.query("SELECT game_data FROM eaw.save_games WHERE name = '" + game + "'", function(err, result) {
         if(err) {
-          return console.error('Failed to load game', err);
+          client.end();
+          return callback(console.error('Failed to load game', err));
         } else{
           //(created_datetime, modified_datetime, game_data, name)
-          return {status: true, result: result.rows[0] };
+          console.log('Sending back: ' + result.rows[0]);
+          client.end();
+          return callback({status: true, result: result.rows[0] });
         }
-        client.end();
       });
     });
   },
@@ -39,16 +59,14 @@ module.exports = {
     client = new pg.Client(params);
     client.connect(function(err) {
       if(err){
-        return console.error('could not connect to postgres', err);
+        return callback(console.error('could not connect to postgres', err));
       }
-      console.log('made it here');
       var q = "SELECT username, password, displayname FROM eaw.users WHERE username = '" + username + "'";
       console.log(q);
       client.query(q, function(err, result) {
         if (err){
-          console.log('crap');
           client.end();
-          return console.error('query error', err);
+          return callback(console.error('query error', err));
         } else{
           var results = {status: true, data: result.rows[0]};
           client.end();

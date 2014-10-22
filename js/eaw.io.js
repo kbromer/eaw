@@ -1,12 +1,14 @@
+  'use strict';
+
   eaw.io = {};
 
-  eaw.io.connectToServer = function () {
+  eaw.io.connectToServer = function (data) {
     //connect socket
-    eaw.io.socket = io.connect();
+    eaw.io.socket = io.connect('/', { query: "id=" + data.userid });
 
     eaw.io.socket.on('onconnected', function( data ) {
       //Note that the data is the object we sent from the server, as is. So we can assume its id exists.
-      console.log( 'Connected successfully to the socket.io server. My server side ID is ' + data.id );
+      console.log( data.user.username + ' connected successfully to the socket.io server with a server side ID of ' + data.id );
       //when a unit is dropped on another player's board
       //in the same game
       eaw.io.socket.on('unit_drop_notify', function (data){
@@ -15,12 +17,39 @@
       eaw.io.socket.on('unit_dragging_notify', function (data){
         eaw.io.networkDragHandler(data);
       });
+
+      eaw.io.socket.on('save_data_received', function (data){
+        //LOAD THIS GAME
+
+      });
+
+
     });
   };
 
   eaw.io.sendSaveGame = function (message) {
+    console.log('emmitting save');
     eaw.io.socket.emit('new_save_game', message);
   };
+
+  eaw.io.sendDefaultSaveGame = function (message) {
+    console.log('emmitting deafult save');
+    eaw.io.socket.emit('new_default_save_game', message);
+  };
+
+  eaw.io.sendDefaultSaveGame = function (message) {
+    console.log('emmitting deafult save');
+    eaw.io.socket.emit('new_default_save_game', message);
+  };
+
+  eaw.io.requestSaveGame = function (message, callback) {
+    console.log('Requesting saved game ' + message + ' from server.');
+    eaw.io.socket.emit('request_save_game', message, function(data, error){
+      console.log('Calling back with ' + data);
+      callback(data);
+    });
+  }
+
 
   eaw.io.sendMove = function (unit, action){
 
@@ -75,7 +104,7 @@
     var country_set = udp.unit_country + '_unit_set';
     var type_set = udp.unit_type;
     var unitid = udp.unitid;
-    console.log('Step1');
+
     //does this unit exist already for this game?, look for it
     var isExistingPiece = false;
     var unit = '';
@@ -85,7 +114,7 @@
         unit = eaw.game.GAME_PIECES[i];
       }
     }
-    console.log('Step2');
+
     //if unit is already on the board, just apply a transformation and call unitMouseupHandler
     if (isExistingPiece){
       unit.el = unit.el.transform('t' + udp.unit_x + ',' + udp.unit_y);
@@ -99,6 +128,6 @@
       unit.el.data("Unit", unit);
     }
     unit.el.attr({stroke: 'black'});
-    console.log('unitMouseupHandler');
+
     eaw.unitMouseupHandler(unit.el, event, true);
   };//close networkDropHandler

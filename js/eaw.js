@@ -11,73 +11,79 @@
   eaw.dice_rendered = false;
 
   eaw.loadGame = function (game) {
+
     eaw.removeAllPieces();
 
-    console.log('Loading data...');
-    var model = JSON.parse(game);
+    eaw.io.requestSaveGame(game, function( gamedata ){
 
-    console.log(model);
-    eaw.game = new eaw.Game();
+      console.log('Requested and received...');
+      console.log(gamedata.game_data);
+      console.log('Loading data...');
+      var model = gamedata.game_data;//JSON.parse(gamedata.game_data);
+      console.log('parsing data');
+      console.log(model);
+      eaw.game = new eaw.Game();
 
-    //set the game turn
-    eaw.game.GAME_TURN = model.GAME_TURN;
 
-    //create new nations
-    eaw.game.PLAYABLE_NATIONS =[];
-    for (var i = 0; i < model.PLAYABLE_NATIONS.length; i++){
+          //set the game turn
+          eaw.game.GAME_TURN = model.GAME_TURN;
 
-      var obj = {
-        id: model.PLAYABLE_NATIONS[i].id,
-        name: model.PLAYABLE_NATIONS[i].name,
-        alliance: model.PLAYABLE_NATIONS[i].alliance,
-        unit_name: model.PLAYABLE_NATIONS[i].unit_name,
-        cash: model.PLAYABLE_NATIONS[i].cash
-      }
+          //create new nations
+          eaw.game.PLAYABLE_NATIONS =[];
+          for (var i = 0; i < model.PLAYABLE_NATIONS.length; i++){
 
-      var new_nation = new eaw.nations.Nation(obj);
-      console.log(new_nation);
-      eaw.game.PLAYABLE_NATIONS[i] = new_nation;
-    }
+            var obj = {
+              id: model.PLAYABLE_NATIONS[i].id,
+              name: model.PLAYABLE_NATIONS[i].name,
+              alliance: model.PLAYABLE_NATIONS[i].alliance,
+              unit_name: model.PLAYABLE_NATIONS[i].unit_name,
+              cash: model.PLAYABLE_NATIONS[i].cash
+            }
 
-    //find and set the current nation
-    for (var i = 0; i < eaw.game.PLAYABLE_NATIONS.length; i++){
-        if (eaw.game.PLAYABLE_NATIONS[i].id === model.CURRENT_NATION.id){
-          eaw.game.CURRENT_NATION = eaw.game.PLAYABLE_NATIONS[i];
-          break;
-        }
-    }
-    eaw.ui.switchNation(eaw.game.CURRENT_NATION);
-    eaw.game.CURRENT_NATION_INDEX = model.CURRENT_NATION_INDEX;
+            var new_nation = new eaw.nations.Nation(obj);
+            eaw.game.PLAYABLE_NATIONS[i] = new_nation;
+          }
 
-    //loop through all the zones and recreate the zone and unit
-    //configuration
-    eaw.zones.loadZones();
+          //find and set the current nation
+          for (var i = 0; i < eaw.game.PLAYABLE_NATIONS.length; i++){
+              if (eaw.game.PLAYABLE_NATIONS[i].id === model.CURRENT_NATION.id){
+                eaw.game.CURRENT_NATION = eaw.game.PLAYABLE_NATIONS[i];
+                break;
+              }
+          }
+          eaw.ui.switchNation(eaw.game.CURRENT_NATION);
+          eaw.game.CURRENT_NATION_INDEX = model.CURRENT_NATION_INDEX;
 
-    /*** REWRITE THE WHOLE THING TO USE THE GAME PIECES ARRAY
-    //*** SINCE THAT HAS EVERYTHING YOU NEED */
+          //loop through all the zones and recreate the zone and unit
+          //configuration
+          eaw.zones.loadZones();
 
-    for (var i = 0; i < model.GAME_PIECES.length; i++){
-      var saved_unit = model.GAME_PIECES[i];
-      var location_zone = saved_unit.location_zone;
-      var owner = saved_unit.unit_owner;
-      var type = saved_unit.unit_type;
+          /*** REWRITE THE WHOLE THING TO USE THE GAME PIECES ARRAY
+          //*** SINCE THAT HAS EVERYTHING YOU NEED */
 
-      var params = {
-          myId: saved_unit.id,
-          myOwner: owner,
-      };
+          for (var i = 0; i < model.GAME_PIECES.length; i++){
+            var saved_unit = model.GAME_PIECES[i];
+            var location_zone = saved_unit.location_zone;
+            var owner = saved_unit.unit_owner;
+            var type = saved_unit.unit_type;
 
-      /*** COPY OBJECT PARAMETERS FROM THE GAME PIECE LIST ***/
-      var new_unit = eaw.createUnit(type, params)
-      new_unit.drawElement();
-      var unitx = saved_unit.el.matrix.e;
-      var unity = saved_unit.el.matrix.f;
-      var unit_zone = saved_unit.location_zone.name;
-      new_unit.el = new_unit.el.transform('t' + unitx + ',' + unity);
-      new_unit.el.data("Unit", new_unit);
-      eaw.unitMouseupHandler(new_unit.el, event, false, unit_zone);
-    }
-  }
+            var params = {
+                myId: saved_unit.id,
+                myOwner: owner,
+            };
+
+            /*** COPY OBJECT PARAMETERS FROM THE GAME PIECE LIST ***/
+            var new_unit = eaw.createUnit(type, params)
+            new_unit.drawElement();
+            var unitx = saved_unit.el.matrix.e;
+            var unity = saved_unit.el.matrix.f;
+            var unit_zone = saved_unit.location_zone.name;
+            new_unit.el = new_unit.el.transform('t' + unitx + ',' + unity);
+            new_unit.el.data("Unit", new_unit);
+            eaw.unitMouseupHandler(new_unit.el, event, false, unit_zone);
+          }
+        });
+  };
 
 
   eaw.removeAllPieces = function () {
@@ -111,7 +117,7 @@
         }
       }
     }
-  }
+  };
 
 eaw.Game = function() {
   //active playable nations
@@ -132,7 +138,7 @@ eaw.Game = function() {
   this.INNATIONS = new Array();
   this.GAME_PIECES = [];
   this.ZONE_SET = [];
-}
+};
 
 
 eaw.Game.prototype = {
@@ -177,6 +183,21 @@ eaw.Game.prototype = {
     eaw.io.sendSaveGame(eaw.savegame);
     console.log(model);
 
+  },
+  saveDefault: function() {
+    eaw.savegame = JSON.stringify(this, function (key, value){
+      if (key == 'node' || key == 'paper' || key == '_drag' || key == 'anims' || key == 'events' || key === 'pathstring'){
+        //kill any vars we don't want to save time/space
+        return;
+      }
+      return value;
+    });
+
+    var model = JSON.parse(eaw.savegame);
+    console.log('sendDefaultSaveGame');
+    eaw.io.sendDefaultSaveGame(eaw.savegame);
+
+
   }
 };
 
@@ -184,7 +205,7 @@ eaw.Game.prototype = {
   eaw.Player = function () {
 
 
-  }
+  };
   eaw.Player.prototype = {
     constructor: eaw.Player
   };
