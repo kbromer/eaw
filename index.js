@@ -51,8 +51,12 @@ app.post('/login', function(req, res, next) {
     if (!user) { return res.redirect('/login'); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      //console.log(req);
+      console.log('logIn user ' + user);
       var userId = guid();
+      //lock this user to this cookie?
+      var mycookieid = req.headers.cookie;
+      mycookieid = mycookieid.split('connect.sid=')[1];
+      info.data.mycookie = mycookieid;
       users[userId] = info.data;
       return res.redirect('/?' + userId);
     });
@@ -78,24 +82,44 @@ io.on('connection', function(socket){
     user_id = user_id.substring(0, ap);
   }
 
-  console.log('userid: ' + user_id);
-  var user = users[user_id];
+  var lookupid = user_id;
+  if (user_id.substring(0, 4) === 'dice'){ lookupid = user_id.split('dicebox-')[1]; }
+  var user = users[lookupid];
 
-  if (user !== undefined){
-    console.log(user.username + ' has connected.');
-    socket.userid = user_id;
-  } else{
-    console.log('SOMETHING BETTER------------');
+  if (typeof user === "undefined") {
+    console.log('No valid ID, attempting cookie match');
     var mycookieid = socket.request.headers.cookie;
-    console.log(mycookieid);
     mycookieid = mycookieid.split('connect.sid=')[1];
     console.log(mycookieid);
+
+    for (var x in users){
+      var u = users[x];
+      console.log(u);
+      //found our entry in the users table via
+      //cookie match. reset to new user_id
+      console.log(u.mycookie + '    +++and+++    ' + mycookieid);
+      if (u.mycookie === mycookieid){
+        //create a new id and assign it to user_id
+        user_id = guid();
+        users[user_id] = u;
+        user = u;
+        break;
+      }
+    }
+  }
+  else{
+    console.log('Found Id');
+    socket.userid = user_id;
+  }
+  //still haven't found a user session to connect to, logout the client
+  if (typeof user === "undefined"){
+    socket.emit('logout_client');
+  } else{
+    socket.emit('onconnected', {id: user_id, user: user});
+    //Useful to know when someone connects
+    console.log('\t socket.io:: player ' + user_id + ' connected');
   }
 
-  socket.emit('onconnected', {id: socket.userid, user: user});
-
-  //Useful to know when someone connects
-  console.log('\t socket.io:: player ' + socket.userid + ' connected');
 
   //When this client disconnects
   socket.on('disconnect', function () {

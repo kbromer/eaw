@@ -1,10 +1,10 @@
-'use strict';
+
 window.onload = function(){
 	console.log("Window loaded.");
 
 	var myUserId = /[^/]*$/.exec(location.href)[0];
-	myUserId = myUserId.substring(1);
-	eaw.io.connectToServer({userid: myUserId});
+	eaw.io.clientid = myUserId.substring(1);
+	eaw.io.connectToServer({userid: eaw.io.clientid});
 
 	//sets up:
 	//1. navigation
@@ -21,7 +21,7 @@ window.onload = function(){
 		var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 */
 		eaw.paper = new Snap('#canvas_container');
-		eaw.paper.zone_set = new Array();
+		eaw.paper.zone_set = [];//new Array();
 		eaw.paper.zonecount = 0;
 
 		//enable draggability for non-canvas unit elements
@@ -52,13 +52,13 @@ window.onload = function(){
 		$(".unit_nav_btn").click(function(event){
 
 			var nation_to_hide = g.getCurrentNation().name;
-
+			var nation = {};
 			//shift one player in the game player array
 			if (this.id == 'right_nav_btn'){
-				var nation = g.nextNation();
+				nation = g.nextNation();
 			//shift one player down
 			} else{
-				var nation = g.previousNation();
+				nation = g.previousNation();
 			}
 
 			eaw.ui.switchNation(nation);
@@ -79,7 +79,7 @@ window.onload = function(){
 
 
 	});//close elements loading callback
-}//close window.onload()
+};//close window.onload()
 
 
 

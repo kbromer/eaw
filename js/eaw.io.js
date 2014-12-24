@@ -1,40 +1,42 @@
   'use strict';
 
-  eaw.io = {};
+  //io can be called from the dice
+  //page, so eaw may not be defined in the tabs
+  //global space
+  if (typeof eaw === "undefined") { var eaw = {}; }
 
-  eaw.io.connectToServer = function (data) {
+  eaw.io = {};
+  eaw.io.clientid = {};
+
+  eaw.io.connectToServer = function ( data ) {
+
     //connect socket
     eaw.io.socket = io.connect('/', { query: "id=" + data.userid });
 
     eaw.io.socket.on('onconnected', function( data ) {
       //Note that the data is the object we sent from the server, as is. So we can assume its id exists.
-      console.log( data.user.username + ' connected successfully to the socket.io server with a server side ID of ' + data.id );
-      //when a unit is dropped on another player's board
-      //in the same game
-      eaw.io.socket.on('unit_drop_notify', function (data){
-        eaw.io.networkDropHandler(data);
+      console.log(' connected successfully to the socket.io server with a server side ID of ' + data.id );
+
+      if (data.id.substring(0, 4) !== 'dice'){
+        //when a unit is dropped on another player's board
+        //in the same game
+        eaw.io.socket.on('unit_drop_notify', function (data){
+          eaw.io.networkDropHandler(data);
+        });
+        eaw.io.socket.on('unit_dragging_notify', function (data){
+          eaw.io.networkDragHandler(data);
+        });
+      }
+      eaw.io.socket.on('logout_client', function () {
+        console.log('User logout requested');
+        window.location.replace("/logout");
       });
-      eaw.io.socket.on('unit_dragging_notify', function (data){
-        eaw.io.networkDragHandler(data);
-      });
-
-      eaw.io.socket.on('save_data_received', function (data){
-        //LOAD THIS GAME
-
-      });
-
-
     });
   };
 
   eaw.io.sendSaveGame = function (message) {
     console.log('emmitting save');
     eaw.io.socket.emit('new_save_game', message);
-  };
-
-  eaw.io.sendDefaultSaveGame = function (message) {
-    console.log('emmitting deafult save');
-    eaw.io.socket.emit('new_default_save_game', message);
   };
 
   eaw.io.sendDefaultSaveGame = function (message) {

@@ -21,7 +21,7 @@ Debrecen: {type: "land", owner:"hu", hasFactory: true, pointValue: 1, center: {x
 /** Bulgaria **/
 Sofia: {type: "land", owner:"bu", hasFactory: true, pointValue: 2, center: {x: 0, y: 0}},
 Varna: {type: "land", owner:"bu", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Burgas: {type: "land", owner: "bu", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
+Burgas: {type: "land", owner: "bu", hasFactory: true, pointValue: 1, center: {x: -10, y: 0}},
 /** Single-Zone Neutrals **/
 Denmark: {type: "land", owner:"dk", hasFactory: true, pointValue: 1, center: {x: -15, y: 0}},
 Ireland: {type: "land", owner:"ei", hasFactory: true, pointValue: 1, center: {x: 10, y: 0}},
@@ -54,8 +54,8 @@ Posen: {type: "land", owner: "po", hasFactory: true, pointValue: 1, center: {x: 
 Krakow: {type: "land", owner: "po", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 /** Greece **/
 Rhodes: {type: "land", owner:"gr", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Athens: {type: "land", owner: "gr", hasFactory: true, pointValue: 2, center: {x: -15, y: 0}},
-Crete: {type: "land", owner: "gr", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+Athens: {type: "land", owner: "gr", hasFactory: true, pointValue: 2, center: {x: -17, y: 10}},
+Crete: {type: "land", owner: "gr", hasFactory: false, pointValue: 0, center: {x: 0, y: 5}},
 Volos: {type: "land", owner: "gr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Thessalonika: {type: "land", owner: "gr", hasFactory: true, pointValue: 1, center: {x: -17, y: -5}},
 /** Yugoslavia **/
@@ -63,7 +63,6 @@ Zagreb: {type: "land", owner: "yu", hasFactory: true, pointValue: 1, center: {x:
 Beograd: {type: "land", owner: "yu", hasFactory: true, pointValue: 2, center: {x: 0, y: 0}},
 Nis: {type: "land", owner: "yu", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Bitolji: {type: "land", owner: "yu", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
-Nis: {type: "land", owner: "yu", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Mostar: {type: "land", owner: "yu", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 /** Iraq **/
 Baghdad: {type: "land", owner: "iq", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
@@ -71,7 +70,7 @@ Mosul: {type: "land", owner: "iq", hasFactory: false, pointValue: 0, center: {x:
 Basra: {type: "land", owner: "iq", hasFactory: true, pointValue: 2, center: {x: 0, y: 0}},
 /** Iran **/
 Khoi: {type: "land", owner: "ir", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Tabriz: {type: "land", owner: "ir", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+Tabriz: {type: "land", owner: "ir", hasFactory: false, pointValue: 0, center: {x: -5, y: 20}},
 Aveh: {type: "land", owner: "ir", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Shustar: {type: "land", owner: "ir", hasFactory: true, pointValue: 2, center: {x: 0, y: 0}},
 /** France **/
@@ -83,7 +82,7 @@ Orleans: {type: "land", owner:"fr", hasFactory: true, pointValue: 1, center: {x:
 Nancy: {type: "land", owner:"fr", hasFactory: true, pointValue: 5, center: {x: 0, y: 0}},
 Reims: {type: "land", owner:"fr", hasFactory: true, pointValue: 4, center: {x: 0, y: 0}},
 Bordeaux: {type: "land", owner:"fr", hasFactory: true, pointValue: 1, center: {x: 3, y: 0}},
-Clermont: {type: "land", owner:"fr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
+Clermont: {type: "land", owner:"fr", hasFactory: true, pointValue: 1, center: {x: 0, y: 10}},
 Toulouse: {type: "land", owner:"fr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Lyon: {type: "land", owner:"fr", hasFactory: true, pointValue: 2, center: {x: 0, y: 0}},
 Marseille: {type: "land", owner:"fr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
@@ -96,7 +95,7 @@ Oran: {type: "land", owner: "fr", hasFactory: false, pointValue: 0, center: {x: 
 Algiers: {type: "land", owner: "fr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Corsica: {type: "land", owner: "fr", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Aleppo: {type: "land", owner: "fr", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Beirut: {type: "land", owner: "fr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
+Beirut: {type: "land", owner: "fr", hasFactory: true, pointValue: 1, center: {x: -5, y: 0}},
 Tunis: {type: "land", owner: "fr", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 /** United Kingdom **/
 Manchester: {type: "land", owner:"uk", hasFactory: true, pointValue: 10, center: {x: 0, y: 0}},
@@ -108,24 +107,27 @@ Belfast: {type: "land", owner:"uk", hasFactory: true, pointValue: 1, center: {x:
 Malta: {type: "land", owner: "uk",hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Alexandria: {type: "land", owner: "uk", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Suez: {type: "land", owner: "uk",hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Cairo: {type: "land", owner: "uk", hasFactory: true, pointValue: 2, center: {x: 0, y: 0}},
-Kuwait: {type: "land", owner: "uk", hasFactory: true, pointValue: 3, center: {x: 0, y: 0}},
-Cyprus: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+Cairo: {type: "land", owner: "uk", hasFactory: true, pointValue: 2, center: {x: -20, y: 0}},
+Kuwait: {type: "land", owner: "uk", hasFactory: true, pointValue: 3, center: {x: -5, y: 0}},
+Cyprus: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: -3, y: 7}},
 Jaffa: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Amman: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: -10, y: 20}},
 Gibralter: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 ElAlamein: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Sallum: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+BoxGibralterLand: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+BoxMaltaLand: {type: "land", owner: "uk", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+
 /** Spain **/
 Spanish_Morocco: {type: "land", owner: "sp", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Bilbao: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Barcelona: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
-Granada: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
-Valencia: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: -10, y: 0}},
+Granada: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 10}},
+Valencia: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: -20, y: 0}},
 Madrid: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Sevilla: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
-Cordoba: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
-Salamanca: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
+Cordoba: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 5, y: 0}},
+Salamanca: {type: "land", owner: "sp", hasFactory: true, pointValue: 1, center: {x: 0, y: 10}},
 Gijon: {type: "land", owner: "sp", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 /** Portugal **/
 Porto: {type: "land", owner: "pr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
@@ -140,13 +142,13 @@ Rome: {type: "land", owner: "it", hasFactory: true, pointValue: 2, center: {x: 0
 Sicily: {type: "land", owner: "it", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Taranto: {type: "land", owner: "it", hasFactory: true, pointValue: 1, center: {x: -15, y: -30}},
 Sardinia: {type: "land", owner: "it", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Tripoli: {type: "land", owner: "it", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
+Tripoli: {type: "land", owner: "it", hasFactory: true, pointValue: 1, center: {x: 20, y: 0}},
 Sirte: {type: "land", owner: "it", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Benghazi: {type: "land", owner: "it", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Tubruq: {type: "land", owner: "it", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+Benghazi: {type: "land", owner: "it", hasFactory: false, pointValue: 0, center: {x: 20, y: 0}},
+Tubruq: {type: "land", owner: "it", hasFactory: false, pointValue: 0, center: {x: 10, y: 0}},
 /** Soviet Occupied Buffer Zones **/
 Lithuania: {type: "land", owner: "buffer", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
-Latvia: {type: "land", owner: "buffer", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+Latvia: {type: "land", owner: "buffer", hasFactory: false, pointValue: 0, center: {x: 10, y: 0}},
 Estonia: {type: "land", owner: "buffer", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Pinsk: {type: "land", owner: "buffer", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Wilno: {type: "land", owner: "buffer", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
@@ -182,7 +184,7 @@ Tver: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x:
 Rzhev: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
 Kaluga: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
 Smolensk: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
-Grozny: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
+Grozny: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 15}},
 Gurev:  {type: "land", owner: "ru", hasFactory: true, pointValue : 3, center: {x: 0, y: 0}},
 Astrakhan:  {type: "land", owner: "ru", hasFactory: true, pointValue : 4, center: {x: -10, y: 0}},
 Elan: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
@@ -205,6 +207,7 @@ Beridichev: {type: "land", owner: "ru", hasFactory: true, pointValue : 1, center
 /** Off-Map Build **/
 FarEastT1: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
 FarEastT2: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
+MurmanskBox: {type: "land", owner: "ru", hasFactory: false, pointValue : 0, center: {x: 0, y: 0}},
 /** Romania **/
 Galati: {type: "land", owner: "rm", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 Cernauti: {type: "land", owner: "rm", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
@@ -213,12 +216,12 @@ Cluji: {type: "land", owner: "rm", hasFactory: true, pointValue: 1, center: {x: 
 Lugo: {type: "land", owner: "rm", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 /** Saudi Arabia **/
 AlJawf: {type: "land", owner: "sa", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-Haql: {type: "land", owner: "sa", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
+Haql: {type: "land", owner: "sa", hasFactory: false, pointValue: 0, center: {x: -10, y: -15}},
 AtTurayf: {type: "land", owner: "sa", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
 AlQaysumah: {type: "land", owner: "sa", hasFactory: false, pointValue: 0, center: {x: 0, y: 0}},
-AdDamman: {type: "land", owner: "sa", hasFactory: true, pointValue: 3, center: {x: 0, y: 0}},
+AdDamman: {type: "land", owner: "sa", hasFactory: true, pointValue: 3, center: {x: 5, y: 0}},
 /** Turkey **/
-Istanbul: {type: "land", owner: "tr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
+Istanbul: {type: "land", owner: "tr", hasFactory: true, pointValue: 1, center: {x: -5, y: 0}},
 Ankara: {type: "land", owner: "tr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Izmir: {type: "land", owner: "tr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
 Izmit: {type: "land", owner: "tr", hasFactory: true, pointValue: 1, center: {x: 0, y: 0}},
@@ -286,9 +289,16 @@ RedSea: {type: "sea", majorHarbor: false},
 LeningradLake: {type: "sea", majorHarbor: false},
 PersianGulf: {type: "sea", majorHarbor: false},
 CaspianSea: {type: "sea", majorHarbor: false},
-Box8: {type: "sea", majorHarbor: false},
+Box3: {type: "sea", majorHarbor: false},
+BoxUST1: {type: "sea", majorHarbor: false},
+BoxUST2: {type: "sea", majorHarbor: false},
 Box4: {type: "sea", majorHarbor: false},
-Box10: {type: "sea", majorHarbor: false}
+Box10: {type: "sea", majorHarbor: false},
+BoxMalta: {type: "sea", majorHarbor: false},
+BoxGibralter: {type: "sea", majorHarbor: false},
+Suez1: {type: "sea", majorHarbor: false},
+Suez2: {type: "sea", majorHarbor: false},
+Suez3: {type: "sea", majorHarbor: false}
 };
 
 
@@ -305,7 +315,7 @@ Box10: {type: "sea", majorHarbor: false}
         eaw.zones.createMap(data);
       });
     }
-  }
+  };
 
 
 
@@ -316,9 +326,9 @@ Box10: {type: "sea", majorHarbor: false}
         var path_string = $(this).attr("d");
         var zone_id = $(this).attr("id");
         var zone_data = eaw.ZoneProperties[zone_id];
-        if (typeof zone_data == 'undefined')
+        if (typeof zone_data === 'undefined')
           console.log(zone_id + ' was not found in the zone list.');
-        if (zone_data["type"] == "sea"){
+        if (zone_data["type"] === "sea"){
           var majorHarbor = zone_data["majorHarbor"];
 
           var zone = new eaw.SeaZone(path_string, eaw.paper, zone_id, majorHarbor);
@@ -349,15 +359,36 @@ Box10: {type: "sea", majorHarbor: false}
             anchor_el.transform('t' + x + ',' + y);
           }
 
-          if (zone.name.substr(0, 7) === "Seazone" || zone.name.substr(0,3) === "Box"){
+          if (zone.name.substr(0, 7) === "Seazone" || zone.name.substr(0,3) === "Box" || zone.name.substr(0,4) === "Suez"){
               var t = '';
+              var fs = '32px';
+              var family = 'Comic Sans MS';
               switch(zone.name){
-                case 'Seazone8':
-                  x = x - 70;
-                  t = ' 8 ';
+                case 'BoxUST1':
+                  t = ' US Turn 1 ';
+                  fs = '14px';
+                  y = y + 40;
+                  family = 'Arial Black';
+                break;
+                case 'BoxUST2':
+                  t = ' US Turn 2 ';
+                  fs = '14px';
+                  y = y + 40;;
+                  family = 'Arial Black';
+                break;
+                case 'BoxMalta':
+                  t = ' Malta ';
+                  fs = '20px';
+                  family = 'Arial Black';
+                break;
+                case 'BoxGibralter':
+                  t = ' Gibralter ';
+                  fs = '20px';
+                  family = 'Arial Black';
                 break;
                 case 'Seazone3':
                   x = x - 200;
+                  y = y + 85;
                   t = ' 3 ';
                 break;
                 case 'Seazone4':
@@ -369,17 +400,48 @@ Box10: {type: "sea", majorHarbor: false}
                   y = y + 30;
                   t = ' 10 ';
                 break;
-                case 'Box8':
+                case 'Seazone8':
                   t = ' 8 ';
+                  x = x - 70;
+                break;
+                case 'Box3':
+                  t = ' Box 3 ';
+                  fs = '14px';
+                  y = y + 80;
+                  family = 'Arial Black';
                 break;
                 case 'Box4':
-                  t = ' 4 ';
+                  t = ' Box 4 ';
+                  fs = '14px';
+                  y = y + 40;
+                  family = 'Arial Black';
                 break;
                 case 'Box10':
-                  t = ' 10 ';
+                  t = ' Box 10 ';
+                  fs = '14px';
+                  y = y + 40;
+                  family = 'Arial Black';
+                break;
+                case 'Suez1':
+                  t = ' Suez Turn 1 ';
+                  fs = '10px';
+                  y = y - 20;
+                  family = 'Arial Black';
+                break;
+                case 'Suez2':
+                  t = ' Suez Turn 2 ';
+                  fs = '10px';
+                  y = y - 20;
+                  family = 'Arial Black';
+                break;
+                case 'Suez3':
+                  t = ' Suez Turn 3 ';
+                  fs = '10px';
+                  y = y - 20;
+                  family = 'Arial Black';
                 break;
               }
-              eaw.paper.text(x,y, t).attr({ fontSize: '32px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
+              eaw.paper.text(x,y, t).attr({ fontSize: fs, "text-anchor": "middle", 'font-weight': 'bold', 'font-family': family});
           }
         }else{
           var zone = new eaw.LandZone(path_string, eaw.paper, zone_id, zone_data["owner"], zone_data["hasFactory"], zone_data["pointValue"]);
@@ -391,11 +453,17 @@ Box10: {type: "sea", majorHarbor: false}
           x = x + eaw.ZoneProperties[zone.name].center.x;
           y = y + eaw.ZoneProperties[zone.name].center.y;
 
+          var zonename = zone.name;
+          if (zonename === 'BoxGibralterLand') zonename = 'Gibralter';
+          if (zonename === 'BoxMaltaLand') zonename = 'Malta';
+
           if (zone.point_value > 0){
             eaw.paper.text(x,y+10, '(' + zone.point_value + ')').attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Comic Sans MS'});
-            eaw.paper.text(x,y, zone.name).attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Arial Black'});
+            eaw.paper.text(x,y, zonename).attr({ fontSize: '9px', "text-anchor": "middle", 'font-weight': 'bold', 'font-family': 'Arial Black'});
           }else{
-            eaw.paper.text(x,y, zone.name).attr({ fontSize: '7px', "text-anchor": "middle"});
+
+
+            eaw.paper.text(x,y, zonename).attr({ fontSize: '7px', "text-anchor": "middle"});
           }
         }
 
