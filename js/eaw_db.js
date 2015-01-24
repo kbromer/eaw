@@ -1,8 +1,8 @@
 var pg = require('pg');
-var params = process.env.DATABASE_URL ? process.env.DATABASE_URL : { host: 'ec2-54-243-48-227.compute-1.amazonaws.com',user: 'pyknnfhllbshxm',password: 'pU30R6b8fwRmLUT_rFGSqm7Jvf',database: 'dd3btnvauc5ffj',ssl: true, port: 5432 };
+var params = { host: process.env.DB_HOST,user: process.env.DB_USER,password: process.env.DB_PW,database: process.env.DB_NAME, ssl: true, port: process.env.DB_PORT };
 var client = new pg.Client(params);
 module.exports = {
-  
+
   saveBaseGame: function (msg) {
     client = new pg.Client(params);
     client.connect(function(err) {

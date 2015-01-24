@@ -10,7 +10,7 @@
 
     eaw.io.connectToServer({userid: 'dicebox-' + eaw.io.clientid });
 
-    console.log("Connected to server");
+    console.log("Dicebox window connected to server");
 
         $.getScript( "dice/dice.js", function(){
           $.getScript( "dice/main.js", function(){
