@@ -11,6 +11,13 @@
   "dependencies": {
     "logfmt": "~1.1.2",
     "express": "~4.4.4",
-    "pg": "3.x"
+    "pg": "3.x",
+    "bcrypt": "x.x",
+    "connect-flash": "x.x",
+    "cookies": "x.x",
+    "express-session": "x.x",
+    "passport": "x.x",
+    "passport-local": "x.x",
+    "socket.io": "x.x"    
   }
 }
