@@ -1,3 +1,10 @@
+//Configure nodetime for heroku monitoring
+if(process.env.NODETIME_ACCOUNT_KEY) {
+  require('nodetime').profile({
+    accountKey: process.env.NODETIME_ACCOUNT_KEY,
+    appName: 'EAW Main Process' 
+  });
+}
 // ========== Middleware, auth services, parser, eaw auth & db libraries ==========
 var flash = require("connect-flash");
 var passport = require("passport");
