@@ -10,8 +10,16 @@
 
   eaw.io.connectToServer = function ( data ) {
 
+
     //connect socket
     eaw.io.socket = io.connect('/', { query: "id=" + data.userid });
+
+
+    eaw.io.socket.on('error', function (err){
+      console.log('Connection error: ' + err);
+    });    
+
+    console.log('attempting connection...');
 
     eaw.io.socket.on('onconnected', function( data ) {
       //Note that the data is the object we sent from the server, as is. So we can assume its id exists.

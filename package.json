@@ -1,16 +1,21 @@
 {
   "name": "eaw",
   "version": "0.0.1",
+  "private": true,
   "description": "E@W",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "kbromer",
+  "license": "BSD",
   "engines": {
     "node": "0.10.x",
     "npm": "2.1.x"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/kbromer/eaw.git"
   },
   "dependencies": {
     "nodetime": "x.x",
@@ -24,6 +29,8 @@
     "passport": "x.x",
     "passport-local": "x.x",
     "socket.io": "x.x",
-    "body-parser": "x.x"
+    "body-parser": "x.x",
+    "cookie-parser": "x.x",
+    "redis": "x.x"
   }
 }

@@ -2,7 +2,7 @@
 if(process.env.NODETIME_ACCOUNT_KEY) {
   require('nodetime').profile({
     accountKey: process.env.NODETIME_ACCOUNT_KEY,
-    appName: 'EAW Main Process' 
+    appName: 'EAW Main Process'
   });
 }
 // ========== Middleware, auth services, parser, eaw auth & db libraries ==========
@@ -18,14 +18,23 @@ var bodyParser = require('body-parser');
 var app = require('express')();
 //static
 var express = require("express");
-
 // ========== Sessions, ports env, cookies, http, sockets & logs ==========
 var session = require('express-session');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var port = Number(process.env.PORT || 5000);
 var logfmt = require("logfmt");
-var Cookies = require( "cookies" );   //<--------------- STILL NEED TO BE IMPLEMENTED!!!
+var Cookies = require( "cookies" );
+// ========== Session support for sockets.io ==========
+var cookieParser = require('cookie-parser');
+app.use(cookieParser());
+
+// ========== Redis for session store ==========
+var redis = require('redis');
+var url = require('url');
+var redisURL = url.parse(process.env.REDISCLOUD_URL);
+var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+client.auth(redisURL.auth.split(":")[1]);
 
 // ========== listen for requests ==========
 http.listen(port, function(){
@@ -37,6 +46,7 @@ var users = [];
 
 // ========== App config ==========
 app.use(bodyParser.urlencoded({extended: true}));
+
 app.use(session({ secret: 'itcomesforyou',
                   resave: true,
                   saveUninitialized: true,
@@ -46,6 +56,8 @@ app.use(flash());
 app.use(logfmt.requestLogger());
 app.use(passport.initialize());
 app.use(passport.session());
+var SessionSockets = require('session.socket.io');
+sessionSockets = new SessionSockets(io, client, cookieParser());
 
 // ========== App Routes ==========
 app.get('/logout', function(req, res){
@@ -64,6 +76,10 @@ app.post('/login', function(req, res, next) {
       var mycookieid = req.headers.cookie;
       mycookieid = mycookieid.split('connect.sid=')[1];
       info.data.mycookie = mycookieid;
+      req.session.userId = userId;
+      console.log('COOKIE:' + mycookieid);
+      console.log('USERID: ' + userId);
+
       users[userId] = info.data;
       return res.redirect('/?' + userId);
     });
@@ -78,12 +94,17 @@ app.use('/', function(req, res, next){
 app.use('/', express.static(__dirname + '/'));
 
 // ========== socket.io messaging ==========
-io.on('connection', function(socket){
+sessionSockets.on('connection', function(err, socket, session){
 
   console.log(socket.request.url);
-
+  console.log(session);
   var user_id = socket.request.url.split('id=')[1];
 
+
+  //var otherid = socket.request.session.userId;
+
+
+  //console.log('OTHERID: ' + otherid);
   var ap = user_id.indexOf('&');
   if(ap > 0) {
     user_id = user_id.substring(0, ap);
@@ -96,6 +117,7 @@ io.on('connection', function(socket){
   if (typeof user === "undefined") {
     console.log('No valid ID, attempting cookie match');
     var mycookieid = socket.request.headers.cookie;
+
     mycookieid = mycookieid.split('connect.sid=')[1];
     console.log(mycookieid);
 

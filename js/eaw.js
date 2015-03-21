@@ -285,7 +285,7 @@ eaw.Game.prototype = {
         }
 
         if (prop_count > 1){
-          eaw.redrawChipStack(b.x, b.y + 15, unit_set, unit);
+          eaw.redrawChipStack(b.x, b.y, unit_set, unit);
         }
 
         //its not clear if this is needed, lets remove it
@@ -355,7 +355,7 @@ eaw.Game.prototype = {
       leftover_unit.attr({'display': 'initial', fill: unit_obj.country_gradient});
       leftover_unit.drag(unit_obj.move, unit_obj.start, unit_obj.stop);
       var b = leftover_unit.getBBox();
-      eaw.redrawChipStack(b.x, b.y + 15, unit_set, leftover_unit);
+      eaw.redrawChipStack(b.x, b.y, unit_set, leftover_unit);
     }
     //cleanup after ourselves
     //if we don't need the array-like objs
