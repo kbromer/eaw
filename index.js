@@ -12,30 +12,25 @@ var LocalStrategy = require("passport-local").Strategy;
 var eaw_auth = require("./js/eaw_auth.js");
 var db = require("./js/eaw_db.js");
 var bodyParser = require('body-parser');
-
-// ========== Express instance and static var ==========
-//self executing
-var app = require('express')();
-//static
+// ========== Express Init ==========
 var express = require("express");
+var app = express();
 // ========== Sessions, ports env, cookies, http, sockets & logs ==========
-var session = require('express-session');
 var http = require('http').Server(app);
+var session = require('express-session');
 var io = require('socket.io')(http);
 var port = Number(process.env.PORT || 5000);
 var logfmt = require("logfmt");
-var Cookies = require( "cookies" );
+//var Cookies = require( "cookies" );
 // ========== Session support for sockets.io ==========
 var cookieParser = require('cookie-parser');
 app.use(cookieParser());
-
 // ========== Redis for session store ==========
-var redis = require('redis');
+var RedisStore = require('connect-redis')(session);
 var url = require('url');
 var redisURL = url.parse(process.env.REDISCLOUD_URL);
-var client = redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
-client.auth(redisURL.auth.split(":")[1]);
-
+var redis = require('redis').createClient(redisURL.port, redisURL.hostname, {no_ready_check: true});
+redis.auth(redisURL.auth.split(":")[1]);
 // ========== listen for requests ==========
 http.listen(port, function(){
   console.log('Listening on port ' + port);
@@ -44,24 +39,24 @@ http.listen(port, function(){
 // ========== User sessions ==========
 var users = [];
 
+var sessionstore = new RedisStore({ host: redisURL.hostname, port: redisURL.port, client: redis });
 // ========== App config ==========
 app.use(bodyParser.urlencoded({extended: true}));
-
 app.use(session({ secret: 'itcomesforyou',
+                  store: sessionstore,
                   resave: true,
                   saveUninitialized: true,
-                  cookie: { maxAge: 100000000}
+                  cookie: { maxAge: 100000000}//~16 minutes... i think.
                 }));
 app.use(flash());
 app.use(logfmt.requestLogger());
 app.use(passport.initialize());
 app.use(passport.session());
-var SessionSockets = require('session.socket.io');
-sessionSockets = new SessionSockets(io, client, cookieParser());
 
 // ========== App Routes ==========
 app.get('/logout', function(req, res){
   req.logout();
+  users = [];
   res.redirect('/');
 });
 app.post('/login', function(req, res, next) {
@@ -72,16 +67,19 @@ app.post('/login', function(req, res, next) {
       if (err) { return next(err); }
       console.log('logIn user ' + user);
       var userId = guid();
-      //lock this user to this cookie?
+
+      //append the cookie to the user data
       var mycookieid = req.headers.cookie;
       mycookieid = mycookieid.split('connect.sid=')[1];
       info.data.mycookie = mycookieid;
-      req.session.userId = userId;
+      //add the user session data
+      info.data.session = userId;
+
       console.log('COOKIE:' + mycookieid);
       console.log('USERID: ' + userId);
 
       users[userId] = info.data;
-      return res.redirect('/?' + userId);
+      return res.redirect('/');//?' + userId);
     });
   })(req, res, next);
 });
@@ -94,60 +92,56 @@ app.use('/', function(req, res, next){
 app.use('/', express.static(__dirname + '/'));
 
 // ========== socket.io messaging ==========
-sessionSockets.on('connection', function(err, socket, session){
+  io.on('connection', function(socket){
+    console.log('Socket Connection ID: ' + socket.id);
 
-  console.log(socket.request.url);
-  console.log(session);
-  var user_id = socket.request.url.split('id=')[1];
+    //set to client provided socket id
+    var user_id = socket.id;
 
+    //clear out the 'dice' portion of the user guid if this is coming from the dice tab
+    if (user_id.substring(0, 4) === 'dice'){ user_id = user_id.split('dicebox-')[1]; }
 
-  //var otherid = socket.request.session.userId;
+    //check if a client w/ this socket id is already active
+    var user = users[user_id];
 
-
-  //console.log('OTHERID: ' + otherid);
-  var ap = user_id.indexOf('&');
-  if(ap > 0) {
-    user_id = user_id.substring(0, ap);
-  }
-
-  var lookupid = user_id;
-  if (user_id.substring(0, 4) === 'dice'){ lookupid = user_id.split('dicebox-')[1]; }
-  var user = users[lookupid];
-
-  if (typeof user === "undefined") {
-    console.log('No valid ID, attempting cookie match');
-    var mycookieid = socket.request.headers.cookie;
-
-    mycookieid = mycookieid.split('connect.sid=')[1];
-    console.log(mycookieid);
-
-    for (var x in users){
-      var u = users[x];
-      console.log(u);
-      //found our entry in the users table via
-      //cookie match. reset to new user_id
-      console.log(u.mycookie + '    +++and+++    ' + mycookieid);
-      if (u.mycookie === mycookieid){
-        //create a new id and assign it to user_id
-        user_id = guid();
-        users[user_id] = u;
-        user = u;
-        break;
+    //if not active, try and find the user based on the cookie id
+    if (typeof user === "undefined") {
+      console.log('User id not found - searching for user cookies...');
+      var mycookieid = socket.request.headers.cookie;
+      mycookieid = mycookieid.split('connect.sid=')[1];
+      console.log('Cookie?' + mycookieid);
+      console.log('Users? ' + users.length);
+      //loop through existing users and connect this user
+      //to their cookie set during the authentication
+      for (var x in users){
+        var u = users[x];
+        console.log(u);
+        //found our entry in the users table via
+        //cookie match. reset to new user_id
+        if (u.mycookie === mycookieid){
+          console.log('Matched cookie ' + u.mycookie + ' in the user table.');
+          console.log('Welcome ' + u.displayname);
+          //changing user id to new socket id
+          users[user_id] = u;
+          user = u;
+          console.log('Setting socket id to ' + user_id);
+          socket.userid = user_id;
+          break;
+        }
+      }
+      //still haven't found a user session to connect to, this is an invalid user, logout the client and run teh auth flow
+      if (typeof user === "undefined"){
+        console.log('Logging out invalid client...');
+        socket.emit('logout_client');
+      }else{
+        console.log('\t socket.io:: player ' + user_id + ' connected');
+        socket.emit('onconnected', {id: user_id, user: user});
       }
     }
-  }
-  else{
-    console.log('Found Id');
-    socket.userid = user_id;
-  }
-  //still haven't found a user session to connect to, logout the client
-  if (typeof user === "undefined"){
-    socket.emit('logout_client');
-  } else{
-    socket.emit('onconnected', {id: user_id, user: user});
-    //Useful to know when someone connects
-    console.log('\t socket.io:: player ' + user_id + ' connected');
-  }
+    //found the user id, set the socket to the user (it should already be set)
+    else{
+      console.log('Found user based on id ' + socket.userid + ' and ' + user_id);
+    }
 
 
   //When this client disconnects

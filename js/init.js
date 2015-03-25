@@ -1,11 +1,9 @@
 
 window.onload = function(){
 	console.log("Window loaded.");
-	var x = document.cookie;
-	console.log(x);
-	var myUserId = /[^/]*$/.exec(location.href)[0];
-	eaw.io.clientid = myUserId.substring(1);
-	eaw.io.connectToServer({userid: eaw.io.clientid});
+	//var myUserId =  /[^/]*$/.exec(location.href)[0];
+	//= myUserId.substring(1);
+	eaw.io.connectToServer();//{userid: eaw.io.clientid}
 
 	//sets up:
 	//1. navigation

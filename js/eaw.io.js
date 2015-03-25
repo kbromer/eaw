@@ -9,21 +9,21 @@
   eaw.io.clientid = {};
 
   eaw.io.connectToServer = function ( data ) {
-
-
-    //connect socket
-    eaw.io.socket = io.connect('/', { query: "id=" + data.userid });
-
+      //connect socket
+    eaw.io.socket = io.connect('/');//, { query: "id=" + data.userid }
 
     eaw.io.socket.on('error', function (err){
       console.log('Connection error: ' + err);
-    });    
+    });
 
     console.log('attempting connection...');
 
     eaw.io.socket.on('onconnected', function( data ) {
       //Note that the data is the object we sent from the server, as is. So we can assume its id exists.
-      console.log(' connected successfully to the socket.io server with a server side ID of ' + data.id );
+      console.log(data.user.username + ' connected successfully to the socket.io server with a server side ID of ' + data.id );
+      //set my client socket id
+      eaw.io.clientid = data.id;
+
 
       if (data.id.substring(0, 4) !== 'dice'){
         //when a unit is dropped on another player's board
@@ -37,7 +37,7 @@
       }
       eaw.io.socket.on('logout_client', function () {
         console.log('User logout requested');
-        window.location.replace("/logout");
+        window.location.replace("./logout");
       });
     });
   };
