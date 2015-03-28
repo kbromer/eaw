@@ -75,8 +75,8 @@ app.post('/login', function(req, res, next) {
         info.data.mycookie = mycookieid;
       }
       //add the user session data
-      if (req.session.passport.user)
-        info.data.session = req.session.passport.user;
+      if (req._passport.session.user)
+        info.data.session = req._passport.session.user;
 
       console.log(info.data);
       users[user] = info.data;
