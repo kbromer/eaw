@@ -65,8 +65,8 @@ app.post('/login', function(req, res, next) {
     if (!user) { return res.redirect('/login'); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      console.log('logIn user ' + req.session.passport.user);
-      var userId = req.session.passport.user;
+      console.log('logIn user ' + req.session);
+      //var userId = req.session.passport.user;
       //append the cookie to the user data
       if (req.headers.cookie){
         var mycookieid = req.headers.cookie;
@@ -74,7 +74,7 @@ app.post('/login', function(req, res, next) {
         info.data.mycookie = mycookieid;
       }
       //add the user session data
-      info.data.session = req.session.passport.user;
+      //info.data.session = req.session.passport.user;
       users[userId] = info.data;
       return res.redirect('/');
     });
