@@ -65,7 +65,7 @@ app.post('/login', function(req, res, next) {
     if (!user) { return res.redirect('/login'); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      console.log('logIn user ' + req.session);
+      console.log('logIn user ' + req);
       //var userId = req.session.passport.user;
       //append the cookie to the user data
       if (req.headers.cookie){
