@@ -65,8 +65,8 @@ app.post('/login', function(req, res, next) {
     if (!user) { return res.redirect('/login'); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      console.log('logIn user ' + user);
-      var userId = guid();
+      console.log('logIn user ' + req.session.passport.user);
+      var userId = req.session.passport.user;
       //append the cookie to the user data
       if (req.headers.cookie){
         var mycookieid = req.headers.cookie;
@@ -74,7 +74,7 @@ app.post('/login', function(req, res, next) {
         info.data.mycookie = mycookieid;
       }
       //add the user session data
-      info.data.session = userId;
+      info.data.session = req.session.passport.user;
       users[userId] = info.data;
       return res.redirect('/');
     });
@@ -91,13 +91,13 @@ app.use('/', express.static(__dirname + '/'));
 // ========== socket.io messaging ==========
   io.on('connection', function(socket){
     //set to client provided socket id
-    var user_id = socket.id;
+    var socket_id = socket.id;
 
     //clear out the 'dice' portion of the user guid if this is coming from the dice tab
-    if (user_id.substring(0, 4) === 'dice'){ user_id = user_id.split('dicebox-')[1]; }
+    if (socket_id.substring(0, 4) === 'dice'){ socket_id = user_id.split('dicebox-')[1]; }
 
     //check if a client w/ this socket id is already active
-    var user = users[user_id];
+    var user = users[socket_id];
 
     //if not active, try and find the user based on the cookie id
     if (typeof user === "undefined") {
@@ -179,7 +179,6 @@ passport.deserializeUser(function(user, done) {done(null, user);});
 passport.use(new LocalStrategy(
   function(username, password, done) {
     eaw_auth.checkUserAuth(username, password, function(result){
-      console.log(result);
       if (result.status === true){
         //found user, check password
         eaw_auth.comparePassword(password, result.data.password, function (err, res){

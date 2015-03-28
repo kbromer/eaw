@@ -24,13 +24,11 @@
     "pg": "3.x",
     "bcrypt": "x.x",
     "connect-flash": "x.x",
-    "cookies": "x.x",
     "express-session": "x.x",
     "passport": "x.x",
     "passport-local": "x.x",
     "socket.io": "x.x",
     "body-parser": "x.x",
-    "cookie-parser": "x.x",
     "redis": "x.x",
     "connect-redis": "2.0.0"
   }
