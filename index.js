@@ -66,6 +66,7 @@ app.post('/login', function(req, res, next) {
     req.logIn(user, function(err) {
       if (err) { return next(err); }
       console.log('logIn user ' + req);
+      console.log(req);
       //var userId = req.session.passport.user;
       //append the cookie to the user data
       if (req.headers.cookie){
@@ -75,7 +76,7 @@ app.post('/login', function(req, res, next) {
       }
       //add the user session data
       //info.data.session = req.session.passport.user;
-      users[userId] = info.data;
+      users[user] = info.data;
       return res.redirect('/');
     });
   })(req, res, next);
@@ -181,21 +182,14 @@ passport.use(new LocalStrategy(
     eaw_auth.checkUserAuth(username, password, function(result){
       if (result.status === true){
         //found user, check password
-        eaw_auth.comparePassword(password, result.data.password, function (err, res){
-          if(!err){
-            if (res === true){
-              console.log(username + ' has successfully logged in');
-              return done(null, username, result);
-            }else{
-              console.log('Incorrect password for ' + username);
-              return done(null, false, { message: 'Incorrect password' });
-            }
-          }
-          else{
-            console.log('Authentication error');
-            return done(null, false, { message: 'Authentication error' });
-          }
-        });
+        var res = eaw_auth.comparePassword(password, result.data.password);
+        if (res === true){
+          console.log(username + ' has successfully logged in');
+          return done(null, username, result);
+        }else{
+          console.log('Incorrect password for ' + username);
+          return done(null, false, { message: 'Incorrect password' });
+        }
       } else if (result.status === false) {
         console.log(username + " not found");
         return done(null, false, { message: 'Username not found' });
