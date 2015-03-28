@@ -114,10 +114,10 @@ app.use('/', express.static(__dirname + '/'));
         if (u.mycookie === mycookieid){
           console.log('Found user with a matching cookie.  Welcome ' + u.displayname);
           //changing user id to new socket id
-          users[user_id] = u;
+          users[socket_id] = u;
           user = u;
-          console.log('Setting users new socket id to ' + user_id);
-          socket.userid = user_id;
+          console.log('Setting users new socket id to ' + socket_id);
+          socket.userid = socket_id;
           break;
         }
       }
@@ -126,8 +126,8 @@ app.use('/', express.static(__dirname + '/'));
         console.log('Logging out invalid client...');
         socket.emit('logout_client');
       }else{
-        console.log('\t socket.io:: player ' + user_id + ' connected');
-        socket.emit('onconnected', {id: user_id, user: user});
+        console.log('\t socket.io:: player ' + socket_id + ' connected');
+        socket.emit('onconnected', {id: socket_id, user: user});
       }
     }
     //found the user id, set the socket to the user (it should already be set)
