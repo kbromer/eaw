@@ -46,7 +46,7 @@ app.use(session({ secret: 'itcomesforyou',
                   store: sessionstore,
                   resave: true,
                   saveUninitialized: true,
-                  cookie: { maxAge: 100000000}//~16 minutes... i think.
+                  cookie: { maxAge: 10000000}//~16 minutes... i think.
                 }));
 app.use(flash());
 app.use(logfmt.requestLogger());
@@ -67,19 +67,14 @@ app.post('/login', function(req, res, next) {
       if (err) { return next(err); }
       console.log('logIn user ' + user);
       var userId = guid();
-
       //append the cookie to the user data
       var mycookieid = req.headers.cookie;
       mycookieid = mycookieid.split('connect.sid=')[1];
       info.data.mycookie = mycookieid;
       //add the user session data
       info.data.session = userId;
-
-      console.log('COOKIE:' + mycookieid);
-      console.log('USERID: ' + userId);
-
       users[userId] = info.data;
-      return res.redirect('/');//?' + userId);
+      return res.redirect('/');
     });
   })(req, res, next);
 });
@@ -93,8 +88,6 @@ app.use('/', express.static(__dirname + '/'));
 
 // ========== socket.io messaging ==========
   io.on('connection', function(socket){
-    console.log('Socket Connection ID: ' + socket.id);
-
     //set to client provided socket id
     var user_id = socket.id;
 
@@ -106,11 +99,9 @@ app.use('/', express.static(__dirname + '/'));
 
     //if not active, try and find the user based on the cookie id
     if (typeof user === "undefined") {
-      console.log('User id not found - searching for user cookies...');
+      console.log('Socket id not found - searching for matching cookie to link to an active user...');
       var mycookieid = socket.request.headers.cookie;
       mycookieid = mycookieid.split('connect.sid=')[1];
-      console.log('Cookie?' + mycookieid);
-      console.log('Users? ' + users.length);
       //loop through existing users and connect this user
       //to their cookie set during the authentication
       for (var x in users){
@@ -119,12 +110,11 @@ app.use('/', express.static(__dirname + '/'));
         //found our entry in the users table via
         //cookie match. reset to new user_id
         if (u.mycookie === mycookieid){
-          console.log('Matched cookie ' + u.mycookie + ' in the user table.');
-          console.log('Welcome ' + u.displayname);
+          console.log('Found user with a matching cookie.  Welcome ' + u.displayname);
           //changing user id to new socket id
           users[user_id] = u;
           user = u;
-          console.log('Setting socket id to ' + user_id);
+          console.log('Setting users new socket id to ' + user_id);
           socket.userid = user_id;
           break;
         }
@@ -140,9 +130,8 @@ app.use('/', express.static(__dirname + '/'));
     }
     //found the user id, set the socket to the user (it should already be set)
     else{
-      console.log('Found user based on id ' + socket.userid + ' and ' + user_id);
+      console.log('Found user based on socket id ' + socket.userid);
     }
-
 
   //When this client disconnects
   socket.on('disconnect', function () {
@@ -190,12 +179,25 @@ passport.use(new LocalStrategy(
     eaw_auth.checkUserAuth(username, password, function(result){
       console.log(result);
       if (result.status === true){
-        console.log("Successful login.");
-        var user = username;
-        return done(null, user, result);
+        //found user, check password
+        eaw_auth.comparePassword(password, result.data.password, function (err, res){
+          if(!err){
+            if (res === true){
+              console.log(username + ' has successfully logged in');
+              return done(null, username, result);
+            }else{
+              console.log('Incorrect password for ' + username);
+              return done(null, false, { message: 'Incorrect password' });
+            }
+          }
+          else{
+            console.log('Authentication error');
+            return done(null, false, { message: 'Authentication error' });
+          }
+        });
       } else if (result.status === false) {
-        console.log("Failed login.");
-         return done(null, false, { message: 'Incorrect un/pw' });
+        console.log(username + " not found");
+        return done(null, false, { message: 'Username not found' });
       } else {
         console.log("Failed, server error");
         return done(err);

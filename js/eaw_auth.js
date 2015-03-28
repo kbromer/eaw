@@ -1,7 +1,6 @@
 var db = require("./eaw_db.js");
 var bcrypt = require('bcrypt');
 module.exports = {
-
   ensureAuthenticated: function (req, res, next) {
     if (req.isAuthenticated()) {
       return next();
@@ -12,7 +11,6 @@ module.exports = {
   },
 
   checkUserAuth: function (username, password, callback) {
-
     db.getUserInfo(username, function (results) {
           var r = {};
           if(results.status){
@@ -24,7 +22,6 @@ module.exports = {
               r.status = false;
               r.data = {};
             }
-
           }else{
             console.log('DATABASE ERROR');
             r.status = 'Error';
@@ -32,7 +29,6 @@ module.exports = {
         callback(r);
     });
   },
-
 
   cryptPassword: function (password, callback) {
      bcrypt.genSalt(10, function(err, salt) {
@@ -47,10 +43,10 @@ module.exports = {
   },
 
   comparePassword: function (password, userPassword, callback) {
-     bcrypt.compare(password, userPassword, function(err, isPasswordMatch) {
+     bcrypt.compare(password, userPassword, function(err, res) {
         if (err)
           return callback(err);
-        return callback(null, isPasswordMatch);
+        return callback(null, res);
      });
   }
 };

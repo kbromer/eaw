@@ -55,27 +55,23 @@ module.exports = {
   },
 
   getUserInfo: function (username, callback) {
-    console.log('getting user info');
     client = new pg.Client(params);
     client.connect(function(err) {
       if(err){
         return callback(console.error('could not connect to postgres', err));
       }
       var q = "SELECT username, password, displayname FROM eaw.users WHERE username = '" + username + "'";
-      console.log(q);
       client.query(q, function(err, result) {
         if (err){
           client.end();
           return callback(console.error('query error', err));
         } else{
+          console.log('DB query successful');
           var results = {status: true, data: result.rows[0]};
           client.end();
           callback(results);
         }
       });
-
-
-
       /*client.query("SELECT  '" + username + "'", function(err, result) {
         if(err) {
           return console.error('Failed to load game', err);
@@ -89,6 +85,5 @@ module.exports = {
         client.end();
       });*/
     });
-
   }
 };

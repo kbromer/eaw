@@ -18,12 +18,16 @@
 
     console.log('attempting connection...');
 
+    eaw.io.socket.on('logout_client', function () {
+      console.log('User logout requested');
+      window.location.replace("../logout");
+    });
+
     eaw.io.socket.on('onconnected', function( data ) {
       //Note that the data is the object we sent from the server, as is. So we can assume its id exists.
       console.log(data.user.username + ' connected successfully to the socket.io server with a server side ID of ' + data.id );
       //set my client socket id
       eaw.io.clientid = data.id;
-
 
       if (data.id.substring(0, 4) !== 'dice'){
         //when a unit is dropped on another player's board
@@ -35,10 +39,6 @@
           eaw.io.networkDragHandler(data);
         });
       }
-      eaw.io.socket.on('logout_client', function () {
-        console.log('User logout requested');
-        window.location.replace("./logout");
-      });
     });
   };
 

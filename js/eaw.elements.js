@@ -360,7 +360,7 @@ eaw.SeaZone.prototype = Object.create(eaw.Zone.prototype);
 eaw.SeaZone.prototype.constructor = eaw.SeaZone;
 eaw.SeaZone.prototype.drawElement = function (){this.el = this.paper.path(this.pathstring).attr(
                                           {
-                                            fill: this.paper.gradient('l(0,0,1,1)-#59ABC2-#4680A3'),
+                                            fill: '#3498db',//this.paper.gradient('l(0,0,1,1)-#59ABC2-#4680A3'),
                                             stroke: 'black',
                                             'stroke-width': 2,
                                             'stroke-linejoin': 'round'
