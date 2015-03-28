@@ -23,8 +23,8 @@ var port = Number(process.env.PORT || 5000);
 var logfmt = require("logfmt");
 //var Cookies = require( "cookies" );
 // ========== Session support for sockets.io ==========
-var cookieParser = require('cookie-parser');
-app.use(cookieParser());
+//var cookieParser = require('cookie-parser');
+//app.use(cookieParser());
 // ========== Redis for session store ==========
 var RedisStore = require('connect-redis')(session);
 var url = require('url');
@@ -46,7 +46,7 @@ app.use(session({ secret: 'itcomesforyou',
                   store: sessionstore,
                   resave: true,
                   saveUninitialized: true,
-                  cookie: { maxAge: 10000000}//~16 minutes... i think.
+                  cookie: { /*maxAge: 10000000*/}
                 }));
 app.use(flash());
 app.use(logfmt.requestLogger());
