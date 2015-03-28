@@ -68,9 +68,11 @@ app.post('/login', function(req, res, next) {
       console.log('logIn user ' + user);
       var userId = guid();
       //append the cookie to the user data
-      var mycookieid = req.headers.cookie;
-      mycookieid = mycookieid.split('connect.sid=')[1];
-      info.data.mycookie = mycookieid;
+      if (req.headers.cookie){
+        var mycookieid = req.headers.cookie;
+        mycookieid = mycookieid.split('connect.sid=')[1];
+        info.data.mycookie = mycookieid;
+      }
       //add the user session data
       info.data.session = userId;
       users[userId] = info.data;
