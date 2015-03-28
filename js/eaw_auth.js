@@ -43,10 +43,12 @@ module.exports = {
   },
 
   comparePassword: function (password, userPassword, callback) {
+     return callback(null, bcrypt.compareSync(password, userPassword))
+     /*
      bcrypt.compare(password, userPassword, function(err, res) {
         if (err)
           return callback(err);
         return callback(null, res);
-     });
+     });*/
   }
 };
