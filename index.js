@@ -72,6 +72,7 @@ app.post('/login', function(req, res, next) {
       //append the cookie to the user data
       if (req.headers.cookie){
         var mycookieid = req.headers.cookie;
+        console.log('found cookie ' + mycookieid);
         mycookieid = mycookieid.split('connect.sid=')[1];
         info.data.mycookie = mycookieid;
       }
