@@ -46,6 +46,7 @@ app.use(session({ secret: 'itcomesforyou',
                   store: sessionstore,
                   resave: true,
                   saveUninitialized: true,
+                  proxy : true,
                   cookie: { /*maxAge: 10000000*/}
                 }));
 app.use(flash());
