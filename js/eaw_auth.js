@@ -3,6 +3,7 @@ var bcrypt = require('bcrypt');
 module.exports = {
   ensureAuthenticated: function (req, res, next) {
     console.log('Ensuring authentication: ' + req.isAuthenticated());
+    console.log(req);
     if (req.isAuthenticated()) {
       return next();
     }
