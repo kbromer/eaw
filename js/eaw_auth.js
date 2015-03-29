@@ -2,7 +2,7 @@ var db = require("./eaw_db.js");
 var bcrypt = require('bcrypt');
 module.exports = {
   ensureAuthenticated: function (req, res, next) {
-    console.log('Ensuring authentication: ' + req.isAuthneticated());
+    console.log('Ensuring authentication: ' + req.isAuthenticated());
     if (req.isAuthenticated()) {
       return next();
     }
