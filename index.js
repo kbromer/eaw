@@ -46,6 +46,7 @@ app.use(session({ secret: 'itcomesforyou',
                   store: sessionstore,
                   resave: true,
                   saveUninitialized: true,
+                  secureProxy: true,
                   proxy : true,
                   cookie: { /*maxAge: 10000000*/}
                 }));
@@ -67,7 +68,6 @@ app.post('/login', function(req, res, next) {
     req.logIn(user, function(err) {
       if (err) { return next(err); }
       console.log('logIn user ' + user);
-      console.log(req);
       //var userId = req.session.passport.user;
       //append the cookie to the user data
       if (req.headers.cookie){
@@ -76,8 +76,8 @@ app.post('/login', function(req, res, next) {
         info.data.mycookie = mycookieid;
       }
       //add the user session data
-      if (req._passport.session.user)
-        info.data.session = req._passport.session.user;
+      //if (req._passport.session.user)
+        //info.data.session = req._passport.session.user;
 
       console.log(info.data);
       users[user] = info.data;
