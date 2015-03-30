@@ -10,72 +10,72 @@
 
     <title>EaW</title>
 
-    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-    <script src="//code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+    <script src="https://kbromer.github.io/cdn/js/jquery-2.1.1.min.js"></script>
+    <script src="https://kbromer.github.io/cdn/js/jquery-ui.min.js"></script>
     <script>
       $(document).ready(function(){
         var header = $('body');
 
         var backgrounds = new Array(
-            'url(http://i.imgur.com/fLykXdO.jpg)'
-          , 'url(http://i.imgur.com/6OMKlo5.jpg)'
-          , 'url(http://i.imgur.com/phoHVep.jpg)'
-          , 'url(http://i.imgur.com/1RP7nqY.png)'
-          , 'url(http://i.imgur.com/ODudqKl.png)'
-          , 'url(http://i.imgur.com/OVVTWiB.jpg)'
-          , 'url(http://i.imgur.com/md1Wa6f.jpg)'
-          , 'url(http://i.imgur.com/J6I4oIE.jpg)'
-          , 'url(http://i.imgur.com/MmmYxqH.jpg)'
-          , 'url(http://i.imgur.com/zCy0HYn.jpg)'
-          , 'url(http://i.imgur.com/nwiRSeT.jpg)'
-          , 'url(http://i.imgur.com/eMbQnmK.jpg)'
-          , 'url(http://i.imgur.com/9IhdBOx.jpg)'
-          , 'url(http://i.imgur.com/0pPfFJH.jpg)'
-          , 'url(http://i.imgur.com/pgA2pjw.jpg)'
-          , 'url(http://i.imgur.com/LINmYbi.png)'
-          , 'url(http://i.imgur.com/fFnet8W.png)'
-          , 'url(http://i.imgur.com/Q6ENVMg.jpg)'
-          , 'url(http://i.imgur.com/hyiHCMp.png)'
-          , 'url(http://i.imgur.com/IGOYUqa.png)'
-          , 'url(http://i.imgur.com/8jMZZZs.png)'
-          , 'url(http://i.imgur.com/Z3QsuSC.png)'
-          , 'url(http://i.imgur.com/IT515C7.jpg)'
-          , 'url(http://i.imgur.com/grRKhcY.jpg)'
-          , 'url(http://i.imgur.com/7z9zRSG.jpg)'
-          , 'url(http://i.imgur.com/ltNN1ZT.jpg)'
-          , 'url(http://i.imgur.com/E8yCAif.jpg)'
-          , 'url(http://i.imgur.com/Vlu7ljO.jpg)'
-          , 'url(http://i.imgur.com/IiCB5pS.jpg)'
-          , 'url(http://i.imgur.com/16oFVUG.jpg)'
-          , 'url(http://i.imgur.com/zvahTm7.jpg)'
-          , 'url(http://i.imgur.com/D93kiYZ.jpg)'
-          , 'url(http://i.imgur.com/nQoCfAt.jpg)'
-          , 'url(http://i.imgur.com/de5FOLz.jpg)'
-          , 'url(http://i.imgur.com/8R9WVo9.jpg)'
-          , 'url(http://i.imgur.com/PfoESE5.jpg)'
-          , 'url(http://i.imgur.com/FsPUQko.png)'
-          , 'url(http://i.imgur.com/desj2NT.jpg)'
-          , 'url(http://i.imgur.com/Rq8bBzq.jpg)'
-          , 'url(http://i.imgur.com/sBLmziA.jpg)'
-          , 'url(http://i.imgur.com/K5HX2ea.jpg)'
-          , 'url(http://i.imgur.com/MY4fGpx.jpg)'
-          , 'url(http://i.imgur.com/afosDf3.jpg)'
-          , 'url(http://i.imgur.com/XBux9MQ.jpg)'
-          , 'url(http://i.imgur.com/b0hVjFo.jpg)'
-          , 'url(http://i.imgur.com/z982tc8.jpg)'
+            'url(https://i.imgur.com/fLykXdO.jpg)'
+          , 'url(https://i.imgur.com/6OMKlo5.jpg)'
+          , 'url(https://i.imgur.com/phoHVep.jpg)'
+          , 'url(https://i.imgur.com/1RP7nqY.png)'
+          , 'url(https://i.imgur.com/ODudqKl.png)'
+          , 'url(https://i.imgur.com/OVVTWiB.jpg)'
+          , 'url(https://i.imgur.com/md1Wa6f.jpg)'
+          , 'url(https://i.imgur.com/J6I4oIE.jpg)'
+          , 'url(https://i.imgur.com/MmmYxqH.jpg)'
+          , 'url(https://i.imgur.com/zCy0HYn.jpg)'
+          , 'url(https://i.imgur.com/nwiRSeT.jpg)'
+          , 'url(https://i.imgur.com/eMbQnmK.jpg)'
+          , 'url(https://i.imgur.com/9IhdBOx.jpg)'
+          , 'url(https://i.imgur.com/0pPfFJH.jpg)'
+          , 'url(https://i.imgur.com/pgA2pjw.jpg)'
+          , 'url(https://i.imgur.com/LINmYbi.png)'
+          , 'url(https://i.imgur.com/fFnet8W.png)'
+          , 'url(https://i.imgur.com/Q6ENVMg.jpg)'
+          , 'url(https://i.imgur.com/hyiHCMp.png)'
+          , 'url(https://i.imgur.com/IGOYUqa.png)'
+          , 'url(https://i.imgur.com/8jMZZZs.png)'
+          , 'url(https://i.imgur.com/Z3QsuSC.png)'
+          , 'url(https://i.imgur.com/IT515C7.jpg)'
+          , 'url(https://i.imgur.com/grRKhcY.jpg)'
+          , 'url(https://i.imgur.com/7z9zRSG.jpg)'
+          , 'url(https://i.imgur.com/ltNN1ZT.jpg)'
+          , 'url(https://i.imgur.com/E8yCAif.jpg)'
+          , 'url(https://i.imgur.com/Vlu7ljO.jpg)'
+          , 'url(https://i.imgur.com/IiCB5pS.jpg)'
+          , 'url(https://i.imgur.com/16oFVUG.jpg)'
+          , 'url(https://i.imgur.com/zvahTm7.jpg)'
+          , 'url(https://i.imgur.com/D93kiYZ.jpg)'
+          , 'url(https://i.imgur.com/nQoCfAt.jpg)'
+          , 'url(https://i.imgur.com/de5FOLz.jpg)'
+          , 'url(https://i.imgur.com/8R9WVo9.jpg)'
+          , 'url(https://i.imgur.com/PfoESE5.jpg)'
+          , 'url(https://i.imgur.com/FsPUQko.png)'
+          , 'url(https://i.imgur.com/desj2NT.jpg)'
+          , 'url(https://i.imgur.com/Rq8bBzq.jpg)'
+          , 'url(https://i.imgur.com/sBLmziA.jpg)'
+          , 'url(https://i.imgur.com/K5HX2ea.jpg)'
+          , 'url(https://i.imgur.com/MY4fGpx.jpg)'
+          , 'url(https://i.imgur.com/afosDf3.jpg)'
+          , 'url(https://i.imgur.com/XBux9MQ.jpg)'
+          , 'url(https://i.imgur.com/b0hVjFo.jpg)'
+          , 'url(https://i.imgur.com/z982tc8.jpg)'
           , 'url(https://upload.wikimedia.org/wikipedia/commons/e/ea/Bundesarchiv_Bild_101III-Weill-059-04%2C_Metz%2C_Heinrich_Himmler_neben_Panzer.jpg)'
-          , 'url(http://i.imgur.com/utjWAaq.jpg)'
-          , 'url(http://i.imgur.com/pHiBV9b.jpg)'
-          , 'url(http://i.imgur.com/axif0Zn.jpg)'
-          , 'url(http://i.imgur.com/936ZnuB.jpg)'
-          , 'url(http://i.imgur.com/kTGclnw.jpg)'
-          , 'url(http://i.imgur.com/uDAdnAo.jpg)'
-          , 'url(http://i.imgur.com/RvaZKdO.jpg)'
-          , 'url(http://i.imgur.com/rDnjx8m.jpg)'
-          , 'url(http://i.imgur.com/BW4Jsjl.jpg)'
-          , 'url(http://i.imgur.com/2wPN30j.jpg)'
-          , 'url(http://i.imgur.com/gn2oZgf.jpg)'
-          , 'url(http://i.imgur.com/G5Nnq73.jpg)'
+          , 'url(https://i.imgur.com/utjWAaq.jpg)'
+          , 'url(https://i.imgur.com/pHiBV9b.jpg)'
+          , 'url(https://i.imgur.com/axif0Zn.jpg)'
+          , 'url(https://i.imgur.com/936ZnuB.jpg)'
+          , 'url(https://i.imgur.com/kTGclnw.jpg)'
+          , 'url(https://i.imgur.com/uDAdnAo.jpg)'
+          , 'url(https://i.imgur.com/RvaZKdO.jpg)'
+          , 'url(https://i.imgur.com/rDnjx8m.jpg)'
+          , 'url(https://i.imgur.com/BW4Jsjl.jpg)'
+          , 'url(https://i.imgur.com/2wPN30j.jpg)'
+          , 'url(https://i.imgur.com/gn2oZgf.jpg)'
+          , 'url(https://i.imgur.com/G5Nnq73.jpg)'
         );
 
         var current = Math.floor((Math.random() * 58) + 1);
@@ -91,7 +91,7 @@
       });
     </script>
 
-    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://kbromer.github.io/cdn/css/bootstrapsf1.min.css" rel="stylesheet">
     <style>
       html {
         height: 100%;
@@ -155,6 +155,6 @@
         <input type="password" class="form-control" placeholder="Password" name="password"required>
         <button class="btn btn-lg btn-primary btn-block" style="background-color: #AAAD3D;" type="submit">Sign in</button>
       </form>
-    </div> 
+    </div>
   </body>
 </html>
