@@ -74,7 +74,7 @@ eaw.ui.showMenuItem = function (selectedItem){
     break;
     case 'IPCs':
       eaw.ui.displayIPCMarkers();
-      $('.ipcs_subnav').show();//.show('slide', {direction: 'down'}, 1000);
+      $('#ipc_modal').modal('show');//.show('slide', {direction: 'down'}, 1000);
     break;
     case 'Dice':
       eaw.loadDice();
