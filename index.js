@@ -36,7 +36,7 @@ var sessionstore = new RedisStore({ host: redisURL.hostname, port: redisURL.port
 // ========== App config ==========
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({ secret: 'itcomesforyou',
-                  /*store: sessionstore,*/
+                  store: sessionstore,
                   resave: true,
                   saveUninitialized: true,
                   secureProxy: true,
