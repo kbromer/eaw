@@ -96,22 +96,22 @@ eaw.ui.switchNation = function (nation){
 
   switch (nation.id){
     case "de":
-    $(".subnav").css("background", "linear-gradient(to right, transparent, gray, transparent)");
+    $(".subnav").css("background", "linear-gradient(to right, gray, transparent, gray)");
     break;
     case "uk":
-    $(".subnav").css("background", "linear-gradient(to right, transparent, tan, transparent)");
+    $(".subnav").css("background", "linear-gradient(to right, tan, transparent, tan)");
     break;
     case "ru":
-    $(".subnav").css("background", "linear-gradient(to right, transparent, crimson, transparent)");
+    $(".subnav").css("background", "linear-gradient(to right, crimson, transparent, crimson)");
     break;
     case "fr":
-    $(".subnav").css("background", "linear-gradient(to right, transparent, blue, transparent)");
+    $(".subnav").css("background", "linear-gradient(to right, blue, transparent, blue)");
     break;
     case "it":
-    $(".subnav").css("background", "linear-gradient(to right, transparent, yellow, transparent)");
+    $(".subnav").css("background", "linear-gradient(to right, yellow, transparent, yellow)");
     break;
     case "us":
-    $(".subnav").css("background", "linear-gradient(to right, transparent, green, transparent)");
+    $(".subnav").css("background", "linear-gradient(to right, green, transparent, green)");
     break;
   }
 };

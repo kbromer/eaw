@@ -28,15 +28,17 @@ body {
 }
 .subnav{
   position: fixed;
-  width: 100%;
-  padding-left: 25px;
+  right: 10px;
+  padding-right: 5px;
   padding-top: 50px;
   white-space: nowrap;
   border-style: solid;
   border-width: 3px;
 }
 .units_subnav{
-  background: linear-gradient(to right, transparent, gray, transparent);
+  position: fixed;
+  margin: auto;
+  background: linear-gradient(to right, gray, transparent, gray);
 }
 .ipcs_subnav{
   background: linear-gradient(to right, black, transparent, black);
