@@ -58,7 +58,7 @@
       console.log('Calling back with ' + data);
       callback(data);
     });
-  }
+  };
 
 
   eaw.io.sendMove = function (unit, action){
@@ -94,7 +94,6 @@
     var unitid = udp.unitid;
     for (var i=0; i < eaw.game.GAME_PIECES.length; i++){
       if (eaw.game.GAME_PIECES[i].id === unitid){
-        isExistingPiece = true;
         local_unit = eaw.game.GAME_PIECES[i];
       }
     }

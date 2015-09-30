@@ -11,6 +11,10 @@
   eaw.map_data = null;
   eaw.dice_rendered = false;
 
+  /*NEED TO BE ABLE TO LOAD THE CURRENT GAME AND ELEMENTS WHEN THE NEW PLAYER JOINS OTHERWISE THE ID NUMBERS OVEWRWRITE EACHOTHER
+  SO DETECT AN 'ACTIVE' GAME AND THEN LOAD IT AUTOMATICALLY WHEN PLAYER2 JOINS */
+
+
   eaw.loadGame = function (game) {
 
     eaw.removeAllPieces();
@@ -39,16 +43,16 @@
               alliance: model.PLAYABLE_NATIONS[i].alliance,
               unit_name: model.PLAYABLE_NATIONS[i].unit_name,
               cash: model.PLAYABLE_NATIONS[i].cash
-            }
+            };
 
             var new_nation = new eaw.nations.Nation(obj);
             eaw.game.PLAYABLE_NATIONS[i] = new_nation;
           }
 
           //find and set the current nation
-          for (var i = 0; i < eaw.game.PLAYABLE_NATIONS.length; i++){
-              if (eaw.game.PLAYABLE_NATIONS[i].id === model.CURRENT_NATION.id){
-                eaw.game.CURRENT_NATION = eaw.game.PLAYABLE_NATIONS[i];
+          for (var c = 0; i < eaw.game.PLAYABLE_NATIONS.length; c++){
+              if (eaw.game.PLAYABLE_NATIONS[c].id === model.CURRENT_NATION.id){
+                eaw.game.CURRENT_NATION = eaw.game.PLAYABLE_NATIONS[c];
                 break;
               }
           }
@@ -62,8 +66,8 @@
           /*** REWRITE THE WHOLE THING TO USE THE GAME PIECES ARRAY
           //*** SINCE THAT HAS EVERYTHING YOU NEED */
 
-          for (var i = 0; i < model.GAME_PIECES.length; i++){
-            var saved_unit = model.GAME_PIECES[i];
+          for (var d = 0; i < model.GAME_PIECES.length; d++){
+            var saved_unit = model.GAME_PIECES[d];
             var location_zone = saved_unit.location_zone;
             var owner = saved_unit.unit_owner;
             var type = saved_unit.unit_type;
@@ -74,7 +78,7 @@
             };
 
             /*** COPY OBJECT PARAMETERS FROM THE GAME PIECE LIST ***/
-            var new_unit = eaw.createUnit(type, params)
+            var new_unit = eaw.createUnit(type, params);
             new_unit.drawElement();
             var unitx = saved_unit.el.matrix.e;
             var unity = saved_unit.el.matrix.f;
@@ -122,7 +126,7 @@
 
 eaw.Game = function() {
   //active playable nations
-  this.PLAYABLE_NATIONS = new Array();
+  this.PLAYABLE_NATIONS = [];
   //create nations using the starting nation properties
   for (var id in eaw.nations.StartingNationProperties){
 
@@ -136,7 +140,7 @@ eaw.Game = function() {
   this.GAME_TURN = 0;
   this.CURRENT_NATION = this.PLAYABLE_NATIONS[0];
   this.CURRENT_NATION_INDEX = 0;
-  this.INNATIONS = new Array();
+  this.INNATIONS = [];
   this.GAME_PIECES = [];
   this.ZONE_SET = [];
 };
@@ -145,7 +149,7 @@ eaw.Game = function() {
 eaw.Game.prototype = {
   constructor: eaw.Game,
   getCurrentNation: function(){
-      if (this.CURRENT_NATION == ''){
+      if (this.CURRENT_NATION === ''){
         this.CURRENT_NATION = this.PLAYABLE_NATIONS[0];
         this.CURRENT_NATION_INDEX = 0;
       }
@@ -162,7 +166,7 @@ eaw.Game.prototype = {
     return this.CURRENT_NATION;
   },
   previousNation: function(){
-    if (this.CURRENT_NATION_INDEX == 0){
+    if (this.CURRENT_NATION_INDEX === 0){
       this.CURRENT_NATION_INDEX = this.PLAYABLE_NATIONS.length - 1;
     }
     else{
@@ -224,7 +228,7 @@ eaw.Game.prototype = {
 
     var zone_hit = false;
 
-    if (zone_name == undefined){ zone_name = '';} ;
+    if (zone_name === undefined){ zone_name = '';}
 
     /*** Figure out what zone we've been dropped into
          and assign unit to the appropriate array [country][type]  ***/
@@ -264,7 +268,7 @@ eaw.Game.prototype = {
           }
         }
 
-        var t = unit.paper.text(b.x, b.y, country_name + ' ' + unit_type + ' added to ' + zone_element.name).animate({ opacity : 0 }, 2000, function () { this.remove() });;
+        var t = unit.paper.text(b.x, b.y, country_name + ' ' + unit_type + ' added to ' + zone_element.name).animate({ opacity : 0 }, 2000, function () { this.remove(); });
 
         //build the zone arrays to stack armies
         if (zone_element[set_name] === undefined){
@@ -280,7 +284,7 @@ eaw.Game.prototype = {
 
         var prop_count = 0;
 
-        for(var x in unit_set) {
+        for(var u in unit_set) {
           prop_count++;
         }
 
@@ -316,7 +320,7 @@ eaw.Game.prototype = {
       unit.transform('t'+ b.x + ',' + b.y);
       eaw.unitMouseupHandler(unit, event, remoteDraw);
     }
-  }//end unitMouseupHandler
+  };//end unitMouseupHandler
 
   eaw.unitMousedownHandler = function (unit, event, remoteDraw){
     //pull it out of the existing unit_set
@@ -325,7 +329,7 @@ eaw.Game.prototype = {
     var zone = unit.data("Unit").location_zone;
     var unit_type = unit.data("Unit").unit_type;
     var set_name = country + '_unit_set';
-    var unit_id = unit.data("Unit").id
+    var unit_id = unit.data("Unit").id;
 
     console.log('Removing ' + unit_id + ' ' + unit_type + ' from ' + zone.name);
 
@@ -362,7 +366,7 @@ eaw.Game.prototype = {
     else{
       delete zone[set_name][unit_type];
       var prop2_count = 0;
-      for (var x in zone[set_name]){
+      for (var z in zone[set_name]){
         prop2_count++;
       }
       if (prop2_count === 0){
@@ -395,7 +399,7 @@ eaw.Game.prototype = {
     if (!remoteDraw){
       eaw.io.sendMove(unit, 'drag');
     }
-  }//close unitMousedownHandler
+  };//close unitMousedownHandler
 
   eaw.redrawChipStack = function (xchiploc, ychiploc, unit_set, locked_unit){
 
@@ -451,21 +455,21 @@ eaw.Game.prototype = {
       //we may not need to do this, but it'll guarantee proper
       //stacking when we had them)
       for (i = 0; i < white_chip_remainder; i++){
-        var u = white_chips[counter];
-        u.attr({fill: 'white'});
+        var chip = white_chips[counter];
+        chip.attr({fill: 'white'});
         counter++;
       }
       //everything else gets hidden
       for (i = counter; i < white_chips.length; i++){
-        var u = white_chips[counter];
-        u.attr({'visibility': 'hidden'});
+        var chip2 = white_chips[counter];
+        chip2.attr({'visibility': 'hidden'});
         counter++;
       }
     }
     //not clear to me why i need to do this, but for wahtever reason
     //this was getting hidden (even though it was never a white chip)
     locked_unit.attr({'visibility': 'initial'});
-  }
+  };
 
   eaw.zonehoverinHandler = function(zone){
 /*
@@ -479,7 +483,7 @@ eaw.Game.prototype = {
 
     }, 500);
     zone.data('timerid', timer);*/
-  }
+  };
 
   eaw.zonehoveroutHandler = function(zone){
     /*var timerid = zone.data('timerid');
@@ -487,12 +491,12 @@ eaw.Game.prototype = {
       //mouse out, didn't timeout. Kill previously started timer
       window.clearTimeout(timerid);
     }*/
-  }
+  };
 
 
   eaw.loadDice = function (){
     window.open('../dice.html?' + eaw.io.clientid,'_blank');
-  }
+  };
 
 
     eaw.createUnit = function (type, params){
@@ -532,4 +536,4 @@ eaw.Game.prototype = {
       }
       eaw.game.GAME_PIECES[eaw.game.GAME_PIECES.length] = new_unit;
       return new_unit;
-    }
+    };

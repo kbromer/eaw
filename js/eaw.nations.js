@@ -13,7 +13,7 @@ eaw.nations.Nation = function (obj){
   //owner for purposes of adding up ipcs
   //could be minor allies, etc.
   this.ipc_owner = this.id;
-}
+};
 
 eaw.nations.getIPCs = function () {
   var ipcs = {de: 0, us: 0, fr: 0, uk: 0, ru: 0, it: 0};
@@ -30,7 +30,7 @@ eaw.nations.getIPCs = function () {
   //handle boxes, special cases, offboard IPCs,
   //damaged factories, etc.
   return ipcs;
-}
+};
 
 eaw.nations.StartingNationProperties = {
 

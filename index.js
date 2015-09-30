@@ -107,6 +107,7 @@ app.use('/', express.static(__dirname + '/'));
       //to their cookie set during the authentication
       for (var x in users){
         var u = users[x];
+        console.log('*****User object*****');
         console.log(u);
         //found our entry in the users table via
         //cookie match. reset to new user_id
@@ -177,7 +178,7 @@ passport.deserializeUser(function(user, done) {done(null, user);});
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    eaw_auth.checkUserAuth(username, password, function(result){
+    eaw_auth.checkUsernamePassword(username, password, function(result){
       if (result.status === true){
         //found user, check password
         var res = eaw_auth.comparePassword(password, result.data.password);

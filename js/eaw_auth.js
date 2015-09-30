@@ -3,7 +3,7 @@ var bcrypt = require('bcrypt');
 module.exports = {
   ensureAuthenticated: function (req, res, next) {
     console.log('Ensuring authentication: ' + req.isAuthenticated());
-    console.log(req._passport); 
+  //  console.log(req._passport);
     if (req.isAuthenticated()) {
       return next();
     }
@@ -12,7 +12,7 @@ module.exports = {
     }
   },
 
-  checkUserAuth: function (username, password, callback) {
+  checkUsernamePassword: function (username, password, callback) {
     db.getUserInfo(username, function (results) {
           var r = {};
           if(results.status){
