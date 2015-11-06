@@ -120,22 +120,61 @@ eaw.ui.displayIPCMarkers = function (){
 
   var ipcObj = eaw.nations.getIPCs();
   console.log(ipcObj);
+  var marker_placements = [];
 
-  $("[id^='marker_logo']").each(function( index, element ) {
+  function sortObject(obj) {
+    var arr = [];
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop) && !isNaN(obj[prop])) {
+            arr.push({
+                'key': prop,
+                'value': obj[prop]
+            });
+        }
+    }
+    arr.sort(function(a, b) { return a.value - b.value; });
+    //arr.sort(function(a, b) { a.value.toLowerCase().localeCompare(b.value.toLowerCase()); }); //use this to sort as strings
+    return arr; // returns array
+  }
+
+  var arr = sortObject(ipcObj);
+  console.log(arr);
+
+  for (var i = 0; i < arr.length; i++){
+    console.log(arr[i].key + ' ' + arr[i].value);
+
+    var display_perc = arr[i].value;
+    for (var j = 0; j < marker_placements.length; j++){
+      if (Math.abs(marker_placements[j] - arr[i].value) < 7){
+          console.log("moving");
+          display_perc = arr[i].value + 8;
+      }
+    }
+    marker_placements.push(display_perc);
+    $("[id^='marker_logo_" + arr[i].key + "']").css( "left", display_perc + '%' );
+    var spanid = 'disipc_' + arr[i].key;
+
+    $('#' + spanid).text(arr[i].value);
+  }
+
+/*  $("[id^='marker_logo']").each(function( index, element ) {
     var country_id = element.id.slice(-2);
-    console.log(element.id);
     var display_ipcs = ipcObj[country_id];
-    console.log(display_ipcs);
-    var perc = (display_ipcs/120) * 100;
 
+    //var perc = (display_ipcs/100) * 100;
+    var perc = display_ipcs;
+    for (var i = 0; i < marker_placements.length; i++){
+      if (Math.abs(marker_placements[i] - perc) < 10){
+          console.log("moving");
+          perc = perc + 15;
+      }
+    }
+    marker_placements.push(perc);
+    console.log(perc);
     this.style.left = perc + '%';
     var spanid = 'disipc_' + country_id;
 
     $('#' + spanid).text(display_ipcs);
-
-
-
-
 
     /*
     for (i=0; i < eaw.game.PLAYABLE_NATIONS.length; i++){
@@ -150,7 +189,10 @@ eaw.ui.displayIPCMarkers = function (){
 
 
 
-  });
+  //}); */
+
+
+
 
 
 
