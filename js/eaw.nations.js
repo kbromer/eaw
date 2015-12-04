@@ -16,7 +16,9 @@ eaw.nations.Nation = function (obj){
 };
 
 eaw.nations.getIPCs = function () {
-  var ipcs = {de: 0, us: 0, fr: 0, uk: 0, ru: 0, it: 0};
+
+  //set any offboard points
+  var ipcs = {de: 0, us: 60, fr: 0, uk: 0, ru: 0, it: 0};
 
   for (i = 0; i < eaw.game.ZONE_SET.length; i++){
     var zone = eaw.game.ZONE_SET[i];
@@ -29,6 +31,8 @@ eaw.nations.getIPCs = function () {
 
   //handle boxes, special cases, offboard IPCs,
   //damaged factories, etc.
+
+
   return ipcs;
 };
 
