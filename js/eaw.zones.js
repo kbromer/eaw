@@ -317,8 +317,6 @@ Suez3: {type: "sea", majorHarbor: false}
     }
   };
 
-
-
   eaw.zones.createMap = function (data) {
 
       console.log('Painting map...');
@@ -328,8 +326,8 @@ Suez3: {type: "sea", majorHarbor: false}
         var zone_data = eaw.ZoneProperties[zone_id];
         if (typeof zone_data === 'undefined')
           console.log(zone_id + ' was not found in the zone list.');
-        if (zone_data["type"] === "sea"){
-          var majorHarbor = zone_data["majorHarbor"];
+        if (zone_data.type === "sea"){
+          var majorHarbor = zone_data.majorHarbor;
 
           var zone = new eaw.SeaZone(path_string, eaw.paper, zone_id, majorHarbor);
           zone.drawElement();
@@ -373,7 +371,7 @@ Suez3: {type: "sea", majorHarbor: false}
                 case 'BoxUST2':
                   t = ' US Turn 2 ';
                   fs = '14px';
-                  y = y + 40;;
+                  y = y + 40;
                   family = 'Arial Black';
                 break;
                 case 'BoxMalta':
