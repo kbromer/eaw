@@ -90,7 +90,6 @@
         });
   };
 
-
   eaw.removeAllPieces = function () {
     eaw.paper.clear();
     console.log('Clearing existing game...');
@@ -143,11 +142,15 @@ eaw.Game = function() {
   this.INNATIONS = [];
   this.GAME_PIECES = [];
   this.ZONE_SET = [];
+  this._networkGameStatus = false;
 };
 
 
 eaw.Game.prototype = {
   constructor: eaw.Game,
+  getNetworkGameStatus: function() {
+    return this._networkGameStatus;
+  },
   getCurrentNation: function(){
       if (this.CURRENT_NATION === ''){
         this.CURRENT_NATION = this.PLAYABLE_NATIONS[0];
@@ -187,7 +190,6 @@ eaw.Game.prototype = {
     var model = JSON.parse(eaw.savegame);
     eaw.io.sendSaveGame(eaw.savegame);
     console.log(model);
-
   },
   saveDefault: function() {
     eaw.savegame = JSON.stringify(this, function (key, value){
@@ -199,10 +201,7 @@ eaw.Game.prototype = {
     });
 
     var model = JSON.parse(eaw.savegame);
-    console.log('sendDefaultSaveGame');
     eaw.io.sendDefaultSaveGame(eaw.savegame);
-
-
   }
 };
 
@@ -295,6 +294,7 @@ eaw.Game.prototype = {
         //its not clear if this is needed, lets remove it
         //eaw.game.ZONE_SET[i] = zone_element;
 
+        //SAME THINGS HERE - ONLY DRAW IT IF ITS PART OF A REMOTE GAME
         if (!remoteDraw){
           eaw.io.sendMove(unit, 'drop');
         }
@@ -395,6 +395,8 @@ eaw.Game.prototype = {
 
     //check if zone is still contested
     zone.checkContested();
+
+    //ONLY DRAW IF ITS PART OF A NETWORK GAME - OTHERWISE SHOULD BE LOCAL ONLY
 
     if (!remoteDraw){
       eaw.io.sendMove(unit, 'drag');
