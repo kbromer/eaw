@@ -31,6 +31,6 @@ module.exports = {
   };
 
   User.prototype.logout = function(){
-
+    //can I just redirect to logout here?
 
   };
