@@ -1,3 +1,4 @@
+require('dotenv').config();
 // ========== Middleware, auth services, parser, eaw auth & db libraries ==========
 var flash = require("connect-flash");
 var passport = require("passport");
@@ -40,13 +41,43 @@ app.use(session({ secret: 'itcomesforyou',
                   resave: true,
                   saveUninitialized: true,
                   secureProxy: true,
-                  proxy : true,
-                  cookie: { /*maxAge: 10000000*/}
+                  proxy : true
+                  //cookie: { /*maxAge: 10000000*/}
                 }));
 app.use(flash());
 app.use(logfmt.requestLogger());
 app.use(passport.initialize());
 app.use(passport.session());
+
+// ========== Auth config - passport.js ==========
+passport.serializeUser(function(user, done) {done(null, user);});
+passport.deserializeUser(function(user, done) {done(null, user);});
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    eaw_auth.checkUsernamePassword(username, password, function(result){
+      if (result.status === true){
+        //found user, check password
+        var res = eaw_auth.comparePassword(password, result.data.password);
+        if (res === true){
+          console.log(username + ' has successfully logged in');
+          return done(null, username, result);
+        }else{
+          console.log('Incorrect password for ' + username);
+          return done(null, false, { message: 'Incorrect password' });
+        }
+      } else if (result.status === false) {
+        console.log(username + " not found");
+        return done(null, false, { message: 'Username not found' });
+      } else {
+        console.log("Failed, server error");
+        return done(err);
+      }
+    });
+  }
+));
+
+
 
 // ========== App Routes ==========
 app.get('/logout', function(req, res){
@@ -56,29 +87,28 @@ app.get('/logout', function(req, res){
 });
 app.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
+    //user should contain username
+    //info is everything from the db: un, pw, displayname
     if (err) { return next(err); }
     if (!user) { return res.redirect('/login'); }
     req.logIn(user, function(err) {
       if (err) { return next(err); }
-      console.log('logIn user ' + user);
-      //var userId = req.session.passport.user;
+      console.log('Logging in user ' + user);
       //append the cookie to the user data
+      //this is used to authenticate the socket.io connection
+      //and is attached to the 'active' user in memory
       if (req.headers.cookie){
         var mycookieid = req.headers.cookie;
-        console.log('found cookie ' + mycookieid);
         mycookieid = mycookieid.split('connect.sid=')[1];
         info.data.mycookie = mycookieid;
+        console.log('Setting a session cookie for socket.io connectivity...')
       }
-      //add the user session data
-      //if (req._passport.session.user)
-        //info.data.session = req._passport.session.user;
-
-      console.log(info.data);
       users[user] = info.data;
       return res.redirect('/');
     });
   })(req, res, next);
 });
+
 app.get('/login', function(req, res){
   res.sendfile('login.html');
 });
@@ -172,33 +202,6 @@ app.use('/', express.static(__dirname + '/'));
 
 });//close io.on
 
-// ========== Auth config - passport.js ==========
-passport.serializeUser(function(user, done) {done(null, user);});
-passport.deserializeUser(function(user, done) {done(null, user);});
-
-passport.use(new LocalStrategy(
-  function(username, password, done) {
-    eaw_auth.checkUsernamePassword(username, password, function(result){
-      if (result.status === true){
-        //found user, check password
-        var res = eaw_auth.comparePassword(password, result.data.password);
-        if (res === true){
-          console.log(username + ' has successfully logged in');
-          return done(null, username, result);
-        }else{
-          console.log('Incorrect password for ' + username);
-          return done(null, false, { message: 'Incorrect password' });
-        }
-      } else if (result.status === false) {
-        console.log(username + " not found");
-        return done(null, false, { message: 'Username not found' });
-      } else {
-        console.log("Failed, server error");
-        return done(err);
-      }
-    });
-  }
-));
 
 // ========== util funcs ==========
 var guid = (function() {
