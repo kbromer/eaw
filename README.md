@@ -287,7 +287,7 @@ CREATE TABLE eaw.save_games (
 npm install
 
 # Set up environment variables
-cp .env.example .env  # Edit with your credentials
+# Create .env file manually with required variables (see Environment Variables section)
 
 # Run locally
 node index.js
