@@ -12,7 +12,7 @@ A web-based multiplayer strategy board game inspired by classic World War II tab
 ### Key Features
 
 - **Real-time Multiplayer**: Synchronized gameplay using Socket.IO
-- **Interactive Map**: SVG-based game board with over 300 zones across Europe, North Africa, and the Middle East
+- **Interactive Map**: SVG-based game board with 269 zones across Europe, North Africa, and the Middle East
 - **Drag-and-Drop Units**: Intuitive unit placement and movement
 - **Turn-Based Strategy**: Nation-by-nation turn system with economic (IPC) management
 - **3D Dice Roller**: Physics-based dice rolling using Three.js and Cannon.js
@@ -69,7 +69,7 @@ eaw/
 │
 ├── dice/                  # 3D dice roller
 │   ├── dice.js           # Dice physics and rendering
-│   └── main.js           # Dice initialization
+│   └── main.js           # Dice UI initialization and event handlers
 │
 ├── images/               # Game assets (SVG units, map, icons)
 │   └── eaw.svg          # Complete map with zone paths
@@ -106,16 +106,16 @@ All major European neutral countries are represented (Spain, Turkey, Sweden, etc
 
 ### Game Board
 
-The map consists of approximately **302 zones** divided into:
+The map consists of **269 zones** divided into:
 
-1. **Land Zones** (~240 zones)
+1. **Land Zones** (204 zones)
    - Territory name (e.g., "Berlin", "Paris", "Moscow")
    - Owner nation
    - Factory presence (industrial capacity)
    - IPC (Industrial Production Certificate) value
    - Current occupation status
 
-2. **Sea Zones** (~62 zones)
+2. **Sea Zones** (65 zones)
    - Major harbors for naval operations
    - Named zones (e.g., "English Channel", "Mediterranean")
    - Convoy routes
@@ -308,7 +308,7 @@ git push heroku main
 - express 4.4.4 - Web application framework
 - express-session 1.10.4 - Session middleware
 - logfmt 1.1.2 - Structured logging for Heroku
-- nodetime x.x - Application performance monitoring
+- nodetime x.x - Performance monitoring and profiling (StrongLoop/AppDynamics)
 - passport 0.2.1 - Authentication middleware
 - passport-local 1.0.0 - Local authentication strategy
 - pg 3.x - PostgreSQL client
@@ -562,6 +562,7 @@ npm install
 
 # 3. Set up environment variables
 # Create .env file with database and Redis credentials
+# See example in "Environment Variables" section above
 
 # 4. Initialize database
 # Run SQL schema (create users and save_games tables)
