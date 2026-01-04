@@ -308,6 +308,7 @@ git push heroku main
 - express 4.4.4 - Web application framework
 - express-session 1.10.4 - Session middleware
 - logfmt 1.1.2 - Structured logging for Heroku
+- nodetime x.x - Application performance monitoring
 - passport 0.2.1 - Authentication middleware
 - passport-local 1.0.0 - Local authentication strategy
 - pg 3.x - PostgreSQL client
