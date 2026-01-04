@@ -12,7 +12,7 @@ A web-based multiplayer strategy board game inspired by classic World War II tab
 ### Key Features
 
 - **Real-time Multiplayer**: Synchronized gameplay using Socket.IO
-- **Interactive Map**: SVG-based game board with 300+ zones across Europe, North Africa, and the Middle East
+- **Interactive Map**: SVG-based game board with over 300 zones across Europe, North Africa, and the Middle East
 - **Drag-and-Drop Units**: Intuitive unit placement and movement
 - **Turn-Based Strategy**: Nation-by-nation turn system with economic (IPC) management
 - **3D Dice Roller**: Physics-based dice rolling using Three.js and Cannon.js
@@ -99,14 +99,14 @@ eaw/
 **Playable Major Powers:**
 - **Axis**: Germany (de), Italy (it)
 - **Allies**: United Kingdom (uk), France (fr), United States (us)
-- **Russia**: Soviet Union (ru) - Separate alliance
+- **Russia**: Soviet Union (ru)
 
 **Neutral Nations:**
 All major European neutral countries are represented (Spain, Turkey, Sweden, etc.) and can potentially be invaded or influenced.
 
 ### Game Board
 
-The map consists of **302 zones** divided into:
+The map consists of approximately **302 zones** divided into:
 
 1. **Land Zones** (~240 zones)
    - Territory name (e.g., "Berlin", "Paris", "Moscow")
@@ -300,19 +300,19 @@ git push heroku main
 ### Dependencies
 
 **Production:**
-- bcrypt 1.0.2
-- body-parser 1.12.2
-- connect-flash 0.1.1
-- connect-redis 2.0.0
-- dotenv ^4.0.0
-- express 4.4.4
-- express-session 1.10.4
-- logfmt 1.1.2
-- passport 0.2.1
-- passport-local 1.0.0
-- pg 3.x
-- redis 0.12.1
-- socket.io 1.3.5
+- bcrypt 1.0.2 - Password hashing
+- body-parser 1.12.2 - HTTP request body parsing
+- connect-flash 0.1.1 - Flash message middleware
+- connect-redis 2.0.0 - Redis session store adapter
+- dotenv ^4.0.0 - Environment variable management
+- express 4.4.4 - Web application framework
+- express-session 1.10.4 - Session middleware
+- logfmt 1.1.2 - Structured logging for Heroku
+- passport 0.2.1 - Authentication middleware
+- passport-local 1.0.0 - Local authentication strategy
+- pg 3.x - PostgreSQL client
+- redis 0.12.1 - Redis client
+- socket.io 1.3.5 - Real-time communication
 
 **Target Platform:**
 - Node.js 4.8.4
